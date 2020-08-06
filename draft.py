@@ -653,17 +653,17 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
         
     ### Let's get started
     rows = levels + qlist
-    missing = []
     columns = []
     for j in joblist:
         path = os.path.join(*j)
         jsfp = os.path.join(path, "data.json")
         cnt = 0
         while cnt <= 1:  # counter to reparse at most once
-            data = load_js(jsfp)
-            column = j  
+            data = load_js(jsfp) if os.path.exists(jsfp) else {}
+            column = list(j)  
+            missing = []
             for n,q in enumerate(qlist):
-                to_add = data[q] if q in data.keys else np.nan
+                to_add = data[q] if q in data.keys() else np.nan
                 column.append(to_add)
                 if q not in data.keys() and cnt == 0:
                     missing.append(q)
@@ -673,10 +673,10 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
                 cnt += 1
             else:
                 cnt = 2  # either available or already tried calculating/reparsing
-        columns.append(column)
-    df = pd.concat(columns, axis=1)  # TODO check. I think they need to be series not lists
-    df.index = rows
-    dt = df.T
+        columns.append(pd.Series(column))
+    df = pd.concat(columns, axis=1)  # every column is a j 
+    df.index = rows # index
+    dt = df.T  # Transpose: now every column is either a level spec(A,B,basis,calc) or a property, every row is a job
     return df
 
                    
