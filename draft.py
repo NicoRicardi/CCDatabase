@@ -33,6 +33,27 @@ def mkdif(a):
     if not os.path.exists(a):
         os.makedirs(a)
 
+def split_path(path):
+    """
+    Note
+    ----
+    same as os.path.split(path) but avoids issues with trailing slash.
+    
+    Parameters
+    ----------
+    path: str
+        the path to split
+    
+    Returns
+    -------
+    list
+        the split list
+    """
+    splt = os.path.split(path)
+    if splt[-1] == "":
+        splt = os.path.split(splt[0])
+    return splt
+
 def load_js(fname):
     """
     Note
@@ -305,7 +326,7 @@ def get_joblist(fname="variables.json"):
         ignore = data["ignore"] if "ignore" in data.keys() else []
         return [i for i in  ittl.product(*[data[i] for i in data["levels"]]) if i not in ignore]
 
-def raw_quantities(path="", qlist="variables.json", ext="*.out", ignore="slurm*", parser_file="CCParser.json", parser=None, parser_args=None, parser_kwargs=None):
+def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm*", parser_file="CCParser.json", parser=None, parser_args=None, parser_kwargs=None):
     """
     Parameters
     ----------
@@ -350,7 +371,7 @@ def raw_quantities(path="", qlist="variables.json", ext="*.out", ignore="slurm*"
         else:  # actually a single quantity
             qlist = [qlist]
     # path
-    if path == "":
+    if path is None:
         path = os.getcwd()
     else:
         path = os.path.normpath(path)
@@ -424,11 +445,11 @@ def raw_quantities(path="", qlist="variables.json", ext="*.out", ignore="slurm*"
                 else:  # cases 2,3
                     fname = parser_file
                 subdirs = gl.glob(os.path.join(path,"*",""))  # subdirectories of path (e.g. MP2_A for F&T)
-                paraldirs = gl.glob(os.path.join(os.path.split(path)[0],"*",""))  # directories in the parent folder (e.g. iso if path="emb")
+                paraldirs = gl.glob(os.path.join(split_path(path)[0],"*",""))  # directories in the parent folder (e.g. iso if path="emb")
                 if fol in subdirs and fol not in paraldirs:  # it is a subdir (case 2)
                     path_tmp = os.path.join(path,fol)
                 elif fol not in subdirs and fol in paraldirs:  # it is a parallel dir (case 3)
-                    path_tmp = os.path.join(os.path.split(path)[0],fol)  
+                    path_tmp = os.path.join(split_path(path)[0],fol)  
                 else:
                     raise ValueError("""the location of your quantity {} cannot be understood.
                              Most likely it is either not present or double""".format(qlist[n]))
@@ -466,7 +487,7 @@ def raw_quantities(path="", qlist="variables.json", ext="*.out", ignore="slurm*"
             print("{} missing {}".format(path_tmp,q))
     return missing   
 
-def complex_quantities(path="", qlist="variables.json", reqs=None, ext="*.out", ignore="slurm*", parser=None, parser_args=None, parser_kwargs=None):
+def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out", ignore="slurm*", parser=None, parser_args=None, parser_kwargs=None):
     """
     Parameters
     ----------
@@ -544,7 +565,7 @@ def complex_quantities(path="", qlist="variables.json", reqs=None, ext="*.out", 
     else:
         parserkwargsdict = {q: parser_kwargs for q in all_raws}
     # path
-    if path == "":
+    if path is None:
         path = os.getcwd()
     else:
         path = os.path.normpath(path)
