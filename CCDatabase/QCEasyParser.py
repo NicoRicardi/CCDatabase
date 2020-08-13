@@ -3,8 +3,8 @@
 import os
 import re
 import json
-import numpy as np
-from CCParser.QChem import parse_symmetric_matrix, parse_inline_vec 
+#import numpy as np
+from CCParser.QChem import parse_symmetric_matrix#, parse_inline_vec 
 
 
 def parse_qchem(fname, hooks, to_file=True, output='CCParser.json', overwrite_vals=True):
@@ -41,9 +41,10 @@ def parse_qchem(fname, hooks, to_file=True, output='CCParser.json', overwrite_va
             if match:
                 # Get value(s)
                 if otype == 'matrix':
-                    out = parse_symmetric_matrix_qchem(lines, n)
+                    out = parse_symmetric_matrix(lines, n)
                 if otype == 'vector':
-                    out = parse_inline_vec(line)
+#                    out = parse_inline_vec(line)
+                    print("not implemented yet")
                 elif otype == 'number':
                     if args:
                         out = parse_number_qchem(lines, n, **args)
