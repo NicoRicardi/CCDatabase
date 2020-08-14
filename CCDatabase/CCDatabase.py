@@ -302,7 +302,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None, parser_args=
         print("Several matching files!! Using the shortest file ({})".format(file))
     ### Not sure if this next line can be broken
     parser_args = list(parser_args) if type(parser_args)==tuple else parser_args  
-    parser, parser_args, parser_kwargs = (ccp.Parser,file,dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser != None else (parser, [file]+parser_args, parser_kwargs)
+    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
     data = parser(*parser_args,**parser_kwargs)
     return data
 
