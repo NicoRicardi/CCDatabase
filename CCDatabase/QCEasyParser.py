@@ -7,7 +7,7 @@ import json
 from CCParser.QChem import parse_symmetric_matrix#, parse_inline_vec 
 
 
-def parse_qchem(fname, hooks, to_file=True, output='CCParser.json', overwrite_vals=True):
+def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite_vals=True):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -58,11 +58,12 @@ def parse_qchem(fname, hooks, to_file=True, output='CCParser.json', overwrite_va
                 else:
                     parsed[key] = [[out, n]]
     if to_file:
+        json_filepath = os.path.join(os.path.split(fname)[0],json_file) 
         # Check if file exists and update dictionary
-        if os.path.isfile(output):
-            parsed = update_json_dict(output, parsed, overwrite_vals)
+        if os.path.isfile(json_filepath):
+            parsed = update_json_dict(json_filepath, parsed, overwrite_vals)
         # Save json TODO: replace with dump_js
-        with open(output, 'w') as ofile:
+        with open(json_filepath, 'w') as ofile:
             json.dump(parsed, ofile)
     else:
         return parsed
@@ -137,6 +138,6 @@ hooks = {"scf_energy" : ("number", "SCF   energy in the final basis set"),
         }
 
 
-if __name__ == "__main__":
-    fname = 'emb1.out'
-    parse_qchem(fname, hooks, to_file=True)
+#if __name__ == "__main__":
+#    fname = 'emb1.out'
+#    parse_qchem(fname, hooks, to_file=True)

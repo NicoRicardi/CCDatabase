@@ -291,6 +291,8 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None, parser_args=
     What your parser returns
         the parser container
     """
+    if path is None:
+        path = os.getcwd()
     path = os.path.abspath(path)
     files = [i for i in gl.glob(os.path.join(path,ext)) if i not in gl.glob(os.path.join(path,ignore))]  # e.g. all *.out which are not slurm*.out
     if len(files) == 1:
@@ -303,6 +305,9 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None, parser_args=
     ### Not sure if this next line can be broken
     parser_args = list(parser_args) if type(parser_args)==tuple else parser_args  
     parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
+    print("parser", parser)
+    print("parser_args", parser_args)
+    print("parser_kwargs", parser_kwargs)
     data = parser(*parser_args,**parser_kwargs)
     return data
 
@@ -414,7 +419,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
     reparsed = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
     data = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
     for n,q in enumerate(qlist):
-        if type(q)=="str":
+        if type(q) == str:
             times = 1
         elif type(q) in [list,tuple] and len(q)==2:  # multiple values of a function (e.g. 5 ex. en.)
             times,q = q[0],q[1]

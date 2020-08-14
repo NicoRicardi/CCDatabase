@@ -1,0 +1,3131 @@
+==[2020-08-13 18:48:48,774]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:52:40,779]== CCParser starts...
+==[2020-08-13 18:52:40,779]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:53:37,586]== CCParser starts...
+==[2020-08-13 18:53:37,586]== CCParser starts...
+==[2020-08-13 18:53:37,586]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:54:48,901]== CCParser starts...
+==[2020-08-13 18:54:48,901]== CCParser starts...
+==[2020-08-13 18:54:48,901]== CCParser starts...
+==[2020-08-13 18:54:48,901]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:56:39,593]== CCParser starts...
+==[2020-08-13 18:56:39,593]== CCParser starts...
+==[2020-08-13 18:56:39,593]== CCParser starts...
+==[2020-08-13 18:56:39,593]== CCParser starts...
+==[2020-08-13 18:56:39,593]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:57:02,370]== CCParser starts...
+==[2020-08-13 18:57:02,370]== CCParser starts...
+==[2020-08-13 18:57:02,370]== CCParser starts...
+==[2020-08-13 18:57:02,370]== CCParser starts...
+==[2020-08-13 18:57:02,370]== CCParser starts...
+==[2020-08-13 18:57:02,370]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+==[2020-08-13 18:59:03,246]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,826]== CCParser starts...
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+==[2020-08-13 18:59:49,828]== Automatically determined software is qchem
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 18:59:51,589]== CCParser has finished.
+==[2020-08-13 19:15:17,892]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 19:15:19,784]== Dumped CCParser.results to JSON file.
+==[2020-08-13 19:15:19,786]== CCParser has finished.
+==[2020-08-13 19:16:25,392]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 19:16:27,104]== Dumped CCParser.results to JSON file.
+==[2020-08-13 19:16:27,104]== CCParser has finished.
+==[2020-08-13 19:16:45,876]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-13 19:16:47,571]== Dumped CCParser.results to JSON file.
+==[2020-08-13 19:16:47,571]== CCParser has finished.
+==[2020-08-14 15:41:53,047]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-14 15:43:00,939]== CCParser starts...
+==[2020-08-14 15:43:00,939]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-14 15:44:06,836]== CCParser starts...
+==[2020-08-14 15:44:06,836]== CCParser starts...
+==[2020-08-14 15:44:06,837]== Automatically determined software is qchem
+==[2020-08-14 15:44:06,837]== Automatically determined software is qchem
+[results.molecule] Parsed input molecule(s)
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-14 15:44:08,558]== CCParser has finished.
+==[2020-08-14 15:44:08,558]== CCParser has finished.
+==[2020-08-14 16:00:17,959]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
+==[2020-08-14 16:00:19,742]== Dumped CCParser.results to JSON file.
+==[2020-08-14 16:00:19,742]== CCParser has finished.
+==[2020-08-14 16:16:14,937]== CCParser starts...
+[results.molecule] Parsed input molecule(s)
+[results.xyz] Parsed XYZ coordinates
+[results.nuc_rep] Parsed nuclear repulsion energy
+[results.n_occ] Parsed number of occupied MOs (a, b)
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.bas_name] Parsed basis set name
+[results.nbas] Parsed number of basis functions
+[results.scf_energy] Parsed SCF energy in [a.u.]
+[results.mo_energies] Parsed molecular orbital energies
+[results.mo_energies] Parsed molecular orbital energies
+[results.scf_energy] Parsed SCF energy in [a.u.] (adcman)
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.state_cnvgd] Parsed if states converged (adcman)
+[results.exc_energy_rel] Parsed relative ADC(x) excitation energy/-ies [eV]
+[results.osc_str] Parsed ADC oscillator strength/s
+[results.dip_moment] Parsed Dipole moment [a.u.]
+[results.tot_dip] Parsed Total dipole moment [Debye]
+[results.ampl] Parsed ADC amplitudes
+[results.mulliken] Parsed MP(x)/ADC(x) Mulliken charges
+[results.diff_detach_mean] Parsed mean position of detachment density [Ang]
+[results.diff_attach_mean] Parsed mean position of attachment density [Ang]
+[results.diff_da_dist] Parsed linear D/A distance [Ang]
+[results.diff_detach_size] Parsed RMS size of detachment density [Ang]
+[results.diff_attach_size] Parsed RMS size of attachment density [Ang]
+[results.diff_detach_mom] Parsed cartesian components of detachment size [Ang]
+[results.diff_attach_mom] Parsed cartesian components of attachment size [Ang]
+[results.trans_hole_mean] Parsed mean position of hole [Ang]
+[results.trans_elec_mean] Parsed mean position of electron [Ang]
+[results.trans_eh_dist] Parsed linear e/h distance [Ang]
+[results.trans_hole_size] Parsed RMS hole size [Ang]
+[results.trans_elec_size] Parsed RMS electron size [Ang]
+[results.trans_eh_sep] Parsed RMS electron size [Ang]
+[results.trans_hole_mom] Parsed cartesian components of hole size [Ang]
+[results.trans_elec_mom] Parsed cartesian components of electron size [Ang]
+[results.trans_eh_sep_mom] Parsed RMS electron-hole separation [Ang]
+[results.trans_eh_cov] Parsed electron-hole covariance [Ang^2]
+[results.trans_eh_corr] Parsed electron-hole correlation coefficient
+[results.mo_energies] Parsed molecular orbital energies
+[results.C] Parsed 109 molecular orbital coefficients
+[results.mulliken] Parsed Ground-State Mulliken charges
+[results.has_finished] Parsed whether Q-Chem has finished successfully
