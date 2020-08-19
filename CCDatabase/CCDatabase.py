@@ -19,6 +19,7 @@ import os
 import re
 
 ### Simple utilities
+
 def mkdif(a):
     """
     Note
@@ -92,6 +93,36 @@ def dump_js(obj,fname):
     """
     with open(fname,"w") as f:
         js.dump(obj,f)
+        
+def deal_with_type(obj,condition=False,to=None):
+    """
+    Note
+    ----
+    Changes type to handle different inputs
+    
+    Parameters
+    ----------
+    obj: any
+        the object whose type you want to change
+    condition: type
+        only change if of "type". Give None for NoneType
+    to: type/func
+        type to convert to, function to return. e.g. list, os.getcwd
+    
+    Returns
+    -------
+    obj
+        the object with the desired type (or processed as desired)
+    """
+    if condition != False:
+        if type(obj) == condition:
+            return to(obj)
+        elif type(obj) == type(None):
+            return to()
+        else:
+            return obj
+    else:
+        return to(obj)
 
 ### Database cleaning
 
@@ -120,8 +151,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     Files are never overwritten, and their modified names (e.g. file_2.ext) are stored, which allows to undo moving operations.
     """
     ### Handling type of expr
-    if type(expr) == str:
-        expr = [expr]
+    expr = deal_with_type(expr,orig=str,to=list)  # if list turn to str
     if type(expr) != list:
         raise TypeError("Expr must be either list/tuple or string")
     ### Turning wildcards into regex
@@ -212,8 +242,7 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
     If a file with the same filepath has been added after the deletion, 
     overwriting is avoided and the file is copied as file_n.ext.
     """
-    if type(IDs) == str:  # if only 1 ID
-        IDs = [IDs]
+    IDs = deal_with_type(IDs,orig=str,to=list)  # if only 1 ID,turn to list
     histdict = load_js(histfile)
     with open(logfile, "r") as f:
         lines = f.readlines()
@@ -291,11 +320,12 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None, parser_args=
     What your parser returns
         the parser container
     """
-    if path is None:
-        path = os.getcwd()
+    path = deal_with_type(path,condition=None,to=os.getcwd)
     path = os.path.abspath(path)
     files = [i for i in gl.glob(os.path.join(path,ext)) if i not in gl.glob(os.path.join(path,ignore))]  # e.g. all *.out which are not slurm*.out
-    if len(files) == 1:
+    if len(files) == 0:
+        raise FileNotFoundError("Either no matching file or inexistent path")
+    elif len(files) == 1:
         file = files[0]
     else:
         lens = [len(f) for f in files]
@@ -303,11 +333,11 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None, parser_args=
         file = files[idx]
         print("Several matching files!! Using the shortest file ({})".format(file))
     ### Not sure if this next line can be broken
-    parser_args = list(parser_args) if type(parser_args)==tuple else parser_args  
+    parser_args = deal_with_type(parser_args,condition=tuple, to=list)
     parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
-    print("parser", parser)
-    print("parser_args", parser_args)
-    print("parser_kwargs", parser_kwargs)
+#    print("parser", parser)
+#    print("parser_args", parser_args)
+#    print("parser_kwargs", parser_kwargs)
     data = parser(*parser_args,**parser_kwargs)
     return data
 
@@ -375,6 +405,20 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             qlist = load_js(qlist)["raw_quantities"]
         else:  # actually a single quantity
             qlist = [qlist]
+    elif type(qlist) == list:
+        if len(qlist) == 2 and type(qlist[0]) == int:
+            qlist = [qlist]
+    else:
+        raise TypeError(""""could not process your qlist.
+                        Please provide in one of the following ways:
+                            - file.json (will read variable 'raw_quantities'
+                            - "exc_energies"
+                            - [2,"exc_energies"]
+                            - ["exc_energies","osc_strength"]
+                            - [[2,"exc_energies"],[2,"osc_strength"]]
+                            """)
+    timeslist = [q[0] if type(q) in [tuple,list] else 1 for q in qlist]
+    qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     # path
     if path is None:
         path = os.getcwd()
@@ -391,7 +435,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         if np.array([q not in parser.keys() for q in qlist]).any():
             raise ValueError("""No parser for some of your quantities""")
     else:
-        parser = {q:parser for q in qlist}
+        parser = {q: parser for q in qlist}
     # parser_args    
     if type(parser_args) == list:
         if len(parser_args) == len(qlist):
@@ -418,13 +462,10 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
     missing = []
     reparsed = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
     data = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
+    print(qlist)
     for n,q in enumerate(qlist):
-        if type(q) == str:
-            times = 1
-        elif type(q) in [list,tuple] and len(q)==2:  # multiple values of a function (e.g. 5 ex. en.)
-            times,q = q[0],q[1]
-        else:
-            raise TypeError("quantity {} not understood".format(q))
+        times = timeslist[n]
+#        print("times",times,"q",q)
         """
         q can be as follows:
             1 "quant": checks for "quant" in the current jobfolder
@@ -438,7 +479,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             splt = q.split(",")
             if len(splt)==2 and "." in splt[0]:  # case 4
                 fname = splt[0]
-                type_ = fname.split("."[-1])
+                type_ = fname.split(".")[-1]
                 path_tmp = path
                 stdfile = True if type_ == "json" else False  # actually not in a standard parser_file
             else:  # cases 2,3,5
@@ -492,7 +533,8 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             print("{} missing {}".format(path_tmp,q))
     return missing   
 
-def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out", ignore="slurm*", parser=None, parser_args=None, parser_kwargs=None):
+def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out",
+                       ignore="slurm*", parser=None, parser_args=None, parser_kwargs=None):
     """
     Parameters
     ----------
@@ -509,10 +551,12 @@ def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out"
         wildcard-like expression to match. Default is "*.out"
     ignore: str
         wildcard-like expression of files to ignore. Default "slurm*"
-    parser: None/function
+    parser: None/dict{functions}
         parser to call. If None, calls ccp.Parser
         If Parser != None, pass as the parser's *args as parser_args, then the parser's **kwargs
-    parser_args: list/tuple
+    parser_args: None/dict{list/tuple}
+        provide a list of the positional arguments for your parser
+    parser_kwargs: None/dict{list/tuple}
         provide a list of the positional arguments for your parser
         
     Does
@@ -533,8 +577,21 @@ def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out"
             qlist = jsdict["complex_quantities"]
         else:  # actually a single quantity
             qlist = [qlist]
+    elif type(qlist) == list:
+        if len(qlist) == 2 and type(qlist[0]) == int:
+            qlist = [qlist]
     else:
-        raise TypeError("""qlist can be a list, a json filename to extract it from, or a single quantity(str),..],...}""")
+        raise TypeError(""""could not process your qlist.
+                        Please provide in one of the following ways:
+                            - file.json (will read variable 'raw_quantities'
+                            - "exc_energies"
+                            - [2,"exc_energies"]
+                            - ["exc_energies","osc_strength"]
+                            - [[2,"exc_energies"],[2,"osc_strength"]]
+                            """)
+                            
+    timeslist = [q[0] if type(q) in [tuple,list] else 1 for q in qlist]
+    qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     # reqs
     if type(reqs) == str:
         if re.match(".+\.json", qlist):  # actually a json file
@@ -547,7 +604,7 @@ def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out"
     elif type(reqs) != dict:
         raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
                                                         otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
-    all_raws = set(ittl.chain.from_iterable(reqs.values()))
+    all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqs.values()))]
     # parser
     if type(parser) == dict:
         if np.array([ i not in parser.keys() for i in all_raws]).any():
@@ -564,9 +621,12 @@ def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out"
         parserargsdict = {q: parser_args for q in all_raws}
     # parser_kwargs
     if type(parser_kwargs) == dict:
-        if np.array([ i not in parser_kwargs.keys() for i in all_raws]).any():
-            raise ValueError("No parser_kwargs for some of your requisite raw quantities")
-        parserkwargsdict = parser_kwargs
+        if np.array([ type(i) != dict for i in parser_kwargs]).all():
+            parserkwargsdict = {q: parser_kwargs for q in all_raws}
+        else:
+            if np.array([ i not in parser_kwargs.keys() for i in all_raws]).any():
+                raise ValueError("No parser_kwargs for some of your requisite raw quantities")
+            parserkwargsdict = parser_kwargs
     else:
         parserkwargsdict = {q: parser_kwargs for q in all_raws}
     # path
@@ -581,23 +641,38 @@ def complex_quantities(path=None, qlist="variables.json", reqs=None, ext="*.out"
         data = load_js(datafp)
     else:
         data = {}
-    for q in qlist:
-        if q == str:
-            times = 1
-        if type(q) in [list,tuple] and len(q)==2:
-            times,q = q[0],q[1]
-        else:
-            raise TypeError("quantity {} not understood".format(q))
+    for n,q in enumerate(qlist):
+        times = timeslist[n]
         if not q_in_keys(data,q,times):
-            miss = raw_quantities(path, qlist=reqs[q], ext=ext, ignore=ignore, parser=parserdict, parser_args=parserargsdict, parser_kwargs=parserkwargsdict)  #Check requisite raw quantities are there (parses if necessary)
+            miss = raw_quantities(path, qlist=reqs[q], ext=ext, ignore=ignore,
+                                      parser={r:parserdict[r] for r in reqs[q]},
+                                      parser_args={r:parserargsdict[r] for r in reqs[q]},
+                                      parser_kwargs={r:parserkwargsdict[r] for r in reqs[q]})  #Check requisite raw quantities are there (parses if necessary)
             if len(miss) == 0:
-                qval = quantfuncs[q](path)  # dictionary of {q: func} that calculate complex quantities (reads specific jsons to get raw, processes, returns)
-                data[q] = qval
+                for t in range(1,times+1):  # python counting => fortran/human counting
+                    try:
+                        qval = quantfuncs[q](path=path,n=t)  # dictionary of {q: func} that calculate complex quantities (reads specific jsons to get raw, processes, returns)
+                        data["{}_{}".format(q,n)] = qval
+                    except:
+                        print("Errors while calculating {} in {}".format(q,path))
+                        missing.append(q)
             else:
                 print("cannot calculate {} because of missing raw quantity/ies".format(q))
                 missing.append(q)
     dump_js(data,datafp)                        
     return missing
+
+def raw_to_complex(path="", rawfile="CCParser.json", raw_key="", n=1, linenumbers=True):
+    """
+    """
+    path = deal_with_type(path,condition=None,to=os.getcwd)
+    rawfile = os.path.join(path, rawfile)
+    raws = load_js(rawfile)
+    to_return = raws[raw_key][n][0] if linenumbers else raws[raw_key][n]
+    return to_return
+
+quantfuncs = {
+        "ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="CCParser.json",raw_key="exc_energies_rel")}
 
 def loopthrough(funcdict,joblist):
     """
@@ -637,8 +712,21 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
             qlist = jsdict["complex_quantities"]
         else:  # actually a single quantity
             qlist = [qlist]
+    elif type(qlist) == list:
+        if len(qlist) == 2 and type(qlist[0]) == int:
+            qlist = [qlist]
     else:
-        raise TypeError("""qlist can be a list, a json filename to extract it from, or a single quantity(str),..],...}""")
+        raise TypeError(""""could not process your qlist.
+                        Please provide in one of the following ways:
+                            - file.json (will read variable 'raw_quantities'
+                            - "exc_energies"
+                            - [2,"exc_energies"]
+                            - ["exc_energies","osc_strength"]
+                            - [[2,"exc_energies"],[2,"osc_strength"]]
+                            """)
+                            
+    timeslist = [q[0] if type(q) in [tuple,list] else 1 for q in qlist]
+    qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     # reqs
     if type(reqs) == str:
         if re.match(".+\.json", qlist):  # actually a json file
@@ -651,7 +739,7 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
     elif type(reqs) != dict:
         raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
                                                         otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
-    all_raws = set(ittl.chain.from_iterable(reqs.values()))
+    all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqs.values()))]
     # parser
     if type(parser) == dict:
         if np.array([ i not in parser.keys() for i in all_raws]).any():
@@ -668,9 +756,12 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
         parserargsdict = {q: parser_args for q in all_raws}
     # parser_kwargs
     if type(parser_kwargs) == dict:
-        if np.array([ i not in parser_kwargs.keys() for i in all_raws]).any():
-            raise ValueError("No parser_kwargs for some of your requisite raw quantities")
-        parserkwargsdict = parser_kwargs
+        if np.array([ type(i) != dict for i in parser_kwargs]).all():
+            parserkwargsdict = {q: parser_kwargs for q in all_raws}
+        else:
+            if np.array([ i not in parser_kwargs.keys() for i in all_raws]).any():
+                raise ValueError("No parser_kwargs for some of your requisite raw quantities")
+            parserkwargsdict = parser_kwargs
     else:
         parserkwargsdict = {q: parser_kwargs for q in all_raws}
     # levels
@@ -704,6 +795,5 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
     df.index = rows # index
     dt = df.T  # Transpose: now every column is either a level spec(A,B,basis,calc) or a property, every row is a job
     return df
+#
 
-                   
-        
