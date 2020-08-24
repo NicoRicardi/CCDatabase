@@ -65,8 +65,7 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
         # Save json TODO: replace with dump_js
         with open(json_filepath, 'w') as ofile:
             json.dump(parsed, ofile)
-    else:
-        return parsed
+    return parsed
 
 
 def update_json_dict(json_file, parsed, overwrite_vals):
