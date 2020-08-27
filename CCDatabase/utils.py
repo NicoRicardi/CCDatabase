@@ -183,7 +183,7 @@ def cq_in_keys(d,q, states=False, state=False):
         return q in d.keys()
         
     
-#def get_data(d,q,state=False):
+#def get_data(d,q,state=False):  # NR2CGE: perhaps we may write a function to get the data out of the dictionary(tries different ways)?
 #    """
 #    """
 #    if  state:
@@ -191,21 +191,26 @@ def cq_in_keys(d,q, states=False, state=False):
 #    else:
 #        return q
         
-def setupLogger(to_console=True, to_file=False, logname="CCDatabase.log", level=10):  #TODO check they are booleans
-    # TODO check why still console
+def setupLogger(to_console=True, to_file=False, logname="CCDatabase.log", level=10):  
     """
     """
-    handlerdict = {}
-    if to_console:
-        handlerdict["console"] = logging.StreamHandler()
-    if to_file:
-        handlerdict["file"] = logging.FileHandler(logname)
     if "ccdlog" not in globals(): 
         global ccdlog
         ccdlog = logging.getLogger("ccd")
     else:
         ccdlog = globals()["ccdlog"]
     handlernames = [i._name for i in ccdlog.handlers]
+    handlerdict = {}
+    if False in [type(to_console) == bool, type(to_file) == bool]:
+        ccdlog.critical("\"to_console\" and \"to_file\" should be boolean!!")
+        if type(to_file) == str and "." in to_file and logname == "CCDatabase.log":
+            ccdlog.critical("""It appears you might have given your desired logname as \"to_file\" instead of changing \"logname\".+
+                            I am using  {} as logname and setting to_file to True""".format(to_file))
+            to_file, logname = True, to_file
+    if to_console:
+        handlerdict["console"] = logging.StreamHandler()
+    if to_file:
+        handlerdict["file"] = logging.FileHandler(logname)
     if handlerdict:  # there is at least a handler
         for k,handler in handlerdict.items():
             if k not in handlernames:

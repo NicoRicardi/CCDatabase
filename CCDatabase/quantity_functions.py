@@ -8,7 +8,7 @@ Created on Wed Aug 19 14:15:05 2020
 import os
 import CCDatabase.utils as ut
 
-def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=1, linenumbers=True):
+def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0, linenumbers=True):
     """
     Note
     ----
@@ -33,7 +33,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=1, linenumb
      dictionary item
          generally a float, potentially str.
     """
-    n -= 1  # parameter uses human counting, code uses python counting
+#    n -= 1  # parameter uses human counting, code uses python counting
     path = ut.deal_with_type(path,condition=None,to=os.getcwd)
     if raw_key == "":
         raise ValueError("you didn't specify the raw quantity's key")
