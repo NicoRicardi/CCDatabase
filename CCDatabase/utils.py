@@ -8,6 +8,7 @@ Created on Wed Aug 19 14:21:01 2020
 import json as js
 import numpy as np
 import os
+import logging
 
 def mkdif(a):
     """
@@ -182,11 +183,36 @@ def cq_in_keys(d,q, states=False, state=False):
         return q in d.keys()
         
     
-def get_data(d,q,state=False):
+#def get_data(d,q,state=False):
+#    """
+#    """
+#    if  state:
+#        pass
+#    else:
+#        return q
+        
+def setupLogger(to_console=True, to_file=False, logname="CCDatabase.log", level=10):  #TODO check they are booleans
+    # TODO check why still console
     """
     """
-    if  state:
-        pass
+    handlerdict = {}
+    if to_console:
+        handlerdict["console"] = logging.StreamHandler()
+    if to_file:
+        handlerdict["file"] = logging.FileHandler(logname)
+    if "ccdlog" not in globals(): 
+        global ccdlog
+        ccdlog = logging.getLogger("ccd")
     else:
-        return q
+        ccdlog = globals()["ccdlog"]
+    handlernames = [i._name for i in ccdlog.handlers]
+    if handlerdict:  # there is at least a handler
+        for k,handler in handlerdict.items():
+            if k not in handlernames:
+                handler._name = k
+                handler.setLevel(level)
+                handler.setFormatter(logging.Formatter('%(levelname)s - %(name)s.%(funcName)s:  %(message)s'))
+                ccdlog.addHandler(handler)
+    else: # there is no handler
+        ccdlog.setLevel(50)
     
