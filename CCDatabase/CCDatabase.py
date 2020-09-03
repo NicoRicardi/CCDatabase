@@ -176,7 +176,7 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
                 
 def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
                    parser_args=None, parser_kwargs=None, check_input=True,
-                   to_console=True, to_file=False, logname="CCDatabase.log", level=20): 
+                   to_console=True, to_log=False, logname="CCDatabase.log", printlevel=20): 
     """
     Parameters
     ----------
@@ -203,12 +203,15 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         the parser container
     """
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_file=to_file,logname=logname,level=level)
+    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
 
     if check_input:
         # path
         path = ut.deal_with_type(path,condition=None,to=os.getcwd)
         path = os.path.abspath(path)
+        if not os.path.exists(path):
+            ccdlog.critical("{} does not exist!".format(path))
+            return None  # nothing to parse
         ccdlog.debug("path is {}".format(path))
         # parser
         if parser != None:
@@ -242,7 +245,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
+    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_log=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
     ccdlog.debug("parsing!")
     data = parser(*parser_args,**parser_kwargs)
     return data
@@ -265,12 +268,12 @@ def get_joblist(fname="variables.json"):
         return(data["joblist"])
     else:
         ignore = data["ignore"] if "ignore" in data.keys() else []
-        return [i for i in  ittl.product(*[data[i] for i in data["levels"]]) if i not in ignore]
+        return [i for i in  ittl.product(*[data[i] for i in data["levelnames"]]) if i not in ignore]
 
 def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm*",
                    parser_file="CCParser.json", parser=None, parser_args=None,
                    parser_kwargs=None, check_input=True, to_console=True, 
-                   to_file=False, logname="CCDatabase.log", level=20):
+                   to_log=False, logname="CCDatabase.log", printlevel=20):
     """
     Parameters
     ----------
@@ -312,7 +315,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         the quantities missing in path
     """        
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_file=to_file,logname=logname,level=level)
+    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
     ### Processing user input
     if check_input:
         # qlist
@@ -348,6 +351,9 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             path = os.getcwd()
         else:
             path = os.path.normpath(path)
+        if not os.path.exists(path):
+            ccdlog.critical("{} does not exist!".format(path))
+            return qlist  # all quantities are missing!
         ccdlog.debug("path is {}".format(path))
         # parser
         if parser == None:
@@ -552,7 +558,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                                parser_args=parserargsdict[qlist[n]], 
                                parser_kwargs=parserkwargsdict[qlist[n]],
                                check_input=False, to_console=to_console,
-                               to_file=to_file, logname=logname, level=level)  # parser takes care of dumping json
+                               to_log=to_log, logname=logname, printlevel=printlevel)  # parser takes care of dumping json
                 data[path_tmp] = ut.load_js(filepath)  # let's read reparsed json
             reparsed[path_tmp][parser[qlist[n]]] = True  
         if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and reparsed[path_tmp][parser[qlist[n]]]:
@@ -563,8 +569,8 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
 def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, ext="*.out",
                        ignore="slurm*", parser_file="CCParser.json",parser=None,
                        parser_args=None, parser_kwargs=None, check_input=True,
-                       funcdict="ccp",to_console=True, to_file=False,
-                       logname="CCDatabase.log", level=20):
+                       funcdict="ccp",to_console=True, to_log=False,
+                       logname="CCDatabase.log", printlevel=20):
     """
     Parameters
     ----------
@@ -609,7 +615,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         [quantity1,quantity2, ...] of what is missing
     """
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_file=to_file,logname=logname,level=level)
+    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
     ### Processing user input
     #funcdict
     if type(funcdict) == str:
@@ -698,7 +704,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             parserdict = {q: parser for q in all_raws}
             ccdlog.info("obtained \"parserdict\" as None for all raw quantities")
         else:
-            parser = ut.deal_with_type(parser,condition=tuple,to=list)
+#            parser = ut.deal_with_type(parser,condition=tuple,to=list)
             if type(parser) == dict:
                 if np.array([ i not in parser.keys() for i in all_raws]).any():
                     raise ValueError("No parser for some of your requisite raw quantities")
@@ -710,7 +716,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     raise TypeError("At least one of your parsers is neither a function nor None")  
                 parserdict = parser
                 ccdlog.info("obtained \"parserdict\" with all values func/None")
-            elif type(parser) == list:
+            elif type(parser) in [list,tuple]:
                 raise TypeError(""""parser" cannot be a list. it can be None/func/dict """)
             else:
                 try:  # this changes with python versions, hence try/except
@@ -721,7 +727,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     parserdict = {q: parser for q in all_raws}
                     ccdlog.info("obtained \"parserdict\" as the function you gave for all raw quantities")
                 else:
-                    raise TypeError(""""Cannot process "parser", as it is none of: dict,list,func,None""")
+                    raise TypeError(""""Cannot process "parser", as it is none of: dict,func,None""")
         # parser_args
         if parser_args == None:
             parserargsdict = {q: parser_args for q in all_raws}
@@ -760,6 +766,9 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             path = os.getcwd()
         else:
             path = os.path.normpath(path)
+        if not os.path.exists(path):
+            ccdlog.critical("{} does not exist!".format(path))
+            return qlist  # all quantities are missing!
         ccdlog.debug("path is {}".format(path))
     else:
         reqsdict = reqs
@@ -798,7 +807,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                   parser_args={r:parserargsdict[r] for r in reqsdict[q]},
                                   parser_kwargs={r:parserkwargsdict[r] for r in reqsdict[q]},
                                   check_input=False, to_console=to_console,
-                                  to_file=to_file, logname=logname, level=level)  #Check requisite raw quantities are there (parses if necessary)
+                                  to_log=to_log, logname=logname, printlevel=printlevel)  #Check requisite raw quantities are there (parses if necessary)
             if len(miss) == 0:
                 ccdlog.debug("no requisite raw quantities missing")
                 shift = 1 if q in ex_qs else 0  # 1 if only excited state
@@ -872,11 +881,11 @@ def loopthrough(funcdict,joblist):
             ckwargs.update({"path": os.path.join(*job)})  # we join the tuple elements to obtain the path
             func(**ckwargs)
 
-def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json",
+def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.json",
                  ex_qs=[], reqs=None, ext="*.out", ignore="slurm*", parser=None,
                  parser_file="CCParser.json",parser_args=None, 
                  parser_kwargs=None, check_input=True, funcdict="ccp",
-                 to_console=True, to_file=False, logname="CCDatabase.log", level=20):
+                 to_console=True, to_log=False, logname="CCDatabase.log", printlevel=20):
     """
     Note
     ----
@@ -885,8 +894,8 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
     ----------
     joblist: list[tuples/list]/str
         Either list of jobs, or json file to retrieve
-    levels: list[str]
-        list of levels.Must match len of joblist items. Default is ["A","B","basis","calc"]
+    levelnames: list[str]
+        list of level names.Must match len of joblist items. Default is ["A","B","basis","calc"]
     qlist: list[str]/str
         list of complex quantities to get
     reqs: dict
@@ -907,8 +916,8 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
     pd.DataFrame
         a DataFrame with ...
     """
-    ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_file=to_file,logname=logname,level=level)
+    ### Logger setup: file or console, printlevel
+    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
     ### Processing user input
     # joblist
     joblist = ut.deal_with_type(joblist,condition=str,to=get_joblist)
@@ -1043,9 +1052,9 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
         parserargsdict = parser_args
         parserkwargsdict = parser_kwargs
         ccdlog.debug("Assigned parser-related arguments without checking")
-    # levels
-    if len(levels) != len(joblist[0]):
-        raise TypeError("Levels and joblist do not match!")
+    # levelnames
+    if len(levelnames) != len(joblist[0]):
+        raise TypeError("levelnames and joblist do not match!")
         
     ### Let's get started
     ccdlog.debug("done checking input. Starting collection")
@@ -1053,6 +1062,9 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
     columns = []
     for j in joblist:
         path = os.path.join(*j)
+        if not os.path.exists(path):
+            ccdlog.critical("{} does not exist! skipping it".format(path))
+            continue
         ccdlog.info("working on {}".format(path))
         jsfp = os.path.join(path, "data.json")
         cnt = 0
@@ -1060,61 +1072,67 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
             data = ut.load_js(jsfp) if os.path.exists(jsfp) else {}
             column = list(j)  
             missing = []
-            for n,q in enumerate(qlist): 
-                ccdlog.debug("quantity: {}".format(q))
-                shift = 1 if q in ex_qs else 0  # 1 if only excited state
-                if stateslist[n]:
-                    try:
-                        values = [data[q][str(v)] for v in range(shift,stateslist[n]+1)]
-                        # if q or str[v] gives key error goes to except
-                        column.extend(values)
-                        ccdlog.debug("gotten values for {} from its dictionary".format(q))
-                    except:
-                        miss_state = False
-                        for s in range(shift,stateslist[n]+1):
-                            qn = "{}_{}".format(q,s)
-                            to_add = data[qn] if qn in data.keys() else np.nan
-                            miss_state = miss_state if qn in data.keys() else True
-                            column.append(to_add)
-                        if not miss_state:
-                            ccdlog.warning("had to get values for {} from individual values, check dictionary".format(q))
-                        else:
-                            if cnt == 0:  # miss_state is True
-                                missing.append([stateslist[n],q])
-                                ccdlog.debug("added {} to \"missing\"".format([stateslist[n],q]))
-                            else:
-                                ccdlog.debug("{} could not be obtained".format([stateslist[n],q]))
-                else:  # stateslist[n] == False
-                    to_add = data[q] if q in data.keys() else np.nan
-                    if q not in data.keys():
-                        if cnt == 0:
-                            missing.append(q)
-                            column.append(to_add)
-                            ccdlog.debug("added {} to \"missing\"".format(q))
-                        else:
-                            ccdlog.debug("{} could not be obtained".format(q))
-                    elif type(to_add) == dict:
-                        ccdlog.warning("You did not specify states for {q}. This makes collection slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
+            if data == {}:  # no need to loop over qlist
+                if cnt == 0:  # let's obtain our complex quantities
+                    missing = qlist
+                else:
+                    ccdlog.critical("Your datafile is empty after parsing. Probably filename mismatch or nothing written to file")
+            else:
+                for n,q in enumerate(qlist): 
+                    ccdlog.debug("quantity: {}".format(q))
+                    shift = 1 if q in ex_qs else 0  # 1 if only excited state
+                    if stateslist[n]:
                         try:
-                            values = [to_add[str(v)] for v in range(shift,len(to_add)+1)]  # all in order
-                            ccdlog.info("states 1-{n} in {q}".format(n=len(to_add),q=q))
-                        except KeyError:  # not ordered (1,3,4,..)
-                            max_state = max([int(i) for i in  to_add.keys()])
-                            values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift,max_state+1)]
-                            ccdlog.warning("some state missing in {q}, using np.nan for it".format(q=q))
-                        start = len(column)  # starting point for this set of vals
-                        column.extend(values)
-                        column.extend((nsl[n]-len(values))*[np.nan])
-                        if len(to_add)>nsl[n]:
-                            for col in columns[:-1]:  # all the previous ones
-                                col = pd.concat(
-                                        [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]),col[start+nsl[n]:]],
-                                        ignore_index=True)  #  insert np.nan to match all lengths
-                            nsl[n] = len(values)
-                            ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
-                    else:  # not a dict
-                        column.append(to_add)
-                        ccdlog.debug("added column")
+                            values = [data[q][str(v)] for v in range(shift,stateslist[n]+1)]
+                            # if q or str[v] gives key error goes to except
+                            column.extend(values)
+                            ccdlog.debug("gotten values for {} from its dictionary".format(q))
+                        except:
+                            miss_state = False
+                            for s in range(shift,stateslist[n]+1):
+                                qn = "{}_{}".format(q,s)
+                                to_add = data[qn] if qn in data.keys() else np.nan
+                                miss_state = miss_state if qn in data.keys() else True
+                                column.append(to_add)
+                            if not miss_state:
+                                ccdlog.warning("had to get values for {} from individual values, check dictionary".format(q))
+                            else:
+                                if cnt == 0:  # miss_state is True
+                                    missing.append([stateslist[n],q])
+                                    ccdlog.debug("added {} to \"missing\"".format([stateslist[n],q]))
+                                else:
+                                    ccdlog.debug("{} could not be obtained".format([stateslist[n],q]))
+                    else:  # stateslist[n] == False
+                        to_add = data[q] if q in data.keys() else np.nan
+                        if q not in data.keys():
+                            if cnt == 0:
+                                missing.append(q)
+                                column.append(to_add)
+                                ccdlog.debug("added {} to \"missing\"".format(q))
+                            else:
+                                ccdlog.debug("{} could not be obtained".format(q))
+                        elif type(to_add) == dict:
+                            ccdlog.warning("You did not specify states for {q}. This makes collection slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
+                            try:
+                                values = [to_add[str(v)] for v in range(shift,len(to_add)+1)]  # all in order
+                                ccdlog.info("states 1-{n} in {q}".format(n=len(to_add),q=q))
+                            except KeyError:  # not ordered (1,3,4,..)
+                                max_state = max([int(i) for i in  to_add.keys()])
+                                values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift,max_state+1)]
+                                ccdlog.warning("some state missing in {q}, using np.nan for it".format(q=q))
+                            start = len(column)  # starting point for this set of vals
+                            column.extend(values)
+                            column.extend((nsl[n]-len(values))*[np.nan])
+                            if len(to_add)>nsl[n]:
+                                for col in columns[:-1]:  # all the previous ones
+                                    col = pd.concat(
+                                            [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]),col[start+nsl[n]:]],
+                                            ignore_index=True)  #  insert np.nan to match all lengths
+                                nsl[n] = len(values)
+                                ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
+                        else:  # not a dict
+                            column.append(to_add)
+                            ccdlog.debug("added column")
             if len(missing) != 0 and cnt == 0:
                 ccdlog.info("trying to recalculate missing quantities")
                 complex_quantities(path=path, qlist=missing, ex_qs = ex_qs,
@@ -1123,7 +1141,7 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
                                    parser_args=parserargsdict, 
                                    parser_kwargs=parserkwargsdict, check_input=False,
                                    funcdict=funcdict, to_console=to_console,
-                                   to_file=to_file, logname=logname, level=level)  # calculated/reparsed
+                                   to_log=to_log, logname=logname, printlevel=printlevel)  # calculated/reparsed
                 cnt += 1
             else:
                 cnt = 2  # either available or already tried calculating/reparsing
@@ -1135,7 +1153,7 @@ def collect_data(joblist, levels=["A","B","basis","calc"], qlist="variables.json
             xp_qlist += ["{}_{}".format(q,s+shift) for s in range(nsl[n])]
         else:
             xp_qlist.append(q)
-    rows = levels + xp_qlist 
+    rows = levelnames + xp_qlist 
     ccdlog.debug("obtained rows")
     df = pd.concat(columns, axis=1)  # every column is a j 
     ccdlog.debug("concatenated")

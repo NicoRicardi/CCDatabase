@@ -191,7 +191,7 @@ def cq_in_keys(d,q, states=False, state=False):
 #    else:
 #        return q
         
-def setupLogger(to_console=True, to_file=False, logname="CCDatabase.log", level=10):  
+def setupLogger(to_console=True, to_log=False, logname="CCDatabase.log", printlevel=10):  
     """
     """
     if "ccdlog" not in globals(): 
@@ -201,21 +201,21 @@ def setupLogger(to_console=True, to_file=False, logname="CCDatabase.log", level=
         ccdlog = globals()["ccdlog"]
     handlernames = [i._name for i in ccdlog.handlers]
     handlerdict = {}
-    if False in [type(to_console) == bool, type(to_file) == bool]:
-        ccdlog.critical("\"to_console\" and \"to_file\" should be boolean!!")
-        if type(to_file) == str and "." in to_file and logname == "CCDatabase.log":
-            ccdlog.critical("""It appears you might have given your desired logname as \"to_file\" instead of changing \"logname\".+
-                            I am using  {} as logname and setting to_file to True""".format(to_file))
-            to_file, logname = True, to_file
+    if False in [type(to_console) == bool, type(to_log) == bool]:
+        ccdlog.critical("\"to_console\" and \"to_log\" should be boolean!!")
+        if type(to_log) == str and "." in to_log and logname == "CCDatabase.log":
+            ccdlog.critical("""It appears you might have given your desired logname as \"to_log\" instead of changing \"logname\".+
+                            I am using  {} as logname and setting to_log to True""".format(to_log))
+            to_log, logname = True, to_log
     if to_console:
         handlerdict["console"] = logging.StreamHandler()
-    if to_file:
+    if to_log:
         handlerdict["file"] = logging.FileHandler(logname)
     if handlerdict:  # there is at least a handler
         for k,handler in handlerdict.items():
             if k not in handlernames:
                 handler._name = k
-                handler.setLevel(level)
+                handler.setLevel(printlevel)
                 handler.setFormatter(logging.Formatter('%(levelname)s - %(name)s.%(funcName)s:  %(message)s'))
                 ccdlog.addHandler(handler)
     else: # there is no handler
