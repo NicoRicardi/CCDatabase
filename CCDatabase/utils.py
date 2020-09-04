@@ -182,15 +182,6 @@ def cq_in_keys(d,q, states=False, state=False):
         q = "{}_{}".format(q,state)
         return q in d.keys()
         
-    
-#def get_data(d,q,state=False):  # NR2CGE: perhaps we may write a function to get the data out of the dictionary(tries different ways)?
-#    """
-#    """
-#    if  state:
-#        pass
-#    else:
-#        return q
-        
 def setupLogger(to_console=True, to_log=False, logname="CCDatabase.log", printlevel=10):  
     """
     """
