@@ -368,10 +368,14 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                        "qcep": qcep.parse_qchem}
     else:
         try:
-            all_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
+            all_vals_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
+            all_keys_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.keys()]).all()
         except:
-            all_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
-        assert all_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
+            all_vals_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
+            all_keys_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.keys()]).all()
+        assert all_vals_funcs^all_keys_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
+        if all_keys_funcs:
+            parserfuncs = {parserfuncs[k]: k for k in parserfuncs.keys()}  # inverting if necessary
     # parser
     """
     In the end it must be:
@@ -408,9 +412,10 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             except:
                 is_func = hasattr(parser,"__call__")  # whether it is a function
             if is_func: 
-                parserfuncs["unknown"] = parser
-                parserdict = {q: "unknown" for q in rawlist}
-                ccdlog.warning("You gave a function as \"parser\". Will be named \"unknown\" and used for all quantities.")
+                name = parser.__name__
+                parserfuncs[name] = parser
+                parserdict = {q: name for q in rawlist}
+                ccdlog.warning("You gave a function as \"parser\". Will be named {} and used for all quantities.".format(name))
                 ccdlog.warning("Please consider giving parserfuncs={pname: pfunc} and parser=pname")
             else:
                 raise TypeError("Cannot process \"parser\", as it is none of: {}dict,func,None".format("list/tuple," if raw else ""))
@@ -424,8 +429,18 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                 continue
         elif v == False:
             continue
-        else:
-            raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
+        else: 
+            try:
+                is_func = callable(v)
+            except:
+                is_func = hasattr(v,"__call__")
+            if is_func:
+                name = v.__name__
+                parserfuncs[name] = v
+                parserdict[k] = name
+                ccdlog.warning("You gave q: func instead of q: parsername. We changed it to {q}:{name} and added {name} to parserfuncs".format(q=k,name=name))
+            else:
+                raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
     parsers_used = list(set(parserdict.values()))
     # parser_args
     """
