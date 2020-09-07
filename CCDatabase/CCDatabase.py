@@ -249,7 +249,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
                 parser_args = list(parser_args)
             elif type(parser_args) != list:
                 parser_args = [parser_args]
-                print("""Your "parser_args" is neither None nor list/tuple, turning it into a list (parser_args = [parser_args])""")
+                ccdlog.warning("Your \"parser_args\" is neither None nor list/tuple, turning it into a list (parser_args = [parser_args])")
         # parser_kwargs
         if parser_kwargs != None and type(parser_kwargs)!=dict:
             raise TypeError(""""Cannot process "parser_kwargs", as it is none of: dict,None""") 
@@ -266,10 +266,226 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_log=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
+    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
     ccdlog.debug("parsing!")
     data = parser(*parser_args,**parser_kwargs)
     return data
+
+def check_qlist(qlist, key, fp, jsdata):
+    """
+    """
+    if type(qlist) == str:
+        if re.match(".+\.json", qlist):  # actually a json file
+            fp = cp.copy(qlist)
+            jsdata = ut.load_js(fp)
+            if type(jsdata) == list:
+                qlist = cp.copy(jsdata)
+                fp, jsdata = None, None  # back to None because it only had qlist
+            elif type(jsdata) == dict:
+                if key in jsdata.keys():
+                    qlist = jsdata[key]
+                    ccdlog.info("obtained \"qlist\" from {}".format(fp))
+                else:
+                    raise KeyError("No {} in the json dictionary".format(key))
+            else:  # no tuple option, they become lists in json
+                raise TypeError("Your json file is neither dictionary nor list/tuple")
+        else:  # actually a single quantity
+            qlist = [qlist]
+            ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
+    elif type(qlist) == list:
+        if len(qlist) == 2 and type(qlist[0]) == int:
+            qlist = [qlist]
+            ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
+    else:
+        raise TypeError(""""could not process your qlist.
+                        Please provide in one of the following ways:
+                            - file.json (will read variable 'raw_quantities'
+                            - "exc_energies"
+                            - [2,"exc_energies"]
+                            - ["exc_energies","osc_strength"]
+                            - [[2,"exc_energies"],[2,"osc_strength"]]
+                            """)
+    return qlist,fp,jsdata
+ 
+def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser_kwargs, ex_qs=None, reqs=None, raw=False):
+    """
+    Note
+    ----
+    only use: 
+        a) within other functions
+        b) after running check_qlist()
+        c) when fp,jsdata are defined (at least as None)
+                                
+    """
+    if not raw and None in [ex_qs,reqs]:
+        raise ValueError("You must specify ex_qs and reqs")
+    if not raw:
+        # ex_qs (tuple is fine as well)
+        ex_qs = ut.deal_with_type(ex_qs,condition=str,to=lambda x: [x])  #deal with single q
+        # reqs
+        if reqs == None:
+            if fp != None:  # not declared as nonlocal, i.e. determined json file
+                reqs = fp  # we have a json dictionary file
+            else:
+                raise ValueError("You must specify the required raw quantities for each complex quantity as reqs")
+        elif type(reqs) == str:
+            if re.match(".+\.json", reqs):  # actually a json file (qlist or its own)
+                if jsdata != None and reqs == fp:  # not already read
+                    jsdata = ut.load_js(reqs)
+                if type(jsdata)  != dict:
+                    raise ValueError("Your json file is not a dictionary!!")
+                reqsdict = jsdata["requisites"] if "requisites" in jsdata.keys() else jsdata
+                ccdlog.info("obtained \"reqsdict\" from {}".format(reqs))
+            else:
+                reqsdict = {q: [reqs] for q in qlist}
+                ccdlog.warning("""You only gave one raw quantity as requisite. That can happen but is rare. Sure about it?
+                            It is being converted as {q: [reqs] for q in qlist}""")
+        elif type(reqs) in [list,tuple]: 
+            reqs = ut.deal_with_type(reqs,condition=tuple,to=list)
+            reqsdict = {q: reqs for q in qlist}
+            ccdlog.info("You gave a list/tuple as \"reqs\". Obtained reqsdict as reqs = {q: reqs for q in qlist}")
+        elif type(reqs) == dict:
+            reqsdict = reqs
+            for k,v in reqsdict.items():
+                reqsdict[k] = ut.deal_with_type(v,condition=str,to=lambda x: [x])
+            ccdlog.info("Turned any string value in your dictionary into a list")
+        else:
+            raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
+                                                            otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
+        assert (np.array([q in reqsdict.keys() for q in qlist]).all()), "Some quantity does not have its requisites specified" 
+        # any raw which is a req of a complex
+        all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]  
+    rawlist = qlist if raw else all_raws
+    # parserfuncs
+    """
+    In the end it must be:
+    parserfuncs = {"parsername1": parserfunc1,
+                   "parsername2": parserfunc2, .. }
+    None is interpreted as ccp.Parser
+    """
+    if not parserfuncs:  # default
+        parserfuncs = {"ccp": None,
+                       "qcep": qcep.parse_qchem}
+    else:
+        try:
+            all_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
+        except:
+            all_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
+        assert all_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
+    # parser
+    """
+    In the end it must be:
+        parserdict = {"q1": "parsername3",
+                      "q2": "parsername4", ..}
+    """
+    if parser == None:  
+        parserdict = {q: "ccp" for q in rawlist}
+        ccdlog.info("obtained \"parserdict\" as \"ccp\" for all raw quantities")
+    else:  #parser != None
+        if type(parser) == str:
+            parser = {q: parser for q in rawlist}  # not parserdict!!
+            ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
+        if type(parser) == dict:
+            if np.array([ i not in parser.keys() for i in rawlist]).any():
+                raise ValueError("No parser for some of your{} raw quantities".format("" if raw else " requisite"))
+            parserdict = parser
+            ccdlog.info("obtained \"parserdict\" with all necessary keys")
+        elif type(parser) in [list,tuple]:
+            if raw:
+                if len(parser) == 1:  # actually only one parser                                                      
+                    parserdict = {q: parser[0] for q in qlist}                                                        
+                    ccdlog.info("\"parserdict\" was a single element list. Will be used for all quantities")          
+                elif len(parser) == len(qlist):                                                                       
+                    parserdict = {qlist[n]: parser[n] for n in range(len(qlist))}                                     
+                    ccdlog.info("obtained \"parserdict\"")                                                            
+                else:                                                                                                 
+                    raise ValueError("""You gave a list as "parser" but the length does not match that of "qlist" """)
+            else:
+                raise TypeError("\"parser\" cannot be a list. it can be dict/str/None")
+        else:
+            try:  # this changes with python versions, hence try/except
+                is_func = callable(parser)  # whether it is a function
+            except:
+                is_func = hasattr(parser,"__call__")  # whether it is a function
+            if is_func: 
+                parserfuncs["unknown"] = parser
+                parserdict = {q: "unknown" for q in rawlist}
+                ccdlog.warning("You gave a function as \"parser\". Will be named \"unknown\" and used for all quantities.")
+                ccdlog.warning("Please consider giving parserfuncs={pname: pfunc} and parser=pname")
+            else:
+                raise TypeError("Cannot process \"parser\", as it is none of: {}dict,func,None".format("list/tuple," if raw else ""))
+    for k,v in parserdict.items():
+        if type(v)== str:
+            if v not in parserfuncs.keys():
+                raise ValueError("You asked at least once for an unrecognised parser.")
+            continue
+        elif v == None:
+                parserdict[k] = "ccp"  # changing None to ccp
+                continue
+        elif v == False:
+            continue
+        else:
+            raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
+    parsers_used = list(set(parserdict.values()))
+    # parser_args
+    """
+    In the end it must be:
+        parserargsdict = {"pname1": [arg1, arg2, ..],
+                          "pname2": [arg10, arg11, ..], ..}
+    None is accepted as *args for ccp.Parser
+    """
+    if parser_args == None:
+        parserargsdict = {p: parser_args for p in parsers_used}
+        ccdlog.info("obtained \"parserargsdict\" as None for all parsers")
+    elif type(parser_args) == dict:
+        if np.array([p not in parser_args.keys() for p in parsers_used]).any():
+            raise ValueError("No parser_args for at least one of your parsers")
+        typelist = [type(parser_args[p]) for p in parsers_used]
+        if np.array([t not in [list,tuple,type(None)] for t in typelist]).any():
+            raise TypeError("At least one of the elements in parser_args is none of list,tuple,None")
+        elif tuple in typelist:
+            for k,v in parser_args.items():
+                if type(v) == tuple:  # turn to list
+                    parser_args[k] = list(v)
+                    ccdlog.debug("turned parser_args element from tuple to list")
+        parserargsdict = parser_args
+        ccdlog.info("obtained \"parserargsdict\" from the provided dictionary")
+    elif type(parser_args) in [list,tuple]:
+        parser = ut.deal_with_type(parser,condition=tuple,to=list)  
+        parserargsdict = {p: parser_args for p in parsers_used}
+        ccdlog.info("obtained \"parserargsdict\" as your \"parser_args\" for all parsers")
+    else:
+        raise ValueError("""Cannot process your "parser_args" """)
+    # parser_kwargs    
+    """
+    In the end it must be:
+        parserkwargsdict = {"pname1": {kw1: arg1, kw2: arg2, ..},
+                          "pname2": {kw10: arg10, kw11: arg11, ..}, ..}
+    None is accepted as **kwargs for ccp.Parser
+    """
+    if parser_kwargs == None:
+        parserkwargsdict = {p: parser_kwargs for p in parsers_used}
+        ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
+    else:  # parser_kwargs != None
+        if type(parser_kwargs) in [tuple,list]:
+            if type(parser_kwargs[0]) == dict:
+                parser_kwargs = parser_kwargs[0]
+                ccdlog.debug("You gave \"parser_kwargs\" as [dict]. The dictionary will be processed.")
+            else:
+                raise TypeError("Please provide \"parser_kwargs\" either as a dictionary (to use for all parsers) or as a dictionary of dictionaries")
+        if type(parser_kwargs) == dict:  # not elif!!
+            if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
+                parserkwargsdict = {p: parser_kwargs for p in parsers_used}
+                ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
+            elif np.array([p not in parser_kwargs.keys() for p in parsers_used]).any():  # allows unnecessary keys
+                raise ValueError("""No parser_kwargs for at least one of your parsers""")
+            else:
+                parserkwargsdict = parser_kwargs
+                ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
+        else:
+            raise ValueError(""""parser_kwargs" can be None, dict (to use for all quantities), or dict of dict. Your type is not recognised.""")
+    to_return = (parserfuncs, parserdict, parserargsdict, parserkwargsdict) if raw else (reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict)
+    return to_return
 
 def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm*",
                    parser_file="CCParser.json", parserfuncs={},parser=None, 
@@ -318,31 +534,10 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
     """        
     ### Logger setup: file or console, level
     ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
+    fp, jsdata = None, None  # to allow nonlocal declaration
     ### Processing user input
     if check_input:
-        # qlist
-        if type(qlist) == str:
-            if re.match(".+\.json", qlist):  # actually a json file
-                fp = cp.copy(qlist)
-                qlist = ut.load_js(qlist)["raw_quantities"]
-                ccdlog.info("obtained \"qlist\" from {}".format(fp))
-                del fp
-            else:  # actually a single quantity
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        elif type(qlist) == list:
-            if len(qlist) == 2 and type(qlist[0]) == int:
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        else:
-            raise TypeError(""""could not process your qlist.
-                            Please provide in one of the following ways:
-                                - file.json (will read variable 'raw_quantities'
-                                - "exc_energies"
-                                - [2,"exc_energies"]
-                                - ["exc_energies","osc_strength"]
-                                - [[2,"exc_energies"],[2,"osc_strength"]]
-                                """)
+        qlist, fp, jsdata = check_qlist(qlist,"raw_quantities",fp,jsdata)
     nvalslist = [q[0] if type(q) in [tuple,list] else 1 for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and nvalslist")
@@ -357,138 +552,20 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             ccdlog.critical("{} does not exist!".format(path))
             return qlist  # all quantities are missing!
         ccdlog.debug("path is {}".format(path))
-        # parserfuncs
-        """
-        In the end it must be:
-        parserfuncs = {"parsername1": parserfunc1,
-                       "parsername2": parserfunc2, .. }
-        None is interpreted as ccp.Parser
-        """
-        if not parserfuncs:  # default
-            parserfuncs = {"ccp": None,
-                           "qcep": qcep}
-        else:
-            try:
-                all_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
-            except:
-                all_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
-            assert all_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
-        # parser
-        """
-        In the end it must be:
-            parserdict = {"q1": "parsername3",
-                          "q2": "parsername4", ..}
-        """
-        if parser == None:
-            parserdict = {q: "ccp" for q in qlist}
-            ccdlog.info("obtained \"parserdict\" as None for all quantities")
-        else:  # parser != None
-            if type(parser) == str:
-                parserdict = {q: parser for q in qlist}
-            if type(parser) == tuple:
-                parser = list(parser)
-                ccdlog.debug("turned parser from tuple to list")
-            if type(parser) == list:
-                if len(parser) == 1:  # actually only one parser
-                    parserdict = {q: parser[0] for q in qlist}
-                    ccdlog.info("\"parserdict\" was a single element list. Will be used for all quantities")
-                elif len(parser) == len(qlist):
-                    parserdict = {qlist[n]: parser[n] for n in range(len(qlist))}
-                    ccdlog.info("obtained \"parserdict\"")
-                else:
-                    raise ValueError("""You gave a list as "parser" but the length does not match that of "qlist" """)
-            elif type(parser) == dict:
-                if np.array([q not in parser.keys() for q in qlist]).any():
-                    raise ValueError("""No parser for some of your quantities""")
-                parserdict = parser
-                ccdlog.info("obtained \"parserdict\"")
-            else:   # func or unknown because: type(parser) not in [type(None),tuple,list, dict]
-                try:  # this changes with python versions, hence try/except
-                    is_func = callable(parser)  # whether it is a function
-                except:
-                    is_func = hasattr(parser,"__call__")  # whether it is a function
-                if is_func:
-                    parserfuncs = {"unknown": parser}
-                    parserdict = {q: "unknown" for q in qlist}
-                    ccdlog.warning("You gave a function as \"parser\". Will be named \"unknown\" and used for all quantities.")
-                    ccdlog.warning("Please consider giving parserfuncs={pname: pfunc} and parser=pname")
-                else:
-                    raise TypeError(""""Cannot process "parser", as it is none of: dict,list,func,None""")
-        for k,v in parserdict.items():
-            if type(v)== str:
-                if v not in parserfuncs.keys():
-                    raise ValueError("You asked at least once for an unrecognised parser.")
-                continue
-            elif v == None:
-                    parserdict[k] = "ccp"  # changing None to ccp
-                    continue
-            elif v == False:
-                continue
-            else:
-                raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
-        # parser_args   
-        """
-        In the end it must be:
-            parserargsdict = {"pname1": [arg1, arg2, ..],
-                              "pname2": [arg10, arg11, ..], ..}
-        None is accepted as *args for ccp.Parser
-        """
-        if parser_args == None:
-            parserargsdict = {p: parser_args for p in parserfuncs.keys()}
-            ccdlog.info("obtained \"parserargsdict\" as None for all parser(s)")            
-        else:
-            if type(parser_args) == tuple:  # turn to list
-                parser_args = list(parser_args)
-                ccdlog.debug("turned parser from tuple to list")
-            if type(parser_args) == list:  # it was either list or tuple
-                parserargsdict = {p: parser_args for p in parserfuncs.keys()}
-                ccdlog.warning("You gave a list as \"parserargsdict\". It will be used for all parser(s)")        
-            elif type(parser_args) == dict:
-                if np.array([p not in parser_args.keys() for p in parserfuncs.values()]).any():
-                    raise ValueError("No \"parser_args\" for at least one of your parsers")
-                typelist = [type(parser_args[p]) for p in parserfuncs.keys()]  # allows unnecessary keys
-                if np.array([t not in [tuple,list,type(None)] for t in typelist]).any():
-                    raise ValueError("At least one of the items in you \"parser_args\" dictionary is not tuple/list/None")
-                elif tuple in typelist:
-                        for k,v in parser_args.items():
-                            if type(v) == tuple:  # turn to list
-                                parser_args[k] = list(v)
-                                ccdlog.debug("turned parser_args element from tuple to list")
-                parserargsdict = parser_args
-                ccdlog.info("obtained \"parserargsdict\" from the provided dictionary")
-        # parser_kwargs    
-        """
-        In the end it must be:
-            parserkwargsdict = {"pname1": {kw1: arg1, kw2: arg2, ..},
-                              "pname2": {kw10: arg10, kw11: arg11, ..}, ..}
-        None is accepted as **kwargs for ccp.Parser
-        """
-        if parser_kwargs == None:
-            parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-            ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
-        else:
-            if type(parser_kwargs) in [tuple,list]:
-                if type(parser_kwargs[0]) == dict:
-                    parser_kwargs = parser_kwargs[0]
-                else:
-                    raise TypeError("Please provide \"parser_kwargs\" either as a dictionary (to use for all parsers) or as a dictionary of dictionaries")
-            if type(parser_kwargs) == dict:  # not elif!!
-                if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
-                    parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-                    ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
-                elif np.array([p not in parser_kwargs.keys() for p in parserfuncs.keys()]).any():  # allows unnecessary keys
-                    raise ValueError("""No parser_kwargs for at least one of your parsers""")
-                else:
-                    parserkwargsdict = parser_kwargs
-                    ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
-            else:
-                raise ValueError(""""parser_kwargs" can be None, dict (to use for all quantities), or dict of dict. Your type is not recognised.""")
+        parserfuncs, parserdict, parserargsdict, parserkwargsdict = check_other_args(fp,
+                                                                                     jsdata, 
+                                                                                     qlist, 
+                                                                                     parserfuncs,
+                                                                                     parser, 
+                                                                                     parser_args, 
+                                                                                     parser_kwargs,
+                                                                                     raw=True)
     else:
         parserdict = parser
         parserargsdict = parser_args
         parserkwargsdict = parser_kwargs
         ccdlog.debug("Assigned parser-related arguments without checking")
-    ### Let's get started        
+    ### Let's get started      
     missing = []
     reparsed = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
     data = {}  # dict for current calculation and if needed iso, iso_g, sup, ...
@@ -628,7 +705,8 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         [quantity1,quantity2, ...] of what is missing
     """
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
+    ut.setupLogger(to_console=to_console, to_log=to_log, logname=logname, printlevel=printlevel)
+    fp, jsdata = None, None  # to allow nonlocal declaration
     ### Processing user input
     #funcdict
     if type(funcdict) == str:
@@ -649,31 +727,8 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         raise TypeError(""""funcdict" should be a dictionary or a string""")
         
     if check_input:
-        # qlist
-        qlist = ut.deal_with_type(qlist,condition=tuple,to=list)
-        if type(qlist) == str:
-            if re.match(".+\.json", qlist):  # actually a json file
-                fp = cp.copy(qlist)
-                jsdict = ut.load_js(qlist)
-                qlist = jsdict["complex_quantities"]
-                ccdlog.info("obtained \"qlist\" from {}".format(fp))
-            else:  # actually a single quantity
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        elif type(qlist) == list:
-            if len(qlist) == 2 and type(qlist[0]) == int:
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        else:
-            raise TypeError(""""could not process your qlist.
-                            Please provide in one of the following ways:
-                                - file.json (will read variable 'raw_quantities'
-                                - "exc_energies"
-                                - [2,"exc_energies"]
-                                - ["exc_energies","osc_strength"]
-                                - [[2,"exc_energies"],[2,"osc_strength"]]
-                                """)
-                            
+        qlist, fp, jsdata = check_qlist(qlist,"coplex_quantities",fp,jsdata)
+        
     stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and stateslist")
@@ -688,154 +743,16 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             ccdlog.critical("{} does not exist!".format(path))
             return qlist  # all quantities are missing!
         ccdlog.debug("path is {}".format(path))
-        # ex_qs (tuple is fine as well)
-        ex_qs = ut.deal_with_type(ex_qs,condition=str,to=lambda x: [x])  #deal with single q
-        # reqs
-        if reqs == None:
-            if "fp" in locals():
-                reqs = fp
-            else:
-                raise ValueError("You must specify the required raw quantities for each complex quantity as reqs")
-        elif type(reqs) == str:
-            if re.match(".+\.json", reqs):  # actually a json file
-                if "jsdict" not in locals():
-                    jsdict = ut.load_js(qlist)    
-                reqsdict = jsdict["requisites"]
-                ccdlog.info("obtained \"reqsdict\" from {}".format(fp))
-            else:
-                reqsdict = {q: [reqs] for q in qlist}
-                ccdlog.warning("""You only gave one raw quantity as requisite. That can happen but is rare. Sure about it?
-                            It is being converted as {q: [reqs] for q in qlist}""")
-        elif type(reqs) in [list,tuple]: 
-            reqs = ut.deal_with_type(reqs,condition=tuple,to=list)
-            reqsdict = {q: reqs for q in qlist}
-            ccdlog.info("You gave a list/tuple as \"reqs\". Obtained reqsdict as reqs = {q: reqs for q in qlist}")
-        elif type(reqs) == dict:
-            reqsdict = reqs
-            for k,v in reqsdict.items():
-                reqsdict[k] = ut.deal_with_type(v,condition=str,to=lambda x: [x])
-                ccdlog.info("Turned every string value in your dictionary into a list")
-        else:
-            raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
-                                                            otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
-        assert (np.array([q in reqsdict.keys() for q in qlist]).all()), "Some quantity does not have its requisites specified" 
-        # any raw which is a req of a complex
-        all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]  
-        # parserfuncs
-        """
-        In the end it must be:
-        parserfuncs = {"parsername1": parserfunc1,
-                       "parsername2": parserfunc2, .. }
-        None is interpreted as ccp.Parser
-        """
-        if not parserfuncs:  # default
-            parserfuncs = {"ccp": None,
-                           "qcep": qcep}
-        else:
-            try:
-                all_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
-            except:
-                all_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
-            assert all_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
-        # parser
-        """
-        In the end it must be:
-            parserdict = {"q1": "parsername3",
-                          "q2": "parsername4", ..}
-        """
-        if parser == None:  
-            parserdict = {q: "ccp" for q in all_raws}
-            ccdlog.info("obtained \"parserdict\" as \"ccp\" for all raw quantities")
-        else:
-            if type(parser) == str:
-                parserdict = {q: parser for q in all_raws} 
-                ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
-            if type(parser) == dict:
-                if np.array([ i not in parser.keys() for i in all_raws]).any():
-                    raise ValueError("No parser for some of your requisite raw quantities")
-                parserdict = parser
-                ccdlog.info("obtained \"parserdict\" with all values func/None")
-            elif type(parser) in [list,tuple]:
-                raise TypeError("\"parser\" cannot be a list. it can be dict/str/None")
-            else:
-                try:  # this changes with python versions, hence try/except
-                    is_func = callable(parser)  # whether it is a function
-                except:
-                    is_func = hasattr(parser,"__call__")  # whether it is a function
-                if is_func:
-                    parserdict = {q: parser for q in all_raws}
-                    ccdlog.info("obtained \"parserdict\" as the function you gave for all raw quantities")
-                else:
-                    raise TypeError(""""Cannot process "parser", as it is none of: dict,func,None""")
-        for k,v in parserdict.items():
-            if type(v)== str:
-                if v not in parserfuncs.keys():
-                    raise ValueError("You asked at least once for an unrecognised parser.")
-                continue
-            elif v == None:
-                    parserdict[k] = "ccp"  # changing None to ccp
-                    continue
-            elif v == False:
-                continue
-            else:
-                raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
-        # parser_args
-        """
-        In the end it must be:
-            parserargsdict = {"pname1": [arg1, arg2, ..],
-                              "pname2": [arg10, arg11, ..], ..}
-        None is accepted as *args for ccp.Parser
-        """
-        if parser_args == None:
-            parserargsdict = {p: parser_args for p in parserfuncs.keys()}
-            ccdlog.info("obtained \"parserargsdict\" as None for all raw quantities")
-        elif type(parser_args) == dict:
-            if np.array([p not in parser_args.keys() for p in parserfuncs.keys()]).any():
-                raise ValueError("No parser_args for at least one of your parsers")
-            typelist = [type(parser_args[p]) for p in parserfuncs.keys()]
-            if np.array([t not in [list,tuple,type(None)] for t in typelist]).any():
-                raise TypeError("At least one of the elements in parser_args is none of list,tuple,None")
-            elif tuple in typelist:
-                for k,v in parser_args.items():
-                    if type(v) == tuple:  # turn to list
-                        parser_args[k] = list(v)
-                        ccdlog.debug("turned parser_args element from tuple to list")
-            parserargsdict = parser_args
-            ccdlog.info("obtained \"parserargsdict\" from the provided dictionary")
-        elif type(parser_args) in [list,tuple]:
-            parser = ut.deal_with_type(parser,condition=tuple,to=list)
-            parserargsdict = {q: parser_args for q in all_raws}
-            ccdlog.info("obtained \"parserargsdict\" as your \"parser_args\" for all parsers")
-        else:
-            raise ValueError("""Cannot process your "parser_args" """)
-        # parser_kwargs    
-        """
-        In the end it must be:
-            parserkwargsdict = {"pname1": {kw1: arg1, kw2: arg2, ..},
-                              "pname2": {kw10: arg10, kw11: arg11, ..}, ..}
-        None is accepted as **kwargs for ccp.Parser
-        """
-        if parser_kwargs == None:
-            parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-            ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
-        else:  # parser_kwargs != None
-            if type(parser_kwargs) in [tuple,list]:
-                if type(parser_kwargs[0]) == dict:
-                    parser_kwargs = parser_kwargs[0]
-                    ccdlog.debug("You gave \"parser_kwargs\" as [dict]. The dictionary will be processed.")
-                else:
-                    raise TypeError("Please provide \"parser_kwargs\" either as a dictionary (to use for all parsers) or as a dictionary of dictionaries")
-            if type(parser_kwargs) == dict:  # not elif!!
-                if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
-                    parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-                    ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
-                elif np.array([p not in parser_kwargs.keys() for p in parserfuncs.keys()]).any():  # allows unnecessary keys
-                    raise ValueError("""No parser_kwargs for at least one of your parsers""")
-                else:
-                    parserkwargsdict = parser_kwargs
-                    ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
-            else:
-                raise ValueError(""""parser_kwargs" can be None, dict (to use for all quantities), or dict of dict. Your type is not recognised.""")
+        reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict = check_other_args(fp,
+                                                                                               jsdata, 
+                                                                                               qlist, 
+                                                                                               parserfuncs,
+                                                                                               parser, 
+                                                                                               parser_args, 
+                                                                                               parser_kwargs,
+                                                                                               ex_qs=ex_qs, 
+                                                                                               reqs=reqs,
+                                                                                               raw=False)
     else:  # check_input==False
         reqsdict = reqs
         parserdict = parser
@@ -869,6 +786,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             ccdlog.debug("{} not in data{}. Trying to obtain it".format(q, " {} times".format(states) if states else ""))
             miss = raw_quantities(path, qlist=reqsdict[q], ext=ext, ignore=ignore,
                                   parser_file=parser_file,
+                                  parserfuncs=parserfuncs,
                                   parser=parserdict,
                                   parser_args=parserargsdict,
                                   parser_kwargs=parserkwargsdict,
@@ -898,18 +816,23 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                         missing.append(q)
                 else:  # no state specified, could be 1 or "as many as possible"
                     failed = False
-                    s = 0  
+                    s = shift
                     vals = {}
                     while not failed:  # trying to obtain as many vals as possible
                         try:
                             qval = func(path=path,n=s)  
-                            vals[s+shift] = qval  # nb will become a str when dumped
+                            vals[s] = qval  # nb will become a str when dumped
                             ccdlog.debug("{} = {}".format(s,qval))
                             s += 1
                         except:  # max num of vals
-                            failed = True 
+                            if s == 0:  # ex_q not declared, e.g. ex_en_0
+                                failed = None
+                                vals [0] = np.nan
+                                s += 1
+                            else:
+                                failed = True 
                     if len(vals) == 0:
-                        ccdlog.error("Errors while calculating {} in {}".format(q,path))
+                        ccdlog.error("Errors when calculating {} in {}".format(q,path))
                         missing.append(q)
                     elif len(vals) == 1:
                         data[q] = vals[1]
@@ -962,36 +885,14 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
         a DataFrame with ...
     """
     ### Logger setup: file or console, printlevel
-    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
+    ut.setupLogger(to_console=to_console, to_log=to_log, logname=logname, printlevel=printlevel)
+    fp, jsdata = None, None
     ### Processing user input
     # joblist
-    joblist = ut.deal_with_type(joblist,condition=str,to=get_joblist)
+    joblist = ut.deal_with_type(joblist,condition=str, to=get_joblist)
     ccdlog.info("obtained \"joblist\"")
     if check_input:
-        # qlist
-        if type(qlist) == str:
-            if re.match(".+\.json", qlist):  # actually a json file
-                fp = cp.copy(qlist)
-                jsdict = ut.load_js(qlist)
-                qlist = jsdict["complex_quantities"]
-                ccdlog.info("obtained \"qlist\" from {}".format(fp))
-            else:  # actually a single quantity
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        elif type(qlist) == list:
-            if len(qlist) == 2 and type(qlist[0]) == int:
-                qlist = [qlist]
-                ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        else:
-            raise TypeError(""""could not process your qlist.
-                            Please provide in one of the following ways:
-                                - file.json (will read variable 'raw_quantities'
-                                - "exc_energies"
-                                - [2,"exc_energies"]
-                                - ["exc_energies","osc_strength"]
-                                - [[2,"exc_energies"],[2,"osc_strength"]]
-                                """)
-                            
+        qlist, fp, jsdata = check_qlist(qlist,"complex_quantities", fp, jsdata)
     stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and stateslist")
@@ -1004,154 +905,16 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                 raise ValueError("Unrecognised string value for \"funcdict\"")
         elif type(funcdict) != dict:
             raise TypeError("\"funcdict\" can be a dictionary or a recognisable string (\"ccp\",\"qcepccp\",\"qcep\")")            
-        # ex_qs (tuple is fine as well)
-        ex_qs = ut.deal_with_type(ex_qs,condition=str,to=lambda x: [x])  #deal with single q
-        # reqs
-        if reqs == None:
-            if "fp" in locals():  # we read qlist  from json, let's take reqs from there
-                reqs = fp
-            else:
-                raise ValueError("You must specify the required raw quantities for each complex quantity as reqs")
-        if type(reqs) == str:  
-            if re.match(".+\.json", reqs):  # actually a json file (qlist or its own)
-                if "jsdict" not in locals():  # no need to read twice
-                    jsdict = ut.load_js(reqs)    
-                reqsdict = jsdict["requisites"]
-                ccdlog.info("obtained \"reqsdict\" from {}".format(reqs))
-            else:
-                reqsdict = {q: [reqs] for q in qlist}
-                ccdlog.warning("""You only gave one raw quantity as requisite. That can happen but is rare. Sure about it?
-                            It is being converted as {q: [reqs] for q in qlist}""")
-        elif type(reqs) in [list,tuple]:
-            reqs = ut.deal_with_type(reqs, condition=tuple, to=list)
-            reqsdict = {q: reqs for q in qlist}
-            ccdlog.info("You gave a list as \"reqs\". Obtained reqs as reqs = {q: reqs for q in qlist}")
-        elif type(reqs) == dict:
-            reqsdict = reqs
-            for k,v in reqsdict.items():
-                reqsdict[k] = ut.deal_with_type(v,condition=str,to=lambda x: [x])
-                ccdlog.info("Turned every string value in your dictionary into a list")
-        else:
-            raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
-                                                            otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
-        assert (np.array([q in reqsdict.keys() for q in qlist]).all()), "Some quantity does not have its requisites specified" 
-        # any raw which is a req of a complex
-        all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]
-        # parserfuncs
-        """
-        In the end it must be:
-        parserfuncs = {"parsername1": parserfunc1,
-                       "parsername2": parserfunc2, .. }
-        None is interpreted as ccp.Parser
-        """
-        if not parserfuncs:  # default
-            parserfuncs = {"ccp": None,
-                           "qcep": qcep}
-        else:
-            try:
-                all_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
-            except:
-                all_funcs = np.array([hasattr(p,"__call__") or (p==None) for p in parserfuncs.values()]).all()
-            assert all_funcs, "If you wish to use other parsers than ccp&qcep, please provide parserfuncs={pname1: pfunc1, pname2: pfunc2,..}"
-        # parser
-        """
-        In the end it must be:
-            parserdict = {"q1": "parsername3",
-                          "q2": "parsername4", ..}
-        """
-        if parser == None:
-            parserdict = {q: "ccp" for q in all_raws}
-            ccdlog.info("obtained \"parserdict\" as \"ccp\" for all raw quantities")
-        else:
-            if type(parser) == str:
-                parserdict = {q: parser for q in all_raws}
-                ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
-            if type(parser) == dict:
-                if np.array([ i not in parser.keys() for i in all_raws]).any():
-                    raise ValueError("No parser for some of your requisite raw quantities")
-                parserdict = parser
-                ccdlog.info("obtained \"parserdict\" with all values func/None")
-            elif type(parser) in [list,tuple]:
-                raise TypeError("\"parser\" cannot be a list. it can be dict/str/None")
-            else:
-                try:  # this changes with python versions, hence try/except
-                    is_func = callable(parser)  # whether it is a function
-                except:
-                    is_func = hasattr(parser,"__call__")  # whether it is a function
-                if is_func:
-                    parserdict = {q: parser for q in all_raws}
-                    ccdlog.info("obtained \"parserdict\" as the function you gave for all raw quantities")
-                else:
-                    raise TypeError(""""Cannot process "parser", as it is none of: dict,func,None""")
-        for k,v in parserdict.items():
-            if type(v)== str:
-                if v not in parserfuncs.keys():
-                    raise ValueError("You asked at least once for an unrecognised parser.")
-                continue
-            elif v == None:
-                    parserdict[k] = "ccp"  # changing None to ccp
-                    continue
-            elif v == False:
-                continue
-            else:
-                raise ValueError("some value in your parserdict is not valid. They should all be parsernames or False.")
-        # parser_args
-        """
-        In the end it must be:
-            parserargsdict = {"pname1": [arg1, arg2, ..],
-                              "pname2": [arg10, arg11, ..], ..}
-        None is accepted as *args for ccp.Parser
-        """
-        if parser_args == None:
-            parserargsdict = {p: parser_args for p in parserfuncs.keys()}
-            ccdlog.info("obtained \"parserargsdict\" as None for all raw quantities")
-        elif type(parser_args) == dict:
-            if np.array([p not in parser_args.keys() for p in parserfuncs.keys()]).any():
-                raise ValueError("No parser_args for at least one of your parsers")
-            typelist = [type(parser_args[p]) for p in parserfuncs.keys()]
-            if np.array([t not in [list,tuple,type(None)] for t in typelist]).any():
-                raise TypeError("At least one of the elements in parser_args is none of list,tuple,None")
-            elif tuple in typelist:
-                for k,v in parser_args.items():
-                    if type(v) == tuple:  # turn to list
-                        parser_args[k] = list(v)
-                        ccdlog.debug("turned parser_args element from tuple to list")
-            parserargsdict = parser_args
-            ccdlog.info("obtained \"parserargsdict\" from the provided dictionary")
-        elif type(parser_args) in [list,tuple]:
-            parser = ut.deal_with_type(parser,condition=tuple,to=list)
-            parserargsdict = {q: parser_args for q in all_raws}
-            ccdlog.info("obtained \"parserargsdict\" as your \"parser_args\" for all parsers")
-        else:
-            raise ValueError("""Cannot process your "parser_args" """)
-        # parser_kwargs    
-        """
-        In the end it must be:
-            parserkwargsdict = {"pname1": {kw1: arg1, kw2: arg2, ..},
-                              "pname2": {kw10: arg10, kw11: arg11, ..}, ..}
-        None is accepted as **kwargs for ccp.Parser
-        """
-        if parser_kwargs == None:
-            parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-            ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
-        else:  # parser_kwargs != None
-            if type(parser_kwargs) in [tuple,list]:
-                if type(parser_kwargs[0]) == dict:
-                    parser_kwargs = parser_kwargs[0]
-                    ccdlog.debug("You gave \"parser_kwargs\" as [dict]. The dictionary will be processed.")
-                else:
-                    raise TypeError("Please provide \"parser_kwargs\" either as a dictionary (to use for all parsers) or as a dictionary of dictionaries")
-            if type(parser_kwargs) == dict:  # not elif!!
-                if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
-                    parserkwargsdict = {p: parser_kwargs for p in parserfuncs.values()}
-                    ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
-                elif np.array([p not in parser_kwargs.keys() for p in parserfuncs.keys()]).any():  # allows unnecessary keys
-                    raise ValueError("""No parser_kwargs for at least one of your parsers""")
-                else:
-                    parserkwargsdict = parser_kwargs
-                    ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
-            else:
-                raise ValueError(""""parser_kwargs" can be None, dict (to use for all quantities), or dict of dict. Your type is not recognised.""")
+        reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict = check_other_args(fp,
+                                                                                               jsdata, 
+                                                                                               qlist, 
+                                                                                               parserfuncs,
+                                                                                               parser, 
+                                                                                               parser_args, 
+                                                                                               parser_kwargs,
+                                                                                               ex_qs=ex_qs, 
+                                                                                               reqs=reqs,
+                                                                                               raw=False)
     else:  # check_input == False
         reqsdict = reqs
         parserdict = parser
@@ -1180,6 +943,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
             missing = []
             if data == {}:  # no need to loop over qlist
                 if cnt == 0:  # let's obtain our complex quantities
+                    ccdlog.debug("data.json was not there or empty")
                     missing = qlist
                 else:
                     ccdlog.critical("Your datafile is empty after parsing. Probably filename mismatch or nothing written to file")
@@ -1234,7 +998,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                     col = pd.concat(
                                             [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]),col[start+nsl[n]:]],
                                             ignore_index=True)  #  insert np.nan to match all lengths
-                                nsl[n] = len(values)
+                                nsl[n] = len(values) - 1 + shift
                                 ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
                         else:  # not a dict
                             column.append(to_add)
@@ -1244,6 +1008,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                 complex_quantities(path=path, qlist=missing, ex_qs = ex_qs,
                                    reqs=reqsdict, ext=ext, ignore=ignore, 
                                    parser_file=parser_file, parser=parserdict,
+                                   parserfuncs=parserfuncs,
                                    parser_args=parserargsdict, 
                                    parser_kwargs=parserkwargsdict, check_input=False,
                                    funcdict=funcdict, to_console=to_console,
@@ -1256,14 +1021,18 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     for n,q in enumerate(qlist):  # Could not manage with list comprehension
         if nsl[n]:
             shift = 1 if q in ex_qs else 0  # 1 if only excited state
-            xp_qlist += ["{}_{}".format(q,s+shift) for s in range(nsl[n])]
+            xp_qlist += ["{}_{}".format(q,s+shift) for s in range(nsl[n]+1-shift)]
         else:
             xp_qlist.append(q)
     rows = levelnames + xp_qlist 
     ccdlog.debug("obtained rows")
     df = pd.concat(columns, axis=1)  # every column is a j 
     ccdlog.debug("concatenated")
-    df.index = rows # index
+    try:
+        df.index = rows # index
+    except ValueError:  # length mismatch (e.g. "ex_en_0")
+        print("rows", rows)
+        return df
     ccdlog.info("done, return DataFrame")
     return df.T  # Transpose: now every column is either a level spec(A,B,basis,calc) or a property, every row is a job
 

@@ -39,6 +39,9 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0, linenumb
         raise ValueError("you didn't specify the raw quantity's key")
     rawfile = os.path.join(path, rawfile)
     raws = ut.load_js(rawfile)
+    if n < 0:
+        print("CRITICAL - raw_to_complex: negative index. Most likely you didn't specify that a quantity is in ex_qs")
+        raise ValueError  #message in print to appear also when in "try"  statements
     to_return = raws[raw_key][n][0] if linenumbers else raws[raw_key][n]
     return to_return
 
@@ -49,10 +52,10 @@ e.g.
 "ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="CCParser.json",raw_key="exc_energies_rel")
 """
 ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="CCParser.json",raw_key="exc_energy_rel")}
+        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="CCParser.json",raw_key="exc_energy_rel")}
 
 qcep_ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="CCParser.json",raw_key="exc_energy")}
+        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="CCParser.json",raw_key="exc_energy")}
 
 qcep_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="qcep.json",raw_key="exc_energy")}
+        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="qcep.json",raw_key="exc_energy")}
