@@ -54,15 +54,15 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     Files are never overwritten, and their modified names (e.g. file_2.ext) are stored, which allows to undo moving operations.
     """
     ### Handling type of expr
-    expr = ut.deal_with_type(expr,orig=str,to=lambda x: [x])  # if list turn to str
-    if type(expr) != list:
+    expr = ut.deal_with_type(expr, orig=str, to=lambda x: [x])  # if list turn to str
+    if type(expr) is not list:
         raise TypeError("Expr must be either list/tuple or string")
     ### Turning wildcards into regex
-    expr = [i.replace("*",".+").replace("?",".") for i in expr]    
+    expr = [i.replace("*", ".+").replace("?", ".") for i in expr]    
     ### Handling default startdir if none specified
     startdir = os.getcwd() if not startdir else startdir
     ### Handling default trash if none specified
-    trash = os.path.join(os.getcwd(),"Trash") if not trash else trash
+    trash = os.path.join(os.getcwd(), "Trash") if not trash else trash
     ut.mkdif(trash)
     try:
         histdict = ut.load_js(histfile)  # read history file and look for highest ID
@@ -74,27 +74,27 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     for dirname,subdirlist,filelist in os.walk(startdir):   # walking through tree
         for fname in filelist:  # loop over files found
             for e in expr:  # loop over wildcard expressions
-                if not(keep^bool(re.match(e,fname))):  #move or not based on "keep"
-                    src = os.path.join(dirname,fname)
-                    dest = os.path.join(trash,fname)
+                if not(keep^bool(re.match(e, fname))):  #move or not based on "keep"
+                    src = os.path.join(dirname, fname)
+                    dest = os.path.join(trash, fname)
                     if os.path.exists(dest):
                         splt = dest.split(".")
                         bname = ".".join(splt[:-1])
                         ext = splt[-1]
                         count = 2
                         while os.path.exists(dest):  # avoid overwriting it
-                            dest = "{}_{}.{}".format(bname,count,ext)
+                            dest = "{}_{}.{}".format(bname, count,ext)
                             count += 1
-                    os.move(src,dest)
-                    print("moved {} to {}".format(os.path.join(dirname,fname), trash))
-                    moved.append((os.path.abspath(src),os.path.abspath(dest)))
+                    os.move(src, dest)
+                    print("moved {} to {}".format(os.path.join(dirname,  fname), trash))
+                    moved.append((os.path.abspath(src), os.path.abspath(dest)))
     histdict.update({ID:moved})  # {..., ID:[(src1,dest1),(src2,dest2),...]}      
-    ut.dump_js(histdict,histfile)          
-    with open(logfile,"a") as log:
+    ut.dump_js(histdict, histfile)          
+    with open(logfile, "a") as log:
         neg = "not" if keep else ""
         date = dt.date.today().strftime("%d-%b-%Y")
         exprstr = ",".join(expr)
-        log.write("""{}, ID: {}, moved to trash files {} matching with "{}"\n""".format(date,ID,neg,exprstr))
+        log.write("""{}, ID: {}, moved to trash files {} matching with "{}"\n""".format(date, ID, neg, exprstr))
 
 def keep_only(expr, startdir="", trash="", logfile="operations.log", histfile="history.json"):
     """
@@ -145,7 +145,7 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
     If a file with the same filepath has been added after the deletion, 
     overwriting is avoided and the file is copied as file_n.ext.
     """
-    IDs = ut.deal_with_type(IDs,orig=str,to=lambda x: [x])  # if only 1 ID,turn to list
+    IDs = ut.deal_with_type(IDs, orig=str, to=lambda x: [x])  # if only 1 ID,turn to list
     histdict = ut.load_js(histfile)
     with open(logfile, "r") as f:
         lines = f.readlines()
@@ -159,15 +159,15 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
             ext = splt[-1]
             count = 2
             while os.path.exists(dest):  # avoid overwriting it
-                dest = "{}_{}.{}".format(bname,count,ext)
+                dest = "{}_{}.{}".format(bname ,count, ext)
                 count += 1
-            os.move(src,dest)
+            os.move(src, dest)
             print("restored {}".format(dest))
         del histdict[str(ID)]  # removing entry from histfile
         for n,line in enumerate(lines):
             if "ID: {}".format(ID) in line:
                 del lines[n]  # removing entry from logfile
-    ut.dump_js(histdict,histfile)  # updating histfile
+    ut.dump_js(histdict, histfile)  # updating histfile
 
     with open(logfile, "w") as f:  # updating logfile
         for line in lines:
@@ -218,43 +218,52 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
         False is used by other quantities that check before for loops.
+    to_console: bool
+        whether to print logging to the console
+    to_log: bool
+        whether to print logging to file
+    logname: str
+        the log filename. Default is CCDatabase.log
+    printlevel: int
+        logging level: 10,20,30,40,50. Accessible also as logging.DEBUG/INFO/WARNING/ERROR/CRITICAL (respectively)
+        
     Returns
     -------
     What your parser returns
         the parser container
     """
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
+    ut.setupLogger(to_console=to_console, to_log=to_log, logname=logname, printlevel=printlevel)
 
     if check_input:
         # path
-        path = ut.deal_with_type(path,condition=None,to=os.getcwd)
+        path = ut.deal_with_type(path, condition=None, to=os.getcwd)
         path = os.path.abspath(path)
         if not os.path.exists(path):
             ccdlog.critical("{} does not exist!".format(path))
             return None  # nothing to parse
         ccdlog.debug("path is {}".format(path))
         # parser
-        if parser != None:
+        if parser is not None:
             try:  # this changes with python versions, hence try/except
                 is_func = callable(parser)  # whether it is a function
             except:
-                is_func = hasattr(parser,"__call__")  # whether it is a function
+                is_func = hasattr(parser, "__call__")  # whether it is a function
             if not is_func:
                 raise TypeError(""""Cannot process "parser", as it is none of: dict,list,func,None""")
         ccdlog.debug("parser passed inspection")
         # parser_args
-        if parser_args != None:
-            if type(parser_args) == tuple:
+        if parser_args is not None:
+            if type(parser_args) is tuple:
                 parser_args = list(parser_args)
-            elif type(parser_args) != list:
+            elif type(parser_args) is not list:
                 parser_args = [parser_args]
                 ccdlog.warning("Your \"parser_args\" is neither None nor list/tuple, turning it into a list (parser_args = [parser_args])")
         # parser_kwargs
-        if parser_kwargs != None and type(parser_kwargs)!=dict:
+        if parser_kwargs is not None and type(parser_kwargs) is not dict:
             raise TypeError(""""Cannot process "parser_kwargs", as it is none of: dict,None""") 
     # Finding file
-    files = [i for i in gl.glob(os.path.join(path,ext)) if i not in gl.glob(os.path.join(path,ignore))]  # e.g. all *.out which are not slurm*.out
+    files = [i for i in gl.glob(os.path.join(path, ext)) if i not in gl.glob(os.path.join(path, ignore))]  # e.g. all *.out which are not slurm*.out
     if len(files) == 0:
         raise FileNotFoundError("Either no matching file or inexistent path")
     elif len(files) == 1:
@@ -266,22 +275,44 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser,[file],dict(software="qchem",to_file=True, to_console=False, to_json=True))  if parser == None else (parser, [file]+parser_args, parser_kwargs)
+    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem", 
+                                          to_file=True, to_console=False, to_json=True)) \
+                                          if parser is None else (parser, [file]+parser_args, parser_kwargs)
     ccdlog.debug("parsing!")
     data = parser(*parser_args,**parser_kwargs)
     return data
 
 def check_qlist(qlist, key, fp, jsdata):
     """
+    Note
+    ----
+    Checks qlist and returns a processed one. Also returns fp and jsdata to avoid double-reading
+    
+    Parameters
+    ----------
+    qlist: list
+        quantity list(whether raw or complex)
+    key: str
+        if item in a json file's dictionary (generally raw_quantities/complex_quantities)
+    fp: None/str
+        the filepath to json
+    jsdata: None/obj (dict,list,..)
+        what is read in the json file at filepath fp
+        
+    Returns
+    -------
+    tuple
+        qlist, fp, jsdata
+        fp and jsdata only if useful for later (jsonfile contains several arguments)
     """
-    if type(qlist) == str:
+    if type(qlist) is str:
         if re.match(".+\.json", qlist):  # actually a json file
             fp = cp.copy(qlist)
             jsdata = ut.load_js(fp)
-            if type(jsdata) == list:
+            if type(jsdata) is list:
                 qlist = cp.copy(jsdata)
                 fp, jsdata = None, None  # back to None because it only had qlist
-            elif type(jsdata) == dict:
+            elif type(jsdata) is dict:
                 if key in jsdata.keys():
                     qlist = jsdata[key]
                     ccdlog.info("obtained \"qlist\" from {}".format(fp))
@@ -292,8 +323,8 @@ def check_qlist(qlist, key, fp, jsdata):
         else:  # actually a single quantity
             qlist = [qlist]
             ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-    elif type(qlist) == list:
-        if len(qlist) == 2 and type(qlist[0]) == int:
+    elif type(qlist) is list:
+        if len(qlist) == 2 and type(qlist[0]) is int:
             qlist = [qlist]
             ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
     else:
@@ -316,23 +347,55 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         b) after running check_qlist()
         c) when fp,jsdata are defined (at least as None)
                                 
-    """
-    if not raw and None in [ex_qs,reqs]:
+    Parameters
+    ----------
+    fp: None/str
+        filepath to json file if useful
+    jsdata: None/dict
+        json dictionary if useful
+    qlist: list
+        pre-processed qlist
+    parserfuncs: {},dict
+        {"pname": pfunc/None}
+        None => ccp.
+        if {pfunc: "pname"} it will be inverted
+    parser: None ,dict, str, func, list(if raw == True)                 
+        {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
+        if str/func, uses for all qs
+        list allowed only if raw == True
+    parser_args: None, dict, list
+        {"pname1": args1, pname1, ..}
+        list will be used for all parser
+    parser_kwargs: None, dict:
+        If dictionary of dictionary/None, will be used as is.
+        Else, will be used for each parser
+    ex_qs: list
+        the excited state quantities in qlist
+    raw: bool
+        whethere it is raw quantities of complex quantities
+        
+    Returns
+    -------
+    tuple
+        reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict
+        reqsdict only for raw == False
+        """
+    if not raw and None in [ex_qs, reqs]:
         raise ValueError("You must specify ex_qs and reqs")
     if not raw:
         # ex_qs (tuple is fine as well)
-        ex_qs = ut.deal_with_type(ex_qs,condition=str,to=lambda x: [x])  #deal with single q
+        ex_qs = ut.deal_with_type(ex_qs, condition=str, to=lambda x: [x])  #deal with single q
         # reqs
-        if reqs == None:
-            if fp != None:  # not declared as nonlocal, i.e. determined json file
+        if reqs is None:
+            if fp is not None:  # not declared as nonlocal, i.e. determined json file
                 reqs = fp  # we have a json dictionary file
             else:
                 raise ValueError("You must specify the required raw quantities for each complex quantity as reqs")
-        elif type(reqs) == str:
+        elif type(reqs) is str:
             if re.match(".+\.json", reqs):  # actually a json file (qlist or its own)
-                if jsdata != None and reqs == fp:  # not already read
+                if jsdata is not None and reqs == fp:  # not already read
                     jsdata = ut.load_js(reqs)
-                if type(jsdata)  != dict:
+                if type(jsdata) is not dict:
                     raise ValueError("Your json file is not a dictionary!!")
                 reqsdict = jsdata["requisites"] if "requisites" in jsdata.keys() else jsdata
                 ccdlog.info("obtained \"reqsdict\" from {}".format(reqs))
@@ -341,20 +404,20 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                 ccdlog.warning("""You only gave one raw quantity as requisite. That can happen but is rare. Sure about it?
                             It is being converted as {q: [reqs] for q in qlist}""")
         elif type(reqs) in [list,tuple]: 
-            reqs = ut.deal_with_type(reqs,condition=tuple,to=list)
+            reqs = ut.deal_with_type(reqs, condition=tuple, to=list)
             reqsdict = {q: reqs for q in qlist}
             ccdlog.info("You gave a list/tuple as \"reqs\". Obtained reqsdict as reqs = {q: reqs for q in qlist}")
-        elif type(reqs) == dict:
+        elif type(reqs) is dict:
             reqsdict = reqs
             for k,v in reqsdict.items():
-                reqsdict[k] = ut.deal_with_type(v,condition=str,to=lambda x: [x])
+                reqsdict[k] = ut.deal_with_type(v, condition=str, to=lambda x: [x])
             ccdlog.info("Turned any string value in your dictionary into a list")
         else:
             raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
                                                             otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
         assert (np.array([q in reqsdict.keys() for q in qlist]).all()), "Some quantity does not have its requisites specified" 
         # any raw which is a req of a complex
-        all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]  
+        all_raws = [r[1] if type(r) in [tuple, list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]  
     rawlist = qlist if raw else all_raws
     # parserfuncs
     """
@@ -382,14 +445,14 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         parserdict = {"q1": "parsername3",
                       "q2": "parsername4", ..}
     """
-    if parser == None:  
+    if parser is None:  
         parserdict = {q: "ccp" for q in rawlist}
         ccdlog.info("obtained \"parserdict\" as \"ccp\" for all raw quantities")
     else:  #parser != None
-        if type(parser) == str:
+        if type(parser) is str:
             parser = {q: parser for q in rawlist}  # not parserdict!!
             ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
-        if type(parser) == dict:
+        if type(parser) is dict:
             if np.array([ i not in parser.keys() for i in rawlist]).any():
                 raise ValueError("No parser for some of your{} raw quantities".format("" if raw else " requisite"))
             parserdict = parser
@@ -420,14 +483,14 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             else:
                 raise TypeError("Cannot process \"parser\", as it is none of: {}dict,func,None".format("list/tuple," if raw else ""))
     for k,v in parserdict.items():
-        if type(v)== str:
+        if type(v) is str:
             if v not in parserfuncs.keys():
                 raise ValueError("You asked at least once for an unrecognised parser.")
             continue
-        elif v == None:
+        elif v is None:
                 parserdict[k] = "ccp"  # changing None to ccp
                 continue
-        elif v == False:
+        elif v is False:
             continue
         else: 
             try:
@@ -449,24 +512,24 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                           "pname2": [arg10, arg11, ..], ..}
     None is accepted as *args for ccp.Parser
     """
-    if parser_args == None:
+    if parser_args is None:
         parserargsdict = {p: parser_args for p in parsers_used}
         ccdlog.info("obtained \"parserargsdict\" as None for all parsers")
-    elif type(parser_args) == dict:
+    elif type(parser_args) is dict:  # TODO: deal with functions as keys
         if np.array([p not in parser_args.keys() for p in parsers_used]).any():
             raise ValueError("No parser_args for at least one of your parsers")
         typelist = [type(parser_args[p]) for p in parsers_used]
-        if np.array([t not in [list,tuple,type(None)] for t in typelist]).any():
+        if np.array([t not in [list, tuple, type(None)] for t in typelist]).any():
             raise TypeError("At least one of the elements in parser_args is none of list,tuple,None")
         elif tuple in typelist:
             for k,v in parser_args.items():
-                if type(v) == tuple:  # turn to list
+                if type(v) is tuple:  # turn to list
                     parser_args[k] = list(v)
                     ccdlog.debug("turned parser_args element from tuple to list")
         parserargsdict = parser_args
         ccdlog.info("obtained \"parserargsdict\" from the provided dictionary")
     elif type(parser_args) in [list,tuple]:
-        parser = ut.deal_with_type(parser,condition=tuple,to=list)  
+        parser = ut.deal_with_type(parser, condition=tuple, to=list)  
         parserargsdict = {p: parser_args for p in parsers_used}
         ccdlog.info("obtained \"parserargsdict\" as your \"parser_args\" for all parsers")
     else:
@@ -478,17 +541,17 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                           "pname2": {kw10: arg10, kw11: arg11, ..}, ..}
     None is accepted as **kwargs for ccp.Parser
     """
-    if parser_kwargs == None:
+    if parser_kwargs is None:
         parserkwargsdict = {p: parser_kwargs for p in parsers_used}
         ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
     else:  # parser_kwargs != None
-        if type(parser_kwargs) in [tuple,list]:
-            if type(parser_kwargs[0]) == dict:
+        if type(parser_kwargs) in [tuple, list]:
+            if type(parser_kwargs[0]) is dict:
                 parser_kwargs = parser_kwargs[0]
                 ccdlog.debug("You gave \"parser_kwargs\" as [dict]. The dictionary will be processed.")
             else:
                 raise TypeError("Please provide \"parser_kwargs\" either as a dictionary (to use for all parsers) or as a dictionary of dictionaries")
-        if type(parser_kwargs) == dict:  # not elif!!
+        if type(parser_kwargs) is dict:  # not elif!!
             if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
                 parserkwargsdict = {p: parser_kwargs for p in parsers_used}
                 ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
@@ -523,19 +586,31 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         wildcard-like expression of files to ignore. Default "slurm*"
     parser_file: str
         name of the parser's json file. Default is "CCParser.json"
-    parser: dict{q: func}, func, None, False
-        parser to call (for each q). If not dictionary, turns into dict. If None, calls ccp.Parser
-        If Parser != None, pass as the parser's *args as parser_args, then the parser's **kwargs
-        NB. If the file is human-generated and cannot be obtained from a parser, pass False
-    parser_args: dict[parser: list/tuple]/None
-        provide a list of the positional arguments for your parser, for each parser.
-        If one parser only you can pass the list alone, it is turned into a dict
-    parser_kwargs: dict[parser: dict]/None
-        provide a dict of the keyword arguments for your parser, for each parser.
-        If one parser only you can pass the dict alone, it is turned into dict[parser: dict]
+    parserfuncs: {},dict
+        {"pname": pfunc/None}
+        None => ccp.
+        if {pfunc: "pname"} it will be inverted
+    parser: None ,dict, str, func, list(if raw == True)                 
+        {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
+        if str/func, uses for all qs
+        list allowed only if raw == True
+    parser_args: None, dict, list
+        {"pname1": args1, pname1, ..}
+        list will be used for all parser
+    parser_kwargs: None, dict:
+        If dictionary of dictionary/None, will be used as is.
+        Else, will be used for each parser
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
         False is used by other quantities that check before for loops.
+    to_console: bool
+        whether to print logging to the console
+    to_log: bool
+        whether to print logging to file
+    logname: str
+        the log filename. Default is CCDatabase.log
+    printlevel: int
+        logging level: 10,20,30,40,50. Accessible also as logging.DEBUG/INFO/WARNING/ERROR/CRITICAL (respectively)
         
     Does
     ----
@@ -548,11 +623,11 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         the quantities missing in path
     """        
     ### Logger setup: file or console, level
-    ut.setupLogger(to_console=to_console,to_log=to_log,logname=logname,printlevel=printlevel)
+    ut.setupLogger(to_console=to_console, to_log=to_log, logname=logname, printlevel=printlevel)
     fp, jsdata = None, None  # to allow nonlocal declaration
     ### Processing user input
     if check_input:
-        qlist, fp, jsdata = check_qlist(qlist,"raw_quantities",fp,jsdata)
+        qlist, fp, jsdata = check_qlist(qlist, "raw_quantities", fp, jsdata)
     nvalslist = [q[0] if type(q) in [tuple,list] else 1 for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and nvalslist")
@@ -599,7 +674,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         stdfile = True  # q is supposed to be in a standard json file
         if "," in q:  # in another calc (not case 1)
             splt = q.split(",")
-            if len(splt)==2 and "." in splt[0]:  # case 4
+            if len(splt) == 2 and "." in splt[0]:  # case 4
                 ccdlog.debug("case 4")
                 fname = splt[0]
                 type_ = fname.split(".")[-1]
@@ -607,21 +682,21 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                 stdfile = True if type_ == "json" else False  # actually not in a standard parser_file
             else:  # cases 2,3,5
                 fol = splt[0]
-                if len(splt)==3:  # case 5
+                if len(splt) == 3:  # case 5
                     ccdlog.debug("case 5")
                     fname = splt[1]
                     type_ = fname.split("."[-1])
                     stdfile = True if type_ == "json" else False  # actually not in a standard parser_file
                 else:  # cases 2,3
                     fname = parser_file
-                subdirs = gl.glob(os.path.join(path,"*",""))  # subdirectories of path (e.g. MP2_A for F&T)
-                paraldirs = gl.glob(os.path.join(ut.split_path(path)[0],"*",""))  # directories in the parent folder (e.g. iso if path="emb")
+                subdirs = gl.glob(os.path.join(path, "*", ""))  # subdirectories of path (e.g. MP2_A for F&T)
+                paraldirs = gl.glob(os.path.join(ut.split_path(path)[0], "*", ""))  # directories in the parent folder (e.g. iso if path="emb")
                 if fol in subdirs and fol not in paraldirs:  # it is a subdir (case 2)
                     ccdlog.debug("case 2")
-                    path_tmp = os.path.join(path,fol)
+                    path_tmp = os.path.join(path, fol)
                 elif fol not in subdirs and fol in paraldirs:  # it is a parallel dir (case 3)
                     ccdlog.debug("case 3")
-                    path_tmp = os.path.join(ut.split_path(path)[0],fol)  
+                    path_tmp = os.path.join(ut.split_path(path)[0], fol)  
                 else:
                     raise ValueError("""the location of your quantity {} cannot be understood.
                              Most likely it is either not present or double""".format(qlist[n]))
@@ -692,15 +767,20 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         wildcard-like expression to match. Default is "*.out"
     ignore: str
         wildcard-like expression of files to ignore. Default "slurm*"
-    parser_file: str
-        standard parser_file to pass to raw_quantities. Default is ccp
-    parser: None/dict{functions}
-        parser to call. If None, calls ccp.Parser
-        If Parser != None, pass as the parser's *args as parser_args, then the parser's **kwargs
-    parser_args: None/dict{list/tuple}
-        provide a list of the positional arguments for your parser
-    parser_kwargs: None/dict{list/tuple}
-        provide a list of the positional arguments for your parser
+    parserfuncs: {},dict
+        {"pname": pfunc/None}
+        None => ccp.
+        if {pfunc: "pname"} it will be inverted
+    parser: None ,dict, str, func, list(if raw == True)                 
+        {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
+        if str/func, uses for all qs
+        list allowed only if raw == True
+    parser_args: None, dict, list
+        {"pname1": args1, pname1, ..}
+        list will be used for all parser
+    parser_kwargs: None, dict:
+        If dictionary of dictionary/None, will be used as is.
+        Else, will be used for each parser
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
         False is used by other quantities that check before for loops.
@@ -708,6 +788,14 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         dictionary {"complex_quantity": function, ...}
         or one of these strings: "ccp","qcep-ccp","qcep"
         strings recognition is case insensitive and removes non-alphabetic characters
+    to_console: bool
+        whether to print logging to the console
+    to_log: bool
+        whether to print logging to file
+    logname: str
+        the log filename. Default is CCDatabase.log
+    printlevel: int
+        logging level: 10,20,30,40,50. Accessible also as logging.DEBUG/INFO/WARNING/ERROR/CRITICAL (respectively)
         
     Does
     ----
@@ -724,7 +812,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
     fp, jsdata = None, None  # to allow nonlocal declaration
     ### Processing user input
     #funcdict
-    if type(funcdict) == str:
+    if type(funcdict) is str:
         funcdict = (''.join([i for i in funcdict if i.isalpha()])).lower()  # removes non-aplhabetic
         if funcdict == "ccp":
             from CCDatabase.quantity_functions import ccp_funcs
@@ -742,7 +830,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         raise TypeError(""""funcdict" should be a dictionary or a string""")
         
     if check_input:
-        qlist, fp, jsdata = check_qlist(qlist,"coplex_quantities",fp,jsdata)
+        qlist, fp, jsdata = check_qlist(qlist, "coplex_quantities", fp, jsdata)
         
     stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
@@ -790,14 +878,14 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             if par_q in funcdict.keys():
                 func = funcdict[par_q]
                 state_num = int(q.split("_")[-1])  # the state(only one) we want to look at
-                ccdlog.info("{}: will use function for {} on state {}".format(q,par_q,state_num))
+                ccdlog.info("{}: will use function for {} on state {}".format(q, par_q, state_num))
             else:
                 raise ValueError("There is no function for complex quantity {}".format(q))
         else:
             func = funcdict[q]
             state_num = False
         states = stateslist[n]
-        if not ut.cq_in_keys(data,q,states=states):
+        if not ut.cq_in_keys(data, q,  states=states):
             ccdlog.debug("{} not in data{}. Trying to obtain it".format(q, " {} times".format(states) if states else ""))
             miss = raw_quantities(path, qlist=reqsdict[q], ext=ext, ignore=ignore,
                                   parser_file=parser_file,
@@ -812,22 +900,22 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                 shift = 1 if q in ex_qs else 0  # 1 if only excited state
                 if states:
                     vals={}
-                    for s in range(shift,states+1):  # if ES, python counting => fortran/human counting
+                    for s in range(shift, states+1):  # if ES, python counting => fortran/human counting
                         try:
-                            qval = func(path=path,n=s)  
+                            qval = func(path=path, n=s)  
                             vals[s] = qval  # nb will become a str when dumped
-                            data["{}_{}".format(q,s)] = qval  # e.g. ex_en_1 : val1
+                            data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
                         except:
-                            ccdlog.error("Errors while calculating {}, state {}, in {}".format(q,s,path))
+                            ccdlog.error("Errors while calculating {}, state {}, in {}".format(q, s, path))
                             missing.append(q)
                     data[q] = vals  # e.g ex_en:{1:val1,2:val2}
                     ccdlog.debug("saved {} as both dictionary and individual values".format(q))
                 elif state_num:
                     try:
-                        qval = func(path=path,n=state_num)  
+                        qval = func(path=path, n=state_num)  
                         data[q] = qval
                     except:
-                        ccdlog.error("Errors while calculating {} in {}".format(q,path))
+                        ccdlog.error("Errors while calculating {} in {}".format(q, path))
                         missing.append(q)
                 else:  # no state specified, could be 1 or "as many as possible"
                     failed = False
@@ -835,9 +923,9 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     vals = {}
                     while not failed:  # trying to obtain as many vals as possible
                         try:
-                            qval = func(path=path,n=s)  
+                            qval = func(path=path, n=s)  
                             vals[s] = qval  # nb will become a str when dumped
-                            ccdlog.debug("{} = {}".format(s,qval))
+                            ccdlog.debug("{} = {}".format(s, qval))
                             s += 1
                         except:  # max num of vals
                             if s == 0:  # ex_q not declared, e.g. ex_en_0
@@ -847,7 +935,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                             else:
                                 failed = True 
                     if len(vals) == 0:
-                        ccdlog.error("Errors when calculating {} in {}".format(q,path))
+                        ccdlog.error("Errors when calculating {} in {}".format(q, path))
                         missing.append(q)
                     elif len(vals) == 1:
                         data[q] = vals[1]
@@ -855,12 +943,12 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     else:
                         data[q] = vals
                         for s,v in vals.items():
-                            data["{}_{}".format(q,s)] = v  # e.g. ex_en_1 : val1
+                            data["{}_{}".format(q, s)] = v  # e.g. ex_en_1 : val1
                         ccdlog.debug("{} has many values. Added both dict and individual values".format(q))
             else:
                 ccdlog.error("cannot calculate {} because of missing raw quantity/ies".format(q))
                 missing.append(q)
-    ut.dump_js(data,datafp)
+    ut.dump_js(data, datafp)
     ccdlog.info("dumped into {}".format(datafp))                        
     return missing
 
@@ -887,13 +975,33 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
         wildcard expression to match for find_and_parse 
     ignore: str
         wildcard expression to ignore for find_and_parse 
-    parser: dict/func
-        dictionary of parsers for each 
+    parserfuncs: {},dict
+        {"pname": pfunc/None}
+        None => ccp.
+        if {pfunc: "pname"} it will be inverted
+    parser: None ,dict, str, func, list(if raw == True)                 
+        {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
+        if str/func, uses for all qs
+        list allowed only if raw == True
+    parser_args: None, dict, list
+        {"pname1": args1, pname1, ..}
+        list will be used for all parser
+    parser_kwargs: None, dict:
+        If dictionary of dictionary/None, will be used as is.
+        Else, will be used for each parser
     funcdict: dict/str
         dictionary {"complex_quantity": function, ...}
         or one of these strings: "ccp","qcep-ccp","qcep"
         strings recognition is case insensitive and removes non-alphabetic characters
-
+    to_console: bool
+        whether to print logging to the console
+    to_log: bool
+        whether to print logging to file
+    logname: str
+        the log filename. Default is CCDatabase.log
+    printlevel: int
+        logging level: 10,20,30,40,50. Accessible also as logging.DEBUG/INFO/WARNING/ERROR/CRITICAL (respectively)
+        
    Returns
     -------
     pd.DataFrame
@@ -907,18 +1015,18 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     joblist = ut.deal_with_type(joblist,condition=str, to=get_joblist)
     ccdlog.info("obtained \"joblist\"")
     if check_input:
-        qlist, fp, jsdata = check_qlist(qlist,"complex_quantities", fp, jsdata)
+        qlist, fp, jsdata = check_qlist(qlist, "complex_quantities", fp, jsdata)
     stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and stateslist")
 
     if check_input:
         # funcdict
-        if type(funcdict) == str:
+        if type(funcdict) is str:
             funcdict = (''.join([i for i in funcdict if i.isalpha()])).lower()  # removes non-aplhabetic
             if funcdict not in ["ccp","qcepccp","qcep"]:
                 raise ValueError("Unrecognised string value for \"funcdict\"")
-        elif type(funcdict) != dict:
+        elif type(funcdict) is not dict:
             raise TypeError("\"funcdict\" can be a dictionary or a recognisable string (\"ccp\",\"qcepccp\",\"qcep\")")            
         reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict = check_other_args(fp,
                                                                                                jsdata, 
@@ -968,7 +1076,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                     shift = 1 if q in ex_qs else 0  # 1 if only excited state
                     if stateslist[n]:
                         try:
-                            values = [data[q][str(v)] for v in range(shift,stateslist[n]+1)]
+                            values = [data[q][str(v)] for v in range(shift, stateslist[n]+1)]
                             # if q or str[v] gives key error goes to except
                             column.extend(values)
                             ccdlog.debug("gotten values for {} from its dictionary".format(q))
@@ -983,10 +1091,10 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 ccdlog.warning("had to get values for {} from individual values, check dictionary".format(q))
                             else:
                                 if cnt == 0:  # miss_state is True
-                                    missing.append([stateslist[n],q])
-                                    ccdlog.debug("added {} to \"missing\"".format([stateslist[n],q]))
+                                    missing.append([stateslist[n], q])
+                                    ccdlog.debug("added {} to \"missing\"".format([stateslist[n], q]))
                                 else:
-                                    ccdlog.debug("{} could not be obtained".format([stateslist[n],q]))
+                                    ccdlog.debug("{} could not be obtained".format([stateslist[n], q]))
                     else:  # stateslist[n] == False
                         to_add = data[q] if q in data.keys() else np.nan
                         if q not in data.keys():
@@ -996,22 +1104,22 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 ccdlog.debug("added {} to \"missing\"".format(q))
                             else:
                                 ccdlog.debug("{} could not be obtained".format(q))
-                        elif type(to_add) == dict:
+                        elif type(to_add) is dict:
                             ccdlog.warning("You did not specify states for {q}. This makes collection slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
                             try:
-                                values = [to_add[str(v)] for v in range(shift,len(to_add)+1)]  # all in order
-                                ccdlog.info("states 1-{n} in {q}".format(n=len(to_add),q=q))
+                                values = [to_add[str(v)] for v in range(shift, len(to_add)+1)]  # all in order
+                                ccdlog.info("states 1-{n} in {q}".format(n=len(to_add), q=q))
                             except KeyError:  # not ordered (1,3,4,..)
                                 max_state = max([int(i) for i in  to_add.keys()])
-                                values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift,max_state+1)]
+                                values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift, max_state+1)]
                                 ccdlog.warning("some state missing in {q}, using np.nan for it".format(q=q))
                             start = len(column)  # starting point for this set of vals
                             column.extend(values)
-                            column.extend((nsl[n]-len(values))*[np.nan])
-                            if len(to_add)>nsl[n]:
+                            column.extend((nsl[n] - len(values))*[np.nan])
+                            if len(to_add) > nsl[n]:
                                 for col in columns[:-1]:  # all the previous ones
                                     col = pd.concat(
-                                            [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]),col[start+nsl[n]:]],
+                                            [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]), col[start+nsl[n]:]],
                                             ignore_index=True)  #  insert np.nan to match all lengths
                                 nsl[n] = len(values) - 1 + shift
                                 ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
@@ -1036,7 +1144,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     for n,q in enumerate(qlist):  # Could not manage with list comprehension
         if nsl[n]:
             shift = 1 if q in ex_qs else 0  # 1 if only excited state
-            xp_qlist += ["{}_{}".format(q,s+shift) for s in range(nsl[n]+1-shift)]
+            xp_qlist += ["{}_{}".format(q, s+shift) for s in range(nsl[n] + 1 - shift)]
         else:
             xp_qlist.append(q)
     rows = levelnames + xp_qlist 
@@ -1061,12 +1169,12 @@ def loopthrough(funcdict,joblist):
     joblist : list/str
         list of job tuples. or file to obtain it from
 
-    Returns
+    Does
     -------
     Performs all the functions in funcdict for all jobs (e.g. complex_quantity, molden file)
 
     """    
-    joblist = ut.deal_with_type(joblist,condition=str,to=get_joblist)
+    joblist = ut.deal_with_type(joblist, condition=str, to=get_joblist)
     for job in joblist:  # every job is a tuple
         for func,kwargs in funcdict.items():
             ckwargs = kwargs.copy()
