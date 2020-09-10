@@ -34,7 +34,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0, linenumb
          generally a float, potentially str.
     """
 #    n -= 1  # parameter uses human counting, code uses python counting
-    path = ut.deal_with_type(path,condition=None,to=os.getcwd)
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if raw_key == "":
         raise ValueError("you didn't specify the raw quantity's key")
     rawfile = os.path.join(path, rawfile)
@@ -49,13 +49,15 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0, linenumb
 for quantity functions it is often useful to use some general function with several parameters,
 define all of them but "path" and "n" into a lambda function, which is then saved as quantity function.
 e.g. 
-"ex_en": lambda path,n: raw_to_complex(path=path,n=n,rawfile="CCParser.json",raw_key="exc_energies_rel")
+"ex_en": lambda path, n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="exc_energies_rel")
 """
 ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="CCParser.json",raw_key="exc_energy_rel")}
+        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy_rel"),
+        "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_str"),
+        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy")}
 
 qcep_ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="CCParser.json",raw_key="exc_energy")}
+        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy")}
 
 qcep_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path,n=n-1,rawfile="qcep.json",raw_key="exc_energy")}
+        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="exc_energy")}
