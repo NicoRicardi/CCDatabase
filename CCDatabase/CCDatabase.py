@@ -415,7 +415,16 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         else:
             raise TypeError("""reqs should be a dictionary {q1: [req1,req2,..], q2: [req1,req2,..],...} \n
                                                             otherwise a json to get it from (as jsdict["reqs"]) or a single quantity(str)""")
-        assert (np.array([q in reqsdict.keys() for q in qlist]).all()), "Some quantity does not have its requisites specified" 
+        tmp = np.array([q in reqsdict.keys() for q in qlist])
+        if not tmp.all():
+            issues = np.where(tmp == False)[0]
+            for i in issues:
+                par_q = "_".join(qlist[i].split("_")[:-1])  # parent q, e.g. "ex_en_11" => "ex_en"
+                if par_q in reqsdict.keys():
+                    reqsdict[qlist[i]] = reqsdict[par_q]
+                    ccdlog.info("You gave {} in qlist and {} in reqs. I suppose they are the same quantity, and will use them as such".format(qlist[i],par_q))
+                else:
+                    raise ValueError("Some quantity does not have its requisites specified")
         # any raw which is a req of a complex
         all_raws = [r[1] if type(r) in [tuple, list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]  
     rawlist = qlist if raw else all_raws
@@ -453,8 +462,17 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             parser = {q: parser for q in rawlist}  # not parserdict!!
             ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
         if type(parser) is dict:
-            if np.array([ i not in parser.keys() for i in rawlist]).any():
-                raise ValueError("No parser for some of your{} raw quantities".format("" if raw else " requisite"))
+            tmp = np.array([ i in parser.keys() for i in rawlist])
+            if not tmp.all():
+                issues = np.where(tmp == False)[0]
+                for i in issues:
+                    par_q = "_".join(rawlist[i].split("_")[:-1])  # parent q, e.g. "ex_en_11" => "ex_en"
+                    if par_q in parser.keys():
+                        parser[rawlist[i]] = parser[par_q]
+                        ccdlog.info("You gave {} in {} and {} in parser. I suppose they are the same quantity, and will use them as such".format(rawlist[i],
+                                    "qlist" if raw else "requisites",par_q))
+                    else:
+                        raise ValueError("No parser for some of your{} raw quantities".format("" if raw else " requisite"))
             parserdict = parser
             ccdlog.info("obtained \"parserdict\" with all necessary keys")
         elif type(parser) in [list,tuple]:
@@ -938,7 +956,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                         ccdlog.error("Errors when calculating {} in {}".format(q, path))
                         missing.append(q)
                     elif len(vals) == 1:
-                        data[q] = vals[1]
+                        data[q] = vals[0]
                         ccdlog.debug("{} is a single value".format(q))
                     else:
                         data[q] = vals
