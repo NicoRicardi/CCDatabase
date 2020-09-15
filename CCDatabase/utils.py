@@ -61,10 +61,10 @@ def load_js(fname):
     dict
         the dictionary in the json file
     """
-    with open(fname,"r") as f:
+    with open(fname, "r") as f:
         return js.load(f)
 
-def dump_js(obj,fname):
+def dump_js(obj, fname):
     """
     Note
     ----
@@ -81,10 +81,10 @@ def dump_js(obj,fname):
     ----
     dumps obj in fname
     """
-    with open(fname,"w") as f:
-        js.dump(obj,f)
+    with open(fname, "w") as f:
+        js.dump(obj, f)
         
-def deal_with_type(obj,condition=False,to=None):
+def deal_with_type(obj, condition=False, to=None):
     """
     Note
     ----
@@ -105,13 +105,13 @@ def deal_with_type(obj,condition=False,to=None):
         the object with the desired type (or processed as desired)
     """
     if condition != False:
-        if type(obj) == condition:
+        if type(obj) is condition:
             try:
                 return to(obj)
             except:
                 print("utils.deal_with_type: failed to return to(obj), returning obj")
                 return obj
-        elif condition == None and obj == None:
+        elif condition is None and obj is None:
             try:
                 return to()
             except:
@@ -122,7 +122,7 @@ def deal_with_type(obj,condition=False,to=None):
     else:
         return to(obj)
     
-def rq_in_keys(d,q, nvals=1):
+def rq_in_keys(d, q, nvals=1):
     """
     Parameters
     ----------
@@ -142,7 +142,7 @@ def rq_in_keys(d,q, nvals=1):
     if q not in d.keys():
         return False
     else:
-        if len(d[q])<nvals:
+        if len(d[q]) < nvals:
             return False
         else:
             return True
@@ -161,12 +161,14 @@ def cq_in_keys(d,q, states=False, state=False):
     Returns
     -------
     bool
-        DESCRIPTION.
+        Whether the complex quantity is present in d.
+        If state, if it's present for that state.
+        If states, if it's present up to that state.
 
     """
     if states and state:
         print("You used both states and state. states trumps state.")
-        state=False
+        state = False
     if not states and q not in d.keys():
         return False
     elif states:
@@ -176,23 +178,33 @@ def cq_in_keys(d,q, states=False, state=False):
             else:  # float, str, etc...
                 return False
         else:
-            qs = ["{}_{}".format(q,s) for s in range(states)]
+            qs = ["{}_{}".format(q, s) for s in range(states)]
             return np.array([x in d.keys() for x in qs]).all()
     elif state:
-        q = "{}_{}".format(q,state)
+        q = "{}_{}".format(q, state)
         return q in d.keys()
-        
-    
-#def get_data(d,q,state=False):  # NR2CGE: perhaps we may write a function to get the data out of the dictionary(tries different ways)?
-#    """
-#    """
-#    if  state:
-#        pass
-#    else:
-#        return q
         
 def setupLogger(to_console=True, to_log=False, logname="CCDatabase.log", printlevel=10):  
     """
+    Note
+    ----
+    Never add handlers directly, particularly within functions that get called several times, as this will result in handler multiplication.
+    Use this function which prevents it and ensure 1 handler per type is present at most.
+    
+    Parameters
+    ----------
+    to_console: bool
+        whether to print logging to the console
+    to_log: bool
+        whether to print logging to file
+    logname: str
+        the log filename. Default is CCDatabase.log
+    printlevel: int
+        logging level: 10,20,30,40,50. Accessible also as logging.DEBUG/INFO/WARNING/ERROR/CRITICAL (respectively)
+        
+    Does
+    ----
+    Sets up the logger avoiding handlers repetition
     """
     if "ccdlog" not in globals(): 
         global ccdlog
