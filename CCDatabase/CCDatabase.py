@@ -202,7 +202,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     Parameters
     ----------
     path: str
-        the folder to work in
+        the folder to work in. if None, uses os.getcwd()
     ext: str
         wildcard-like expression to match. Default is "*.out"
     ignore: str
@@ -265,7 +265,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     # Finding file
     files = [i for i in gl.glob(os.path.join(path, ext)) if i not in gl.glob(os.path.join(path, ignore))]  # e.g. all *.out which are not slurm*.out
     if len(files) == 0:
-        raise FileNotFoundError("Either no matching file or inexistent path")
+        raise FileNotFoundError("Either no matching file or inexistent path")  #TODO check
     elif len(files) == 1:
         file = files[0]
         ccdlog.info("File found!")

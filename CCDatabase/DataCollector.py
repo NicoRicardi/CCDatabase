@@ -49,8 +49,6 @@ class DataCollector():
             self.all_raws = [r[1] if type(r) in [tuple,list] else r for r in set(ittl.chain.from_iterable(reqsdict.values()))]
             self.parserdict = {rq : megadict[parsername]["parser"] for rq in self.all_raws}  #TODO: change
             self.parser_file = megadict[parsername]["parser_file"]
-#            self.parserargsdict = {rq: megadict[parsername]["parserargs"][rq] for rq in self.all_raws}
-            ### {rq: [{rq:hook,..}]} because parser should parse all_raws at once
             self.parserargsdict = {parsername: [{rq: megadict[parsername]["parser_args"][rq] for rq in self.all_raws}]}
             self.parserkwargsdict = {parsername: megadict[parsername]["parser_kwargs"]}
         self.cqlist = cqlist 
