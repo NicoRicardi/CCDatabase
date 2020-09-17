@@ -217,7 +217,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         dictionary of {kw1: arg1, kw2: arg2,...}
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
-        False is used by other quantities that check before for loops.
+        False is used by other functions that check before for loops.
     to_console: bool
         whether to print logging to the console
     to_log: bool
@@ -611,16 +611,16 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
     parser: None ,dict, str, func, list(if raw == True)                 
         {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
         if str/func, uses for all qs
-        list allowed only if raw == True
+        list allowed
     parser_args: None, dict, list
-        {"pname1": args1, pname1, ..}
+        {"pname1": args1, "pname2": args2, ..}
         list will be used for all parser
     parser_kwargs: None, dict:
         If dictionary of dictionary/None, will be used as is.
         Else, will be used for each parser
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
-        False is used by other quantities that check before for loops.
+        False is used by other functions that check before for loops.
     to_console: bool
         whether to print logging to the console
     to_log: bool
@@ -801,7 +801,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         Else, will be used for each parser
     check_input: bool
         whether parser,parser_args, parser_kwargs should be checked. Default is True.
-        False is used by other quantities that check before for loops.
+        False is used by other functions that check before for loops.
     funcdict: dict/str
         dictionary {"complex_quantity": function, ...}
         or one of these strings: "ccp","qcep-ccp","qcep"
