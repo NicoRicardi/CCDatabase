@@ -147,7 +147,7 @@ def rq_in_keys(d, q, nvals=1):
         else:
             return True
         
-def cq_in_keys(d,q, states=False, state=False):  #TODO check
+def cq_in_keys(d,q, states=False, state=False):
     """
     Parameters
     ----------

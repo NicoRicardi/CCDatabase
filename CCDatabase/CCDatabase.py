@@ -265,7 +265,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     # Finding file
     files = [i for i in gl.glob(os.path.join(path, ext)) if i not in gl.glob(os.path.join(path, ignore))]  # e.g. all *.out which are not slurm*.out
     if len(files) == 0:
-        raise FileNotFoundError("Either no matching file or inexistent path")  #TODO check
+        raise FileNotFoundError("Either no matching file or inexistent path")  
     elif len(files) == 1:
         file = files[0]
         ccdlog.info("File found!")
@@ -751,13 +751,20 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                 # Here parserdict should be {q1: pname1,..}, parserargsdict {q1:[arg1,..],..}, parserkwargsdict {q:{kw1:arg1,..},..}
                 ccdlog.info("reparsing in folder {}".format(path_tmp))
                 parser = parserfuncs[parsername]
-                find_and_parse(path_tmp, ext=ext, ignore=ignore,
-                               parser=parser, 
-                               parser_args=parserargsdict[parsername], 
-                               parser_kwargs=parserkwargsdict[parsername],
-                               check_input=False, to_console=to_console,
-                               to_log=to_log, logname=logname, printlevel=printlevel)  # parser takes care of dumping json
-                data[path_tmp] = ut.load_js(filepath)  # let's read reparsed json
+                try:
+                    find_and_parse(path_tmp, ext=ext, ignore=ignore,
+                                   parser=parser, 
+                                   parser_args=parserargsdict[parsername], 
+                                   parser_kwargs=parserkwargsdict[parsername],
+                                   check_input=False, to_console=to_console,
+                                   to_log=to_log, logname=logname, printlevel=printlevel)  # parser takes care of dumping json
+                except:
+                    ccdlog.critical("could not parse in {}".format(path_tmp))
+                if os.path.exists(filepath):
+                    data[path_tmp] = ut.load_js(filepath)  # let's read reparsed json
+                else:
+                    ccdlog.critical("{} does not exist. Either did not parse or parsed and saved elsewhere".format(filepath))
+                    data[path_tmp] = {}
             reparsed[path_tmp][parsername] = True  
         if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and reparsed[path_tmp][parser[qlist[n]]]:
             missing.append(qlist[n])  # original q, not split
@@ -976,9 +983,6 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                  parser_kwargs=None, check_input=True, funcdict="ccp",
                  to_console=True, to_log=False, logname="CCDatabase.log", printlevel=20):
     """
-    Note
-    ----
-    
     Parameters
     ----------
     joblist: list[tuples/list]/str
@@ -1023,7 +1027,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
    Returns
     -------
     pd.DataFrame
-        a DataFrame with ...
+        a DataFrame with the desired quantities for each calculation
     """
     ### Logger setup: file or console, printlevel
     ut.setupLogger(to_console=to_console, to_log=to_log, logname=logname, printlevel=printlevel)
@@ -1172,8 +1176,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     try:
         df.index = rows # index
     except ValueError:  # length mismatch (e.g. "ex_en_0")
-        print("rows", rows)
-        return df
+        ccdlog.critical("Some issue in naming your columns!\n columns are {}".format(rows))
     ccdlog.info("done, return DataFrame")
     return df.T  # Transpose: now every column is either a level spec(A,B,basis,calc) or a property, every row is a job
 
@@ -1183,7 +1186,7 @@ def loopthrough(funcdict,joblist):
     Parameters
     ----------
     funcdict : dict
-        {func: {"kw": arg,...}, func2: {"kw": arg,...}, ...}
+        {func: {"args":[arglist],"kw": kwarg,...}, func2: {"args":[arglist],"kw": kwarg,...}, ...}
     joblist : list/str
         list of job tuples. or file to obtain it from
 
@@ -1196,5 +1199,10 @@ def loopthrough(funcdict,joblist):
     for job in joblist:  # every job is a tuple
         for func,kwargs in funcdict.items():
             ckwargs = kwargs.copy()
+            if "args" in ckwargs.keys():
+                args = ckwargs["args"]
+                del ckwargs["args"]
+            else:
+                args = []
             ckwargs.update({"path": os.path.join(*job)})  # we join the tuple elements to obtain the path
-            func(**ckwargs)
+            func(*args,**ckwargs)
