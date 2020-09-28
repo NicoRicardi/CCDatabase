@@ -4,10 +4,49 @@ import os
 import re
 import json
 import numpy as np
-from CCParser.QChem import clean_line_split, parse_symmetric_matrix#, parse_inline_vec 
+from CCParser.QChem import extract_floats, parse_symmetric_matrix#, parse_inline_vec
 
 
-def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
+def parse_molecule(n, readlin):
+    """Parse the geometry of all fragements in one file.
+
+    Parameters
+    ----------
+    n : int
+        Line number of identifier
+    readlin : list
+        Readlines list object
+
+    Returns
+    -------
+    geos : list
+        List of all atom symbols and cartesian coordinates.
+    frag_ids : dict
+        Dictionary with the indices of each fragment.
+    """
+    sep = []
+    frag = 0
+    geos = []
+    frag_ids = {}
+    catom = 0
+    # First find the limits
+    for line in readlin[n+2:]:
+        if "--" in line:
+            frag += 1
+            frag_ids[frag] = []
+        elif "$end" in line:
+            break
+        elif len(line.split()) < 4:
+            continue
+        else:
+            frag_ids[frag].append(catom)
+            data = line.split()
+            geos.append([data[0]] + list(map(float, data[1:])))
+            catom += 1
+    return geos, frag_ids
+
+
+def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
     """Parse a symmetric matrix printed columnwise
 
     Parameters
@@ -29,55 +68,13 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
     matrix = []
     cols = 0
     index_line = n+1
-    first_batch = True
     if stop_signals is None:
         stop_signals = ["Gap", "=", "eV", "Convergence", "criterion"]
-    ncol_ref = len(readlin[index_line].split())
-    while True:  # loop over blocks
-        index_ls = readlin[index_line].split()
-        ncol = len(index_ls)
-        # abort if more or zero columns or due to stop signal
-        if (ncol > ncol_ref or ncol == 0) \
-        or any(stop in index_ls for stop in stop_signals):
+    stop = 0
+    for iline, line in enumerate(readlin[index_line:]):
+        if any(stop in line for stop in stop_signals):
             break
-        # abort if first element is not a number
-        if not index_ls[0].isdigit():
-            try:
-                tmp = float(index_ls[0])
-            except ValueError:
-                break
-        if any(stop in index_ls for stop in stop_signals):
-            break
-        # adding rows scheme -> take line split as is
-        j = 0
-        if cols > 0:
-            first_batch = False
-        while True:  # loop over lines in one block
-            line_split = readlin[index_line+j].split()
-            # abort if no elements in line split
-            if len(line_split) == 0:
-                break
-            # abort if first element is not a number
-            if not line_split[0].isdigit():
-                try:
-                    tmp = float(index_ls[0])
-                except ValueError:
-                    break
-            # if needed clean the split from glued floats
-            if len(line_split) == ncol and \
-                    len(line_split[0].split('-')) > 1:
-                line_split = clean_line_split(line_split)
-            # abort if incorrect number of elements or signal
-            # if len(line_split) != ncol+1 \
-            if any(stop in line_split for stop in stop_signals):
-                break
-            if first_batch:
-                matrix.append([])
-            # everything's fine? let's make a matrix
-            matrix[j] += list(map(float, line_split))
-            j += 1
-        index_line += j  # update index line
-        cols += ncol  # update total number of columns processed
+        matrix.append(extract_floats(line))
     if asmatrix:  # return np.matrix object
         return np.asmatrix(matrix)
     else:  # return list of lists
@@ -117,21 +114,24 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
             match = hook.search(line)
             if match:
                 # Get value(s)
-                if otype == 'simple matrix':
+                if otype == 'geometry':
+                    out, frag_ids = parse_molecule(n, lines)
+                    parsed['frag_ids'] = [[frag_ids, n]]
+                elif otype == 'simple matrix':
                     if args:
                         out = parse_simple_matrix(n, lines, **args)
                     else:
                         out = parse_simple_matrix(n, lines)
                 elif otype == 'symmetric matrix':
-                    out = parse_symmetric_matrix(n, lines)
+                    out = parse_symmetric_matrix(n, lines, asmatrix=False)
                 elif otype == 'vector':
 #                    out = parse_inline_vec(line)
                     print("not implemented yet")
                 elif otype == 'number':
                     if args:
-                        out = parse_number_qchem(lines, n, **args)
+                        out = parse_number_qchem(n, lines, **args)
                     else:
-                        out = parse_number_qchem(lines, n)
+                        out = parse_number_qchem(n, lines)
                 else:
                     raise NotImplementedError('Only matrices and numbers can be parsed.')
                 # Save them in dictionary
@@ -179,15 +179,15 @@ def update_json_dict(json_file, parsed, overwrite_vals):
     return updated
 
 
-def parse_number_qchem(lines, n, line_shift=0, position=-1):
+def parse_number_qchem(n, lines, line_shift=0, position=-1):
     """Parse the the number from the line.
 
     Parameters
     ----------
-    lines : str
-        Lines from text that contains the number.
     n : int
         Number of the line where the hook starts.
+    lines : str
+        Lines from text that contains the number.
     line_shift : int
         Number of lines that need to be shift to start reading.
     position : int
@@ -216,6 +216,10 @@ hooks = {"scf_energy" : ("number", "SCF   energy in the final basis set"),
          "exc_energies": ("number", "Excitation energy:", dict(position=-2)),
          "osc_strength": ("number", "Osc. strength:"),
          "total_dipole" : ("number", "Total dipole"),
+         "xyz": ('geometry', r"\$molecule"),
+         "EFG_tensor_e": ('simple matrix', r"^  Raw EFG tensor \(electronic", dict(stop_signals=['Raw', ' EFG'])),
+         "EFG_tensor_n": ('simple matrix', r"^  Raw EFG tensor \(nuclear", dict(stop_signals=['Raw', ' EFG'])),
+         "EFG_tensor_t": ('simple matrix', r"^  Raw EFG tensor \(total", dict(stop_signals=['Principal'])),
         }
 
 
