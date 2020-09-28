@@ -3,8 +3,85 @@
 import os
 import re
 import json
-#import numpy as np
-from CCParser.QChem import parse_symmetric_matrix#, parse_inline_vec 
+import numpy as np
+from CCParser.QChem import clean_line_split#,parse_symmetric_matrix#, parse_inline_vec 
+
+
+def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
+    """Parse a symmetric matrix printed columnwise
+
+    Parameters
+    ----------
+    n : int
+        Line number of identifier
+    readlin : list
+        Readlines list object
+    asmatrix : bool
+        Whether to return a numpy.matrix object or not
+
+    Returns
+    -------
+    numpy.matrix
+        Parsed AO matrix as numpy.matrix object if asmatrix=True
+    list
+        Parsed AO matrix as list of lists if asmatrix=False
+    """
+    matrix = []
+    cols = 0
+    index_line = n+1
+    first_batch = True
+    if stop_signals is None:
+        stop_signals = ["Gap", "=", "eV", "Convergence", "criterion"]
+    ncol_ref = len(readlin[index_line].split())
+    while True:  # loop over blocks
+        index_ls = readlin[index_line].split()
+        ncol = len(index_ls)
+        # abort if more or zero columns or due to stop signal
+        if (ncol > ncol_ref or ncol == 0) \
+        or any(stop in index_ls for stop in stop_signals):
+            break
+        # abort if first element is not a number
+        if not index_ls[0].isdigit():
+            try:
+                tmp = float(index_ls[0])
+            except ValueError:
+                break
+        if any(stop in index_ls for stop in stop_signals):
+            break
+        # adding rows scheme -> take line split as is
+        j = 0
+        if cols > 0:
+            first_batch = False
+        while True:  # loop over lines in one block
+            line_split = readlin[index_line+j].split()
+            # abort if no elements in line split
+            if len(line_split) == 0:
+                break
+            # abort if first element is not a number
+            if not line_split[0].isdigit():
+                try:
+                    tmp = float(index_ls[0])
+                except ValueError:
+                    break
+            # if needed clean the split from glued floats
+            if len(line_split) == ncol and \
+                    len(line_split[0].split('-')) > 1:
+                line_split = clean_line_split(line_split)
+            # abort if incorrect number of elements or signal
+            # if len(line_split) != ncol+1 \
+            if any(stop in line_split for stop in stop_signals):
+                break
+            if first_batch:
+                matrix.append([])
+            # everything's fine? let's make a matrix
+            matrix[j] += list(map(float, line_split))
+            j += 1
+        index_line += j  # update index line
+        cols += ncol  # update total number of columns processed
+    if asmatrix:  # return np.matrix object
+        return np.asmatrix(matrix)
+    else:  # return list of lists
+        return matrix
 
 
 def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite_vals=True):
@@ -41,8 +118,11 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
             if match:
                 # Get value(s)
                 if otype == 'matrix':
-                    out = parse_symmetric_matrix(lines, n)
-                if otype == 'vector':
+                    if args:
+                        out = parse_simple_matrix(n, lines, **args)
+                    else:
+                        out = parse_simple_matrix(n, lines)
+                elif otype == 'vector':
 #                    out = parse_inline_vec(line)
                     print("not implemented yet")
                 elif otype == 'number':
