@@ -4,7 +4,7 @@ import os
 import re
 import json
 import numpy as np
-from CCParser.QChem import clean_line_split#,parse_symmetric_matrix#, parse_inline_vec 
+from CCParser.QChem import clean_line_split, parse_symmetric_matrix#, parse_inline_vec 
 
 
 def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
@@ -117,11 +117,13 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
             match = hook.search(line)
             if match:
                 # Get value(s)
-                if otype == 'matrix':
+                if otype == 'simple matrix':
                     if args:
                         out = parse_simple_matrix(n, lines, **args)
                     else:
                         out = parse_simple_matrix(n, lines)
+                elif otype == 'symmetric matrix':
+                    out = parse_symmetric_matrix(n, lines)
                 elif otype == 'vector':
 #                    out = parse_inline_vec(line)
                     print("not implemented yet")
