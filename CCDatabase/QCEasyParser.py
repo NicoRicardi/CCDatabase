@@ -24,7 +24,6 @@ def parse_molecule(n, readlin):
     frag_ids : dict
         Dictionary with the indices of each fragment.
     """
-    sep = []
     frag = 0
     geos = []
     frag_ids = {}
@@ -47,7 +46,7 @@ def parse_molecule(n, readlin):
 
 
 def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
-    """Parse a symmetric matrix printed columnwise
+    """Parse a simple (one block) matrix.
 
     Parameters
     ----------
@@ -61,7 +60,7 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
     Returns
     -------
     numpy.matrix
-        Parsed AO matrix as numpy.matrix object if asmatrix=True
+        Parsed matrix as numpy.matrix object if asmatrix=True
     list
         Parsed AO matrix as list of lists if asmatrix=False
     """
