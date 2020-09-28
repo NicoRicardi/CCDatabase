@@ -62,7 +62,7 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
     numpy.matrix
         Parsed matrix as numpy.matrix object if asmatrix=True
     list
-        Parsed AO matrix as list of lists if asmatrix=False
+        Parsed matrix as list of lists if asmatrix=False
     """
     matrix = []
     cols = 0
@@ -122,6 +122,7 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
                     else:
                         out = parse_simple_matrix(n, lines)
                 elif otype == 'symmetric matrix':
+                    # get matrix in a list form
                     out = parse_symmetric_matrix(n, lines, asmatrix=False)
                 elif otype == 'vector':
 #                    out = parse_inline_vec(line)
