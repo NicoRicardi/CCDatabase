@@ -514,7 +514,7 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             try:
                 is_func = callable(v)
             except:
-                is_func = hasattr(v,"__call__")
+                is_func = hasattr(v, "__call__")
             if is_func:
                 name = v.__name__
                 parserfuncs[name] = v
@@ -533,8 +533,22 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
     if parser_args is None:
         parserargsdict = {p: parser_args for p in parsers_used}
         ccdlog.info("obtained \"parserargsdict\" as None for all parsers")
-    elif type(parser_args) is dict:  # TODO: deal with functions as keys
-        if np.array([p not in parser_args.keys() for p in parsers_used]).any():
+    elif type(parser_args) is dict:  # TODO: check functions as keys
+        if np.array([type(k) != str for k in parser_args.keys()]):
+            for k,v in parser_args.items():
+                if type(k) != str:
+                    try:
+                        is_func = callable(k)
+                    except:
+                        is_func = hasattr(k, "__call__")
+                    if is_func:
+                        name = k.__name__
+                        parser_args[name] = v
+                        parserfuncs[name] = k
+                        ccdlog.warning("You gave pfunc: args instead of \"pname\": args. We changed it to \"pname\": args and added \"pname\": pfunc to parserfuncs")
+                    else:
+                        raise ValueError("At least one key in parser_args is neither a string nor a function")
+        if np.array([p not in parser_args.keys() for p in parsers_used]).any():  # not elif!
             raise ValueError("No parser_args for at least one of your parsers")
         typelist = [type(parser_args[p]) for p in parsers_used]
         if np.array([t not in [list, tuple, type(None)] for t in typelist]).any():
@@ -564,7 +578,7 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
     else:  # parser_kwargs != None
         if type(parser_kwargs) in [tuple, list]:
-            if type(parser_kwargs[0]) is dict:
+            if len(parser_kwargs) == 1 and type(parser_kwargs[0]) is dict:
                 parser_kwargs = parser_kwargs[0]
                 ccdlog.debug("You gave \"parser_kwargs\" as [dict]. The dictionary will be processed.")
             else:
@@ -573,11 +587,26 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             if np.array([type(i) not in [dict,None] for i in parser_kwargs.values()]).any():  # It's not a dict of dicts/None
                 parserkwargsdict = {p: parser_kwargs for p in parsers_used}
                 ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
-            elif np.array([p not in parser_kwargs.keys() for p in parsers_used]).any():  # allows unnecessary keys
-                raise ValueError("""No parser_kwargs for at least one of your parsers""")
             else:
-                parserkwargsdict = parser_kwargs
-                ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
+                if np.array([type(k) != str for k in parser_kwargs.keys()]):
+                    for k,v in parser_args.items():
+                        if type(k) != str:
+                            try:
+                                is_func = callable(k)
+                            except:
+                                is_func = hasattr(k, "__call__")
+                            if is_func:
+                                name = k.__name__
+                                parser_kwargs[name] = v
+                                parserfuncs[name] = k
+                                ccdlog.warning("You gave pfunc: args instead of \"pname\": kwargs. We changed it to \"pname\": kwargs and added \"pname\": pfunc to parserfuncs")
+                            else:
+                                raise ValueError("At least one key in parser_args is neither a string nor a function")
+                if np.array([p not in parser_kwargs.keys() for p in parsers_used]).any():  # allows unnecessary keys. Not elif!
+                    raise ValueError("""No parser_kwargs for at least one of your parsers""")
+                else:
+                    parserkwargsdict = parser_kwargs
+                    ccdlog.info("obtained \"parserkwargsdict\" as your \"parser_kwargs\"")
         else:
             raise ValueError(""""parser_kwargs" can be None, dict (to use for all quantities), or dict of dict. Your type is not recognised.""")
     to_return = (parserfuncs, parserdict, parserargsdict, parserkwargsdict) if raw else (reqsdict, parserfuncs, parserdict, parserargsdict, parserkwargsdict)
@@ -1142,7 +1171,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 for col in columns[:-1]:  # all the previous ones
                                     col = pd.concat(
                                             [col[:start+nsl[n]], pd.Series((len(values)-nsl[n])*[np.nan]), col[start+nsl[n]:]],
-                                            ignore_index=True)  #  insert np.nan to match all lengths
+                                            ignore_index=True)  #  insert np.nan to match all lengths 
                                 nsl[n] = len(values) - 1 + shift
                                 ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
                         else:  # not a dict

@@ -9,7 +9,58 @@ import json as js
 import numpy as np
 import os
 import logging
+import re
 
+def str2arr(s, np_ = True):
+    """
+    Note
+    ----
+    Takes a list/array(vectors, matrices) written as a string by pandas, and turns it back into a list/array.
+    If given a non-str will return it as it is.
+    
+    Parameters
+    ----------
+    s: str, any
+        the string  or object to process
+    np_: bool
+        True if np.array is desired, False if list is desired
+    
+    Returns
+    -------
+    np.ndarr/list or s
+        the array/list if possible
+    """
+    if type(s) != str or not re.match(r"\[?(?:\[(?: ?[0-9]+,? ?)+\](?:,|\n)? ?)+\]?",s):
+        return s
+    else:
+        s = re.sub(r"(\d) ", r"\1, ", s)
+        s = re.sub(r"\n ", r", ", s)
+        r = js.loads(s)
+        if np_:
+            r = np.array(r)
+        return r
+            
+def vec_df(df,np_):
+    """
+    Note
+    ----
+    Turns every array/list(vectors, matrices) stored as text into array/list
+    
+    Parameters
+    ----------
+    df: pd.DataFrame
+        the dataframe to process
+    np_: bool
+        True if np.ndarray is desired, False if list is desired
+    
+    Does
+    ----
+    changes values within df
+    """
+    lmbd = lambda x: str2arr(x,np_=np_)
+    for c in df.columns:
+        df[c] = df[c].apply(lmbd)
+        
 def mkdif(a):
     """
     Note
