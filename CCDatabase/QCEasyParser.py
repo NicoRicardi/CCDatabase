@@ -216,18 +216,13 @@ def read_matrix_from_json(json_file, keys):
                     if fname.split('.')[-1] == 'npz':
                         files[fname] = np.load(fname)
                         matrices[key].append(files[fname][k])
-                    elif fname.split('.')[-1] == 'txt':
-                        files[fname] = fname
-                        matrices[key].append(np.loadtxt(fname))
                     else:
-                        raise ValueError('Only npz and txt files')
+                        raise ValueError('Only npz files')
                 else:
                     if fname.split('.')[-1] == 'npz':
                         matrices[key].append(files[fname][k])
-                    elif fname.split('.')[-1] == 'txt':
-                        matrices[key].append(np.loadtxt(fname))
                     else:
-                        raise ValueError('Only npz and txt files')
+                        raise ValueError('Only npz files')
             else:
                 matrices[key].append(np.array(info[0]))
     return matrices
