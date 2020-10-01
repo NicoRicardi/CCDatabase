@@ -80,7 +80,8 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
         return matrix
 
 
-def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite_vals=True):
+def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', 
+                matrix_file='matrix.npz', overwrite_vals=True):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -102,6 +103,7 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
     if not isinstance(hooks, dict):
         raise TypeError("`hooks` should be given as a dictionary.")
     parsed = {}
+    matrices = {}
     for n, line in enumerate(lines):
         for key in hooks:
             args = None
@@ -121,9 +123,15 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
                         out = parse_simple_matrix(n, lines, **args)
                     else:
                         out = parse_simple_matrix(n, lines)
+                    if len(out) > 3:  # large matrix
+                        print("Matrix is too large, saving %s matrix in file." % key)
+                        matrices[key] = np.array(out)
+                        out = [matrix_file, key]
                 elif otype == 'symmetric matrix':
-                    out = parse_symmetric_matrix(n, lines)
                     out = parse_symmetric_matrix(n, lines, asmatrix=False)
+                    if len(out) > 3:  # large matrix
+                        matrices[key] = np.array(out)
+                        out = [matrix_file, key]
                 elif otype == 'vector':
 #                    out = parse_inline_vec(line)
                     print("not implemented yet")
@@ -133,12 +141,14 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
                     else:
                         out = parse_number_qchem(n, lines)
                 else:
-                    raise NotImplementedError('Only matrices and numbers can be parsed.')
+                    raise NotImplementedError('The requested type is not yet implemented.')
                 # Save them in dictionary
                 if key in parsed:
                     parsed[key].append([out, n])
                 else:
                     parsed[key] = [[out, n]]
+    if matrices:
+        np.savez(matrix_file, **matrices)
     if to_file:
         json_filepath = os.path.join(os.path.split(fname)[0],json_file) 
         # Check if file exists and update dictionary
@@ -179,6 +189,50 @@ def update_json_dict(json_file, parsed, overwrite_vals):
     return updated
 
 
+def read_matrix_from_json(json_file, keys):
+    """Read parsed matrices saved in json_file.
+
+    Parameters
+    ----------
+    json_file : str
+        Name of json file to read.
+    keys : list
+        List of keys to look into
+    """
+    # Read json TODO: replace with load_js
+    with open(json_file, 'r') as ifile:
+        parsed = json.load(ifile)
+    matrices = {}
+    files = {}
+    for key in keys:
+        if key not in matrices:
+            matrices[key] = []
+        data = parsed[key]
+        for info in data:
+            if isinstance(info[0][0], str):
+                fname = info[0][0]
+                k = info[0][1]
+                if fname not in files:
+                    if fname.split('.')[-1] == 'npz':
+                        files[fname] = np.load(fname)
+                        matrices[key].append(files[fname][k])
+                    elif fname.split('.')[-1] == 'txt':
+                        files[fname] = fname
+                        matrices[key].append(np.loadtxt(fname))
+                    else:
+                        raise ValueError('Only npz and txt files')
+                else:
+                    if fname.split('.')[-1] == 'npz':
+                        matrices[key].append(files[fname][k])
+                    elif fname.split('.')[-1] == 'txt':
+                        matrices[key].append(np.loadtxt(fname))
+                    else:
+                        raise ValueError('Only npz and txt files')
+            else:
+                matrices[key].append(np.array(info[0]))
+    return matrices
+
+
 def parse_number_qchem(n, lines, line_shift=0, position=-1):
     """Parse the the number from the line.
 
@@ -206,6 +260,7 @@ def parse_number_qchem(n, lines, line_shift=0, position=-1):
         number = float(number)
     return number
  
+
 ###########################################################################
 # The hooks
 # Each hook contains: (type, hook_string, extra_args)
