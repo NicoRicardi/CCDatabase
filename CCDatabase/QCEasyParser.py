@@ -24,7 +24,7 @@ def parse_molecule(n, readlin):
     frag_ids : dict
         Dictionary with the indices of each fragment.
     """
-    sep = []
+#    sep = []  #TODO check with Cris
     frag = 0
     geos = []
     frag_ids = {}
@@ -81,7 +81,7 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
 
 
 def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', 
-                matrix_file='matrix.npz', overwrite_vals=True):
+                matrix_file='matrices.npz', overwrite_vals=True):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -128,7 +128,7 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json',
                         matrices[key] = np.array(out)
                         out = [matrix_file, key]
                 elif otype == 'symmetric matrix':
-                    out = parse_symmetric_matrix(n, lines, asmatrix=False)
+                    out = parse_symmetric_matrix(n, lines)
                     if len(out) > 3:  # large matrix
                         matrices[key] = np.array(out)
                         out = [matrix_file, key]
