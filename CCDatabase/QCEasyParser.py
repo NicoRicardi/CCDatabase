@@ -4,10 +4,50 @@ import os
 import re
 import json
 import numpy as np
-from CCParser.QChem import clean_line_split, parse_symmetric_matrix#, parse_inline_vec 
+from CCParser.QChem import extract_floats, parse_symmetric_matrix#, parse_inline_vec
 
 
-def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
+def parse_molecule(n, readlin):
+    """Parse the geometry of all fragements in one file.
+
+    Parameters
+    ----------
+    n : int
+        Line number of identifier
+    readlin : list
+        Readlines list object
+
+    Returns
+    -------
+    geos : list
+        List of all atom symbols and cartesian coordinates.
+    frag_ids : dict
+        Dictionary with the indices of each fragment.
+    """
+    sep = []
+    frag = 0
+    geos = []
+    frag_ids = {}
+    catom = 0
+    # First find the limits
+    for line in readlin[n+2:]:
+        if "--" in line:
+            frag += 1
+        elif "$end" in line:
+            break
+        elif len(line.split()) < 4:
+            continue
+        else:
+            if frag not in frag_ids:
+                frag_ids[frag] = []
+            frag_ids[frag].append(catom)
+            data = line.split()
+            geos.append([data[0]] + list(map(float, data[1:])))
+            catom += 1
+    return geos, frag_ids
+
+
+def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
     """Parse a symmetric matrix printed columnwise
 
     Parameters
@@ -27,64 +67,21 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=True):
         Parsed AO matrix as list of lists if asmatrix=False
     """
     matrix = []
-    cols = 0
     index_line = n+1
-    first_batch = True
     if stop_signals is None:
         stop_signals = ["Gap", "=", "eV", "Convergence", "criterion"]
-    ncol_ref = len(readlin[index_line].split())
-    while True:  # loop over blocks
-        index_ls = readlin[index_line].split()
-        ncol = len(index_ls)
-        # abort if more or zero columns or due to stop signal
-        if (ncol > ncol_ref or ncol == 0) \
-        or any(stop in index_ls for stop in stop_signals):
+    for iline, line in enumerate(readlin[index_line:]):
+        if any(stop in line for stop in stop_signals):
             break
-        # abort if first element is not a number
-        if not index_ls[0].isdigit():
-            try:
-                tmp = float(index_ls[0])
-            except ValueError:
-                break
-        if any(stop in index_ls for stop in stop_signals):
-            break
-        # adding rows scheme -> take line split as is
-        j = 0
-        if cols > 0:
-            first_batch = False
-        while True:  # loop over lines in one block
-            line_split = readlin[index_line+j].split()
-            # abort if no elements in line split
-            if len(line_split) == 0:
-                break
-            # abort if first element is not a number
-            if not line_split[0].isdigit():
-                try:
-                    tmp = float(index_ls[0])
-                except ValueError:
-                    break
-            # if needed clean the split from glued floats
-            if len(line_split) == ncol and \
-                    len(line_split[0].split('-')) > 1:
-                line_split = clean_line_split(line_split)
-            # abort if incorrect number of elements or signal
-            # if len(line_split) != ncol+1 \
-            if any(stop in line_split for stop in stop_signals):
-                break
-            if first_batch:
-                matrix.append([])
-            # everything's fine? let's make a matrix
-            matrix[j] += list(map(float, line_split))
-            j += 1
-        index_line += j  # update index line
-        cols += ncol  # update total number of columns processed
+        matrix.append(extract_floats(line))
     if asmatrix:  # return np.matrix object
         return np.asmatrix(matrix)
     else:  # return list of lists
         return matrix
 
 
-def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite_vals=True):
+def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', 
+                matrix_file='matrix.npz', overwrite_vals=True):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -106,6 +103,7 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
     if not isinstance(hooks, dict):
         raise TypeError("`hooks` should be given as a dictionary.")
     parsed = {}
+    matrices = {}
     for n, line in enumerate(lines):
         for key in hooks:
             args = None
@@ -117,28 +115,40 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', overwrite
             match = hook.search(line)
             if match:
                 # Get value(s)
-                if otype == 'simple matrix':
+                if otype == 'geometry':
+                    out, frag_ids = parse_molecule(n, lines)
+                    parsed['frag_ids'] = [[frag_ids, n]]
+                elif otype == 'simple matrix':
                     if args:
                         out = parse_simple_matrix(n, lines, **args)
                     else:
                         out = parse_simple_matrix(n, lines)
+                    if len(out) > 3:  # large matrix
+                        print("Matrix is too large, saving %s matrix in file." % key)
+                        matrices[key] = np.array(out)
+                        out = [matrix_file, key]
                 elif otype == 'symmetric matrix':
-                    out = parse_symmetric_matrix(n, lines)
+                    out = parse_symmetric_matrix(n, lines, asmatrix=False)
+                    if len(out) > 3:  # large matrix
+                        matrices[key] = np.array(out)
+                        out = [matrix_file, key]
                 elif otype == 'vector':
 #                    out = parse_inline_vec(line)
                     print("not implemented yet")
                 elif otype == 'number':
                     if args:
-                        out = parse_number_qchem(lines, n, **args)
+                        out = parse_number_qchem(n, lines, **args)
                     else:
-                        out = parse_number_qchem(lines, n)
+                        out = parse_number_qchem(n, lines)
                 else:
-                    raise NotImplementedError('Only matrices and numbers can be parsed.')
+                    raise NotImplementedError('The requested type is not yet implemented.')
                 # Save them in dictionary
                 if key in parsed:
                     parsed[key].append([out, n])
                 else:
                     parsed[key] = [[out, n]]
+    if matrices:
+        np.savez(matrix_file, **matrices)
     if to_file:
         json_filepath = os.path.join(os.path.split(fname)[0],json_file) 
         # Check if file exists and update dictionary
@@ -179,7 +189,46 @@ def update_json_dict(json_file, parsed, overwrite_vals):
     return updated
 
 
-def parse_number_qchem(lines, n, line_shift=0, position=-1):
+def read_matrix_from_json(json_file, keys):
+    """Read parsed matrices saved in json_file.
+
+    Parameters
+    ----------
+    json_file : str
+        Name of json file to read.
+    keys : list
+        List of keys to look into
+    """
+    # Read json TODO: replace with load_js
+    with open(json_file, 'r') as ifile:
+        parsed = json.load(ifile)
+    matrices = {}
+    files = {}
+    for key in keys:
+        if key not in matrices:
+            matrices[key] = []
+        data = parsed[key]
+        for info in data:
+            if isinstance(info[0][0], str):
+                fname = info[0][0]
+                k = info[0][1]
+                if fname not in files:
+                    if fname.split('.')[-1] == 'npz':
+                        files[fname] = np.load(fname)
+                        matrices[key].append(files[fname][k])
+                    else:
+                        raise ValueError('Only npz files')
+                else:
+                    if fname.split('.')[-1] == 'npz':
+                        matrices[key].append(files[fname][k])
+                    else:
+                        raise ValueError('Only npz files')
+            else:
+                matrices[key].append(np.array(info[0]))
+    return matrices
+
+
+def parse_number_qchem(n, lines, line_shift=0, position=-1):
     """Parse the the number from the line.
 
     Parameters
@@ -206,6 +255,7 @@ def parse_number_qchem(lines, n, line_shift=0, position=-1):
         number = float(number)
     return number
  
+
 ###########################################################################
 # The hooks
 # Each hook contains: (type, hook_string, extra_args)
@@ -216,6 +266,10 @@ hooks = {"scf_energy" : ("number", "SCF   energy in the final basis set"),
          "exc_energies": ("number", "Excitation energy:", dict(position=-2)),
          "osc_strength": ("number", "Osc. strength:"),
          "total_dipole" : ("number", "Total dipole"),
+         "xyz": ('geometry', r"\$molecule"),
+         "EFG_tensor_e": ('simple matrix', r"^  Raw EFG tensor \(electronic", dict(stop_signals=['Raw', ' EFG'])),
+         "EFG_tensor_n": ('simple matrix', r"^  Raw EFG tensor \(nuclear", dict(stop_signals=['Raw', ' EFG'])),
+         "EFG_tensor_t": ('simple matrix', r"^  Raw EFG tensor \(total", dict(stop_signals=['Principal'])),
         }
 
 
