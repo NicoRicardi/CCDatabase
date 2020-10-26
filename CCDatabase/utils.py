@@ -10,6 +10,41 @@ import numpy as np
 import os
 import logging
 import re
+import cachetools
+
+caches = {"npz": cachetools.LRUCache(maxsize=256)}
+
+def clear_caches(cachedict):
+    for v in cachedict.values():
+        v.clear()
+
+def russdoll(obj):
+    """
+    Note
+    ----
+    not used for the moment
+    
+    Parameters
+    ----------
+    obj: obj
+        the nested object
+    
+    Returns
+    -------
+    obj 
+        the first object in the nested structure whose length is not 1
+    """
+    while True:
+        try:
+            if len(obj) == 1:
+                n = obj[0]
+            if n == obj:
+                break
+            else:
+                obj = n
+        except:
+            break
+    return obj
 
 def str2arr(s, np_ = True):
     """
@@ -113,7 +148,10 @@ def load_js(fname):
         the dictionary in the json file
     """
     with open(fname, "r") as f:
-        return js.load(f)
+        try:
+            return js.load(f)
+        except:
+            return {}
 
 def dump_js(obj, fname):
     """
@@ -145,8 +183,8 @@ def deal_with_type(obj, condition=False, to=None):
     ----------
     obj: any
         the object whose type you want to change
-    condition: type
-        only change if of "type". Give None for NoneType
+    condition: list of types or type
+        only change if of a type in the list. You can give both None and NoneType for NoneType
     to: type/func
         type to convert to, function to return. e.g. list, os.getcwd
     
@@ -156,17 +194,13 @@ def deal_with_type(obj, condition=False, to=None):
         the object with the desired type (or processed as desired)
     """
     if condition != False:
-        if type(obj) is condition:
+        condition = type(None) if condition is None else condition   # None => NoneType
+        condition = [condition] if type(condition)==type else condition  # if only one type, make it list of types
+        if type(obj) in condition:
             try:
                 return to(obj)
             except:
                 print("utils.deal_with_type: failed to return to(obj), returning obj")
-                return obj
-        elif condition is None and obj is None:
-            try:
-                return to()
-            except:
-                print("utils.deal_with_type: failed to return to(), returning obj")
                 return obj
         else:
             return obj

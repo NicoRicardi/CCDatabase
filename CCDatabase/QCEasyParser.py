@@ -4,10 +4,59 @@ import os
 import re
 import json
 import numpy as np
-from CCParser.QChem import extract_floats, parse_symmetric_matrix#, parse_inline_vec
+from CCParser.QChem import extract_floats, parse_symmetric_matrix
 
+def parse_inline_vec(line, asarray=True):  # from CCP, just to avoid version issues
+    """ Extracts a vector of the format
+    '[ 1.000, 2.000, 3.000]' from the current line"""
+    pattern = r"[+-]?\d+\.\d*"
+    match = re.findall(pattern, line)
+    if len(match) > 0:
+        match = list(map(float, match))
+        if asarray:
+            return np.asarray(match)
+        else:
+            return match
+        
+def parse_molecule(n, readlin, join=False):
+    """Parse the geometry of all fragements in one file.
 
-def parse_molecule(n, readlin):
+    Parameters
+    ----------
+    n : int
+        Line number of identifier
+    readlin : list
+        Readlines list object
+
+    Returns
+    -------
+    geos : list
+        List of all atom symbols and cartesian coordinates.
+    """
+#    sep = []  #TODO check with Cris
+    frag = 0
+    geos = [[]]
+    # First find the limits
+    for line in readlin[n+2:]:
+        if "--" in line:
+            frag += 1
+            geos.append([])
+        elif "$end" in line:
+            break
+        elif "read" in line:
+            geos[frag] = "read"
+        else:
+            data = line.split()
+            if len(data) < 4:
+                continue
+            else:
+                geos[frag].append([data[0]] + list(map(float, data[1:])))
+    if join:
+        from itertools import chain
+        geos = list(chain.from_iterable(geos))
+    return geos
+
+def parse_elconf(n, readlin):
     """Parse the geometry of all fragements in one file.
 
     Parameters
@@ -24,28 +73,19 @@ def parse_molecule(n, readlin):
     frag_ids : dict
         Dictionary with the indices of each fragment.
     """
-#    sep = []  #TODO check with Cris
-    frag = 0
-    geos = []
-    frag_ids = {}
-    catom = 0
+    elconfs, seps = [], 0
     # First find the limits
-    for line in readlin[n+2:]:
+    for line in readlin[n:]:
+        splt = line.split()
+        if len(splt) == 2:
+            elconfs.append((splt[0],splt[1]))
         if "--" in line:
-            frag += 1
-        elif "$end" in line:
-            break
-        elif len(line.split()) < 4:
-            continue
-        else:
-            if frag not in frag_ids:
-                frag_ids[frag] = []
-            frag_ids[frag].append(catom)
-            data = line.split()
-            geos.append([data[0]] + list(map(float, data[1:])))
-            catom += 1
-    return geos, frag_ids
-
+            seps += 1
+    if seps:
+        assert len(elconfs) - seps  == 1
+    else:
+        assert len(elconfs) == 1
+    return elconfs
 
 def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
     """Parse a symmetric matrix printed columnwise
@@ -81,7 +121,7 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
 
 
 def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', 
-                matrix_file='matrices.npz', overwrite_vals=True):
+                overwrite_vals=True, large_fn='matrices.npz', size_thresh=3):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -95,15 +135,29 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json',
         args [optional]: (line_shift, position in line)
     to_file : bool
         Whether it needs to be writen to file.
-    output : str
-        Name of file where to save the parsed data.
+    json_file : str
+        Name of json file where to save the parsed data.
+    large_fn: str
+        Name of npz file to save matrices/arrays of size above thresh
+    size_thresh: int
+        size of the matrix above which they are not saved in json
     """
     with open(fname, 'r') as ifile:
         lines = ifile.readlines()
     if not isinstance(hooks, dict):
         raise TypeError("`hooks` should be given as a dictionary.")
-    parsed = {}
-    matrices = {}
+    parsed, large = {}, {}
+    """
+    if json_file is path, json_filepath = json_file
+    if fname is filename, json_filepath = json_file
+    if fname is path (path/fname.out), json_path is filename, saves in folder (path/jsfile.json)
+    """
+    json_filepath = json_file if os.path.split(json_file)[0] else os.path.join(os.path.split(fname)[0],json_file)
+    large_filepath = os.path.join(os.path.split(json_filepath)[0], large_fn)
+    if os.path.split(large_fn)[0]:
+        large_fn = os.path.split(large_fn)[1]
+        print("\"large_fn\" must be a filename. Everything before your filename is being ignored and\
+                                large_fn is always placed in the same folder as \"json_file\"")
     for n, line in enumerate(lines):
         for key in hooks:
             args = None
@@ -115,42 +169,54 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json',
             match = hook.search(line)
             if match:
                 # Get value(s)
-                if otype == 'geometry':
-                    out, frag_ids = parse_molecule(n, lines)
-                    parsed['frag_ids'] = [[frag_ids, n]]
+                if otype == 'elconfs':
+                    out = parse_elconf(n, lines, join=True)
+                elif otype == 'geometry':
+                    out = parse_molecule(n, lines, join=True)
+                    if len(out) > size_thresh:
+                        print("Matrix is too large, saving %s in file." % key)
+                        large[key] = large[key]+[np.array(out, dtype="object")] if key in large.keys() else [np.array(out, dtype="object")]
+                        out = large_fn
+                elif otype == 'frag_geoms':
+                    out = parse_molecule(n, lines, join=False)
+                    if max([len(i) for i in out]) > size_thresh:
+                        print("Matrix is too large, saving %s matrix in file." % key)
+                        large[key] = large[key]+[np.array(out, dtype="object")] if key in large.keys() else [np.array(out, dtype="object")]
+                        out = large_fn
                 elif otype == 'simple matrix':
                     if args:
                         out = parse_simple_matrix(n, lines, **args)
                     else:
                         out = parse_simple_matrix(n, lines)
-                    if len(out) > 3:  # large matrix
+                    if len(out) > size_thresh:  # large matrix
                         print("Matrix is too large, saving %s matrix in file." % key)
-                        matrices[key] = np.array(out)
-                        out = [matrix_file, key]
+                        large[key] = large[key]+[np.array(out)] if key in large.keys() else [np.array(out)]
+                        out = large_fn
                 elif otype == 'symmetric matrix':
                     out = parse_symmetric_matrix(n, lines)
-                    if len(out) > 3:  # large matrix
-                        matrices[key] = np.array(out)
-                        out = [matrix_file, key]
+                    if len(out) > size_thresh:  # large matrix
+                        print("Matrix is too large, saving %s matrix in file." % key)
+                        large[key] = large[key]+[np.array(out)] if key in large.keys() else [np.array(out)]
+                        out = large_fn
                 elif otype == 'vector':
-#                    out = parse_inline_vec(line)
-                    print("not implemented yet")
+                    out = parse_inline_vec(line)
                 elif otype == 'number':
                     if args:
                         out = parse_number_qchem(n, lines, **args)
                     else:
                         out = parse_number_qchem(n, lines)
                 else:
-                    raise NotImplementedError('The requested type is not yet implemented.')
+                    raise NotImplementedError('The requested type ({}) is not yet implemented.'.format(otype))
                 # Save them in dictionary
-                if key in parsed:
-                    parsed[key].append([out, n])
-                else:
-                    parsed[key] = [[out, n]]
-    if matrices:
-        np.savez(matrix_file, **matrices)
+                parsed[key] = parsed[key] + [[out,n]] if key in parsed.keys() else [[out,n]]
+    if large:
+        """
+        if matrix_file is path, matrix_filepath = json_file
+        if fname is filename, matrix_filepath = json_file
+        if fname is path (path/fname.out), matrix_path is filename, saves in folder (path/matrix_file.npz)
+        """
+        np.savez(large_filepath, **large)
     if to_file:
-        json_filepath = os.path.join(os.path.split(fname)[0],json_file) 
         # Check if file exists and update dictionary
         if os.path.isfile(json_filepath):
             parsed = update_json_dict(json_filepath, parsed, overwrite_vals)
@@ -267,6 +333,8 @@ hooks = {"scf_energy" : ("number", "SCF   energy in the final basis set"),
          "osc_strength": ("number", "Osc. strength:"),
          "total_dipole" : ("number", "Total dipole"),
          "xyz": ('geometry', r"\$molecule"),
+         "frag_xyz": ('frag_geoms', r"\$molecule"),
+         "elconf": ('elconf', r"\$molecule"),
          "EFG_tensor_e": ('simple matrix', r"^  Raw EFG tensor \(electronic", dict(stop_signals=['Raw', ' EFG'])),
          "EFG_tensor_n": ('simple matrix', r"^  Raw EFG tensor \(nuclear", dict(stop_signals=['Raw', ' EFG'])),
          "EFG_tensor_t": ('simple matrix', r"^  Raw EFG tensor \(total", dict(stop_signals=['Principal'])),

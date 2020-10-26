@@ -54,7 +54,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     Files are never overwritten, and their modified names (e.g. file_2.ext) are stored, which allows to undo moving operations.
     """
     ### Handling type of expr
-    expr = ut.deal_with_type(expr, orig=str, to=lambda x: [x])  # if list turn to str
+    expr = ut.deal_with_type(expr, orig=str, to=lambda x: [x])  # if str turn to list
     if type(expr) is not list:
         raise TypeError("Expr must be either list/tuple or string")
     ### Turning wildcards into regex
@@ -795,7 +795,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                     ccdlog.critical("{} does not exist. Either did not parse or parsed and saved elsewhere".format(filepath))
                     data[path_tmp] = {}
             reparsed[path_tmp][parsername] = True  
-        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and reparsed[path_tmp][parser[qlist[n]]]:
+        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and reparsed[path_tmp][parsername]:
             missing.append(qlist[n])  # original q, not split
             ccdlog.error("{} missing {}".format(path_tmp,q))
     return missing   
@@ -920,8 +920,12 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
     missing = []
     datafp = os.path.join(path, "data.json")  # path of complex quantities json file
     if os.path.exists(datafp):
-        data = ut.load_js(datafp)
-        ccdlog.info("Loaded {}".format(datafp))
+        try:
+            data = ut.load_js(datafp)
+            ccdlog.info("Loaded {}".format(datafp))
+        except:
+            data = {}
+            ccdlog.warning("issues in reading  {}!".format(datafp))
     else:
         data = {}
         ccdlog.debug("{} doesn't exist yet".format(datafp))
@@ -984,7 +988,6 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                         except:  # max num of vals
                             if s == 0:  # ex_q not declared, e.g. ex_en_0
                                 failed = None
-                                vals [0] = np.nan
                                 s += 1
                             else:
                                 failed = True 
@@ -1098,12 +1101,15 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     # levelnames
     if len(levelnames) != len(joblist[0]):
         raise TypeError("levelnames and joblist do not match!")
-        
+    
+#    return reqsdict, parserdict, parserargsdict, parserkwargsdict, parserfuncs
     ### Let's get started
     ccdlog.debug("done checking input. Starting collection")
     nsl = stateslist.copy()  # new stateslist
     columns = []
     for j in joblist:
+        from CCDatabase.utils import caches
+        ut.clear_caches(caches)
         path = os.path.join(*j)
         if not os.path.exists(path):
             ccdlog.critical("{} does not exist! skipping it".format(path))
