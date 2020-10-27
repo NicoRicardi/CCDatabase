@@ -168,6 +168,45 @@ def group_values(vals):
             vals[n1] = to_use
     return vals
 
+def get_index_dict(s,atomlist):
+    """
+    """
+    l=s.split(",")
+    idxs = {}
+    for i in l:
+        if "-" in i:
+            splt = i.split("-")
+            al1, al2 = re.search("[A-Za-z]+", splt[0]), re.search("[A-Za-z]+", splt[1])
+            al1, al2 = al1.group() if al1 else "", al2.group() if al2 else ""
+            assert al1 == al2, "Inconsistent value in atomstring"
+            n1, n2 = re.search("[0-9]+", splt[0]).group(), re.search("[0-9]+", splt[1]).group()
+            partial = [al1+str(j) for j in range(int(n1),int(n2)+1)]
+            for p in partial:
+                if p.isalnum():
+                    al, n = re.search("[A-Za-z]+", p).group(), int(re.search("[0-9]+", p).group())
+                    if al in ["A","a"]:
+                        idxs[p] = (n-1)
+                    else:
+                        idxs[p] = [n for n,j in enumerate(atomlist) if j == al][n-1]
+                elif p.isnumeric():
+                    raise ValueError("Number in atomstring. Use A1,A2,etc")
+                else:
+                    raise ValueError("Could not process value in atomstring")
+        else:
+            if i.isalpha():
+                idxs[i] = [n for n,j in enumerate(atomlist) if j == i]
+            elif i.isalnum():
+                al, n = re.search("[A-Za-z]+", i).group(), int(re.search("[0-9]+", i).group())
+                if al in ["A","a"]:
+                    idxs[i] = (n-1)
+                else:
+                    idxs[i] = [n for n,j in enumerate(atomlist) if j == al][n-1]
+            elif i.isnumeric():
+                raise ValueError("Number in atomstring. Use A1,A2,etc")
+            else:
+                raise ValueError("Could not process value in atomstring")
+    return idxs
+
 def raw_atomic(path=None, rawfile="CCParser.json", raw_key="", n=0, 
                first_only=True, element=None, number=0, frag=0, 
                all_frag_avail=True, linenumbers=True, arr_type="arr"):
@@ -244,29 +283,12 @@ def raw_atomic(path=None, rawfile="CCParser.json", raw_key="", n=0,
     else:
         frag_atoms = geoms[:,0]
         all_atoms = frag_atoms
-#    """
-#    following commented section if collection of many atoms at once implemented
-#    """    
-#if element:
-#        element = ut.deal_with_type(element, condition=str, to=lambda x: [x])
-#        if number:
-#            indexes = []
-#            for el in element:
-#                el_indexes = [n for n,i in enumerate(atomlist) if i == el]
-#                indexes.extend([el_indexes[n] for n in number])
-#        else:
-#            indexes = [n for n,i in enumerate(atomlist) if i in element]
-#    else:
-#        if number:
-#            indexes = [number]
-#    if type(element) != str:
-#        raise ValueError("You must specify and element as a string")
     vals = raws[raw_key]
     atomlist = all_atoms if all_frag_avail else frag_atoms
     if len(vals)%len(atomlist) != 0:
         print("CRITICAL - raw_atomi: The total number of values available is not a multiple of the number of atoms!")
         raise AssertionError  # qfunc is called in try statement. Use logging, not assertion messages
-    idx = [n for n,i in enumerate(atomlist) if i == element][number]
+    idx = [n for n,i in enumerate(atomlist) if i == element][number]  # Here
     idx += n*len(atomlist)  # adjust for state
     idx += shift  # adjust for previous fragments
     val = vals[idx][0] if linenumbers else vals[n][idx]

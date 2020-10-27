@@ -324,7 +324,7 @@ def check_qlist(qlist, key, fp, jsdata):
             qlist = [qlist]
             ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
     elif type(qlist) is list:
-        if len(qlist) == 2 and type(qlist[0]) is int:
+        if len(qlist) == 2 and type(qlist[0]) is int:  # here
             qlist = [qlist]
             ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
     else:
@@ -886,7 +886,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
     if check_input:
         qlist, fp, jsdata = check_qlist(qlist, "coplex_quantities", fp, jsdata)
         
-    stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
+    stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]  # Here
     qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
     ccdlog.debug("divided qlist into qlist and stateslist")
 
@@ -960,7 +960,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     vals={}
                     for s in range(shift, states+1):  # if ES, python counting => fortran/human counting
                         try:
-                            qval = func(path=path, n=s)  
+                            qval = func(path=path, n=s)  # Here
                             vals[s] = qval  # nb will become a str when dumped
                             data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
                         except:
@@ -970,7 +970,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     ccdlog.debug("saved {} as both dictionary and individual values".format(q))
                 elif state_num:
                     try:
-                        qval = func(path=path, n=state_num)  
+                        qval = func(path=path, n=state_num)  # Here
                         data[q] = qval
                     except:
                         ccdlog.error("Errors while calculating {} in {}".format(q, path))
@@ -981,7 +981,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     vals = {}
                     while not failed:  # trying to obtain as many vals as possible
                         try:
-                            qval = func(path=path, n=s)  
+                            qval = func(path=path, n=s)  # Here
                             vals[s] = qval  # nb will become a str when dumped
                             ccdlog.debug("{} = {}".format(s, qval))
                             s += 1
@@ -1071,7 +1071,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     if check_input:
         qlist, fp, jsdata = check_qlist(qlist, "complex_quantities", fp, jsdata)
     stateslist = [q[0] if type(q) in [tuple,list] else False for q in qlist]
-    qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]
+    qlist = [q[1] if type(q) in [tuple,list] else q for q in qlist]  # Here
     ccdlog.debug("divided qlist into qlist and stateslist")
 
     if check_input:
@@ -1133,7 +1133,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                     shift = 1 if q in ex_qs else 0  # 1 if only excited state
                     if stateslist[n]:
                         try:
-                            values = [data[q][str(v)] for v in range(shift, stateslist[n]+1)]
+                            values = [data[q][str(v)] for v in range(shift, stateslist[n]+1)]  # Here
                             # if q or str[v] gives key error goes to except
                             column.extend(values)
                             ccdlog.debug("gotten values for {} from its dictionary".format(q))
@@ -1141,34 +1141,34 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                             miss_state = False
                             for s in range(shift,stateslist[n]+1):
                                 qn = "{}_{}".format(q,s)
-                                to_add = data[qn] if qn in data.keys() else np.nan
+                                to_add = data[qn] if qn in data.keys() else np.nan  # Here
                                 miss_state = miss_state if qn in data.keys() else True
                                 column.append(to_add)
                             if not miss_state:
                                 ccdlog.warning("had to get values for {} from individual values, check dictionary".format(q))
                             else:
                                 if cnt == 0:  # miss_state is True
-                                    missing.append([stateslist[n], q])
+                                    missing.append([stateslist[n], q])  # Here
                                     ccdlog.debug("added {} to \"missing\"".format([stateslist[n], q]))
                                 else:
                                     ccdlog.debug("{} could not be obtained".format([stateslist[n], q]))
                     else:  # stateslist[n] == False
-                        to_add = data[q] if q in data.keys() else np.nan
+                        to_add = data[q] if q in data.keys() else np.nan  # Here
                         if q not in data.keys():
                             if cnt == 0:
-                                missing.append(q)
+                                missing.append(q)  # Here
                                 column.append(to_add)
                                 ccdlog.debug("added {} to \"missing\"".format(q))
                             else:
                                 ccdlog.debug("{} could not be obtained".format(q))
                         elif type(to_add) is dict:
                             ccdlog.warning("You did not specify states for {q}. This makes collection slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
-                            try:
+                            try:  # Here
                                 values = [to_add[str(v)] for v in range(shift, len(to_add)+1)]  # all in order
                                 ccdlog.info("states 1-{n} in {q}".format(n=len(to_add), q=q))
                             except KeyError:  # not ordered (1,3,4,..)
                                 max_state = max([int(i) for i in  to_add.keys()])
-                                values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift, max_state+1)]
+                                values = [to_add[str(v)] if str(v) in to_add.keys() else np.nan for v in range(shift, max_state+1)]  # Here
                                 ccdlog.warning("some state missing in {q}, using np.nan for it".format(q=q))
                             start = len(column)  # starting point for this set of vals
                             column.extend(values)
