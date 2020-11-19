@@ -11,6 +11,7 @@ import CCDatabase.utils as ut
 import numpy as np
 import copy as cp
 import cachetools
+import itertools as ittl
 
 from CCDatabase.utils import caches
 
@@ -60,6 +61,7 @@ def deal_with_array(arr,to="arr"):
         the array like in the requested format
     """
     if type(arr) not in [list, np.ndarray, np.matrix]:
+        print("type", type(arr))
         raise ValueError("It is neither a list, nor an array, nor a matrix")
     options = {"arr": np.array, "array": np.array, "np.array": np.array,
                "np.ndarray": np.array, np.array: np.array,
@@ -181,35 +183,43 @@ def get_index_dict(s,atomlist):
             assert al1 == al2, "Inconsistent value in atomstring"
             n1, n2 = re.search("[0-9]+", splt[0]).group(), re.search("[0-9]+", splt[1]).group()
             partial = [al1+str(j) for j in range(int(n1),int(n2)+1)]
+            vals = []
             for p in partial:
                 if p.isalnum():
                     al, n = re.search("[A-Za-z]+", p).group(), int(re.search("[0-9]+", p).group())
                     if al in ["A","a"]:
-                        idxs[p] = (n-1)
+                        vals.append(n-1)
                     else:
-                        idxs[p] = [n for n,j in enumerate(atomlist) if j == al][n-1]
+                        try:
+                            vals.append([n for n,j in enumerate(atomlist) if j == al][n-1])
+                        except:
+                            pass  # perhaps logging?
                 elif p.isnumeric():
                     raise ValueError("Number in atomstring. Use A1,A2,etc")
                 else:
                     raise ValueError("Could not process value in atomstring")
+            idxs[i] = vals
         else:
             if i.isalpha():
                 idxs[i] = [n for n,j in enumerate(atomlist) if j == i]
             elif i.isalnum():
                 al, n = re.search("[A-Za-z]+", i).group(), int(re.search("[0-9]+", i).group())
                 if al in ["A","a"]:
-                    idxs[i] = (n-1)
+                    idxs[i] = [n-1]
                 else:
-                    idxs[i] = [n for n,j in enumerate(atomlist) if j == al][n-1]
+                    try:
+                        idxs[i] = [[n for n,j in enumerate(atomlist) if j == al][n-1]]
+                    except:
+                        idxs[i] = []
             elif i.isnumeric():
                 raise ValueError("Number in atomstring. Use A1,A2,etc")
             else:
                 raise ValueError("Could not process value in atomstring")
     return idxs
 
-def raw_atomic(path=None, rawfile="CCParser.json", raw_key="", n=0, 
-               first_only=True, element=None, number=0, frag=0, 
-               all_frag_avail=True, linenumbers=True, arr_type="arr"):
+def raw_atomic(path=None, atomstring="", n=0,rawfile="CCParser.json", 
+               raw_key="", first_only=True, frag=0, all_frag_avail=True,
+               linenumbers=True, arr_type="arr"):
     """
     Note
     ----
@@ -219,20 +229,20 @@ def raw_atomic(path=None, rawfile="CCParser.json", raw_key="", n=0,
     ----------
     path: str
         the folder path 
+    atomstring: str
+        a string which determines which atoms to select.
+        "O" => every oxygen
+        "O1" => the first oxygen
+        "O2-O4" => oxygen 2,3,4
+        "A1", "A2-A4": atom 1, atom 2,3,4
+    n: int
+        the state (0=GS,1=ES1, ..)
     rawfile: str
         the name of the raw quantity json file
     raw_key: str
         the desired property's key
-    n: int
-        the state (0=GS,1=ES1, ..)
     first_only: bool
         if the property is only GS
-    element: str
-        the element desired
-    number: int
-        numbering within the element,
-        e.g. element="Na", number=0 ==> first sodium
-             element="Na", number=1 ==> second sodium
     frag: int
         what fragment the counting should be in
     all_frag_avail: bool
@@ -283,21 +293,32 @@ def raw_atomic(path=None, rawfile="CCParser.json", raw_key="", n=0,
     else:
         frag_atoms = geoms[:,0]
         all_atoms = frag_atoms
-    vals = raws[raw_key]
+    all_vals = raws[raw_key]
     atomlist = all_atoms if all_frag_avail else frag_atoms
-    if len(vals)%len(atomlist) != 0:
-        print("CRITICAL - raw_atomi: The total number of values available is not a multiple of the number of atoms!")
+    if len(all_vals)%len(atomlist) != 0:
+        print("CRITICAL - raw_atomic: The total number of values available is not a multiple of the number of atoms!")
         raise AssertionError  # qfunc is called in try statement. Use logging, not assertion messages
-    idx = [n for n,i in enumerate(atomlist) if i == element][number]  # Here
-    idx += n*len(atomlist)  # adjust for state
-    idx += shift  # adjust for previous fragments
-    val = vals[idx][0] if linenumbers else vals[n][idx]
-    if  type(val) == str and re.match(".+npz", val):
-        val = vals_from_npz(os.path.join(path,val), raw_key)[idx]
-    if type(val) not in [bool, int, float]:
-        val = deal_with_array(val, to=arr_type)
-    return val
-    
+    idict = get_index_dict(atomstring, atomlist)
+    valsdict = {}
+    for name,idxs in idict.items():
+        idxs = [idx + n*len(atomlist) + shift for idx in idxs]  # adjust for state and previous fragments
+        try:
+            vals = [all_vals[idx][0] if linenumbers else all_vals[idx] for idx in idxs]
+        except:
+            vals = []
+        for nv, val in enumerate(vals):
+            if  type(val) == str and re.match(".+npz", val):
+                vals[nv] = vals_from_npz(os.path.join(path,val), raw_key)[idxs[nv]]
+            if type(vals[nv]) not in [bool, int, float]:
+                vals[nv] = deal_with_array(vals[nv], to=arr_type)
+        valsdict[name] = vals
+    if not list(ittl.chain.from_iterable(valsdict.values())):
+        raise BaseException("No item in atomstring returned a quantity value")
+    to_return = valsdict.copy()    
+    for k,v in valsdict.items():
+        if not v:
+            del to_return[k]
+    return to_return
     
 """
 for quantity functions it is often useful to use some general function with several parameters,

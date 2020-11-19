@@ -232,7 +232,7 @@ def rq_in_keys(d, q, nvals=1):
         else:
             return True
         
-def cq_in_keys(d,q, states=False, state=False):
+def cq_in_keys(d, q, atomstring=False, states=False, state=False, exc=False):
     """
     Parameters
     ----------
@@ -254,20 +254,42 @@ def cq_in_keys(d,q, states=False, state=False):
     if states and state:
         print("You used both states and state. states trumps state.")
         state = False
+    shift = 1 if exc else 0
     if not states and q not in d.keys():
         return False
     elif states:
         if q in d.keys():
             if type(d[q]) in [list, tuple, dict]:  # a data container 
-                return len(d[q]) >= states
+                if atomstring:
+                    if len(d[q]) < states - shift:
+                        return False
+                    else:
+                        for s in range(shift, states+1):
+                            if np.array([atomkey not in d[q][s].keys() for atomkey in atomstring.split(",")]).any():
+                                return False
+                        return True
+                        
+                else:
+                    return len(d[q]) >= states - shift
             else:  # float, str, etc...
                 return False
         else:
-            qs = ["{}_{}".format(q, s) for s in range(states)]
-            return np.array([x in d.keys() for x in qs]).all()
+            qs = ["{}_{}".format(q, s) for s in range(shift, states+1)]
+            if atomstring:
+                if np.array([x not in d.keys() for x in qs]).any():
+                    return False
+                for qn in qs:
+                    if np.array([atomkey not in d[qn].keys() for atomkey in atomstring.split(",")]).any():
+                        return False
+                return True
+            else:
+                return np.array([x in d.keys() for x in qs]).all()
     elif state:
         q = "{}_{}".format(q, state)
-        return q in d.keys()
+        if atomstring:
+            pass
+        else:
+            return q in d.keys()
         
 def setupLogger(to_console=True, to_log=False, logname="CCDatabase.log", printlevel=10):  
     """
