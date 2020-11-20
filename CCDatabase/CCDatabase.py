@@ -324,20 +324,18 @@ def check_qlist(qlist, key, fp, jsdata):
             qlist = [qlist]
             ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
     elif type(qlist) is list:
-        if len(qlist) == 2 and type(qlist[0]) in [int, str]:
-            qlist = [qlist]
-            ccdlog.info("obtained \"qlist\" as [{}]".format(qlist[0]))
-        elif len(qlist) == 3:
-            qlist = [qlist]
-        else:
-            raise TypeError(""""could not process your qlist.
-                    Please provide in one of the following ways:
-                        - file.json (will read variable 'raw_quantities'
-                        - "exc_energies"
-                        - [2,"exc_energies"]
-                        - ["exc_energies","osc_strength"]
-                        - [[2,"exc_energies"],[2,"osc_strength"]]
+        if False in [type(i) == str or (type(i) == list and len(i) < 4) for i in qlist]:
+            if len(qlist) > 4:
+                raise TypeError(""""could not process your qlist.
+                    Every item should be a string or:
+                        - [maxstate, quantity]
+                        - [atomicstring, quantity]
+                        - [maxstate, atomicstring, quantity]
                         """)
+            elif len(qlist) in [2,3]:
+                qlist = [qlist]  # 1 quantity with atomiclist and/or stateslist. Will be checked later
+            else:
+                raise TypeError("""Qlist is a single non-string list. That cannot be processed.""")
     else:
         raise TypeError(""""could not process your qlist.
                         Please provide in one of the following ways:
@@ -346,6 +344,10 @@ def check_qlist(qlist, key, fp, jsdata):
                             - [2,"exc_energies"]
                             - ["exc_energies","osc_strength"]
                             - [[2,"exc_energies"],[2,"osc_strength"]]
+                            - ["Na", "EFG_t"]
+                            - [["Na", "EFG_t"], ["K", "EFG_t"]]
+                            - [2, "Na", "EFG_t"]
+                            - [[2, "Na", "EFG_t"], [2, "K", "EFG_t"]]
                             """)
     return qlist,fp,jsdata
  
@@ -624,6 +626,8 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
     return to_return
 
 def get_stateslist_atomiclist(qlist):
+    """
+    """
     stateslist, atomiclist, nqlist = [], [], []
     for q in qlist:
         if type(q) == str:
@@ -631,6 +635,8 @@ def get_stateslist_atomiclist(qlist):
             atomiclist.append(False)
             nqlist.append(q)
         elif type(q) in [list, tuple]:
+            if type(q[-1]) != str:
+                raise ValueError("Provide stateslist/atomiclist first, quantity last!")
             if len(q) == 2:
                 if type(q[0]) == str:
                     stateslist.append(False)
@@ -928,7 +934,6 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         
     if check_input:
         qlist, fp, jsdata = check_qlist(qlist, "complex_quantities", fp, jsdata)
-        
     stateslist, atomiclist, qlist = get_stateslist_atomiclist(qlist)
     ccdlog.debug("divided qlist into qlist, stateslist, atomiclist")
 
@@ -1008,8 +1013,9 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, n=s)
                             vals[s] = qval  # nb will become a str when dumped
                             data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
-                        except:
+                        except Exception as e:
                             ccdlog.error("Errors while calculating {}, state {}, in {}".format(q, s, path))
+                            ccdlog.error("Error message below \n {}".format(e))
                             missing.append(q)
                     data[q] = vals  # e.g ex_en:{1:val1,2:val2}
                     ccdlog.debug("saved {} as both dictionary and individual values".format(q))
@@ -1020,8 +1026,9 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                         else:
                             qval = func(path=path, n=state_num)
                         data[q] = qval
-                    except:
+                    except Exception as e:
                         ccdlog.error("Errors while calculating {} in {}".format(q, path))
+                        ccdlog.error("Error message below \n {}".format(e))
                         missing.append(q)
                 else:  # no state specified, could be 1 or "as many as possible"
                     failed = False
@@ -1036,12 +1043,15 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                             vals[s] = qval  # nb will become a str when dumped
                             ccdlog.debug("{} = {}".format(s, qval))
                             s += 1
-                        except:  # max num of vals
+                        except Exception as e:  # max num of vals
                             if s == 0:  # ex_q not declared, e.g. ex_en_0
                                 failed = None
                                 s += 1
+                                ccdlog.info("""Probably q had to be added to ex_qs but was not.
+                                             Error while calculating {}_{}. Error message below \n {}""".format(q, s-1, e))
                             else:
                                 failed = True 
+                                ccdlog.info("Error while calculating {}_{}. Error message below \n {}""".format(q, s-1, e))
                     if len(vals) == 0:
                         ccdlog.error("Errors when calculating {} in {}".format(q, path))
                         missing.append(q)
@@ -1122,6 +1132,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     ccdlog.info("obtained \"joblist\"")
     if check_input:
         qlist, fp, jsdata = check_qlist(qlist, "complex_quantities", fp, jsdata)
+    oldqlist = qlist.copy()
     stateslist, atomiclist, qlist = get_stateslist_atomiclist(qlist)
     ccdlog.debug("divided qlist into qlist, stateslist, atomiclist")
 
@@ -1175,7 +1186,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
             if data == {}:  # no need to loop over qlist
                 if cnt == 0:  # let's obtain our complex quantities
                     ccdlog.debug("data.json was not there or empty")
-                    missing = qlist
+                    missing = oldqlist
                 else:
                     ccdlog.critical("Your datafile is empty after parsing. Probably filename mismatch or nothing written to file")
             else:
@@ -1184,7 +1195,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                     ccdlog.debug("quantity: {}".format(q))
                     shift = 1 if q in ex_qs else 0  # 1 if only excited state
                     item = data[q] if q in data.keys() else False  # can be value, or many values!
-                    if stateslist[n]:
+                    if stateslist[n]:  # NB not "is not False"
                         try:
                             if atomiclist[n]:
                                 values = []
@@ -1265,11 +1276,11 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
 #                        to_add = data[q] if q in data.keys() else np.nan  # del?
                         if q not in data.keys():
                             if cnt == 0:
-                                missing.append(q)
+                                missing.append(oldqlist[n])
                                 column.append(item if item else np.nan)
-                                ccdlog.debug("added {} to \"missing\"".format(q))
+                                ccdlog.debug("added {} to \"missing\"".format(oldqlist[n]))
                             else:
-                                ccdlog.debug("{} could not be obtained".format(q))
+                                ccdlog.debug("{} could not be obtained".format(oldqlist[n]))
                         elif type(item) is dict:
                             if not list(item.keys())[0].isnumeric():  # only one state, atomic values
                                 item = {str(shift): item}  # make it {s: atomicvalsdict}
@@ -1290,7 +1301,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                     values = [item[str(v)] for v in range(shift, len(item)+1)]  # all in order
                                     if look_for_more_states:
                                                 missing.append("{}_{}".format(q,v+1))  # try to parse one more state
-                                ccdlog.info("states {shift}-{n} in {q}".format(shift=shift,n=len(item), q=q))
+                                ccdlog.info("states {shift}-{n} in {q}".format(shift=shift,n=len(item) - 1 + shift, q=q))
                             except KeyError:  # not ordered (1,3,4,..) or atmk missing
                                 max_state = max([int(i) for i in  item.keys()])
                                 missing_states, partial_states, missing_atms = [], [], []
@@ -1339,9 +1350,11 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                             if len(item) > nsl[n]:  # more states than before
                                 for col in columns[:-1]:  # all the previous ones
                                     col = pd.concat(
-                                            [col[:start+nsl[n]*sum(natmklst[n])], pd.Series((len(values)-nsl[n]*sum(natmklst[n]))*[np.nan]), col[start+nsl[n]*sum(natmklst[n]):]],
+                                            [col[:start+nsl[n]*sum(natmklst[n])],
+                                                 pd.Series((len(values)-nsl[n]*sum(natmklst[n]))*[np.nan]),
+                                                 col[start+nsl[n]*sum(natmklst[n]):]],
                                             ignore_index=True)  #  padding other columns
-                                nsl[n] = len(values) - 1 + shift
+                                nsl[n] = len(item) - 1 + shift
                                 ccdlog.debug("Padded previous columns with np.nan and adjusted length of next ones")
                         else:  # not a dict
                             column.append(item if item else np.nan)
@@ -1362,12 +1375,28 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
         columns.append(pd.Series(column))
     xp_qlist = []  # expanded qlist
     for n,q in enumerate(qlist):  # Could not manage with list comprehension
-        if nsl[n]:
+        if nsl[n] is not False:
             shift = 1 if q in ex_qs else 0  # 1 if only excited state
             if atomiclist[n]:
-                xp_qlist += ["{}_{}_{}{}".format(q, s+shift, "".join([i for i in atmk.split("-")[0] if i.isalpha()]), vl) for s in range(nsl[n] + 1 - shift) for natmk,atmk in enumerate(atomiclist[n].split(",")) for vl in range(natmklst[n][natmk])]
+                myint = lambda x: int(x) if x else 1
+                if nsl[n] - shift == 0:  # only one state
+                    xp_qlist += ["{}_{}{}".format(q,
+                                 "".join([i for i in atmk.split("-")[0] if i.isalpha()]),
+                                 vl + myint("".join([i for i in atmk.split("-")[0] if i.isnumeric()]))) \
+                                    for natmk,atmk in enumerate(atomiclist[n].split(",")) \
+                                    for vl in range(natmklst[n][natmk])]
+                else:
+                    xp_qlist += ["{}_{}_{}{}".format(q, s+shift,
+                                 "".join([i for i in atmk.split("-")[0] if i.isalpha()]),
+                                 vl + myint("".join([i for i in atmk.split("-")[0] if i.isnumeric()]))) \
+                                    for s in range(nsl[n] + 1 - shift) \
+                                    for natmk,atmk in enumerate(atomiclist[n].split(",")) \
+                                    for vl in range(natmklst[n][natmk])]
             else:
-                xp_qlist += ["{}_{}".format(q, s+shift) for s in range(nsl[n] + 1 - shift)]
+                if nsl[n] - shift == 0:  # only one state
+                    xp_qlist += q
+                else:
+                    xp_qlist += ["{}_{}".format(q, s+shift) for s in range(nsl[n] + 1 - shift)]
         else:
             xp_qlist.append(q)
     rows = levelnames + xp_qlist 

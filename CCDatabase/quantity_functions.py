@@ -217,7 +217,7 @@ def get_index_dict(s,atomlist):
                 raise ValueError("Could not process value in atomstring")
     return idxs
 
-def raw_atomic(path=None, atomstring="", n=0,rawfile="CCParser.json", 
+def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json", 
                raw_key="", first_only=True, frag=0, all_frag_avail=True,
                linenumbers=True, arr_type="arr"):
     """
@@ -329,20 +329,36 @@ e.g.
 ccp_funcs = {
         "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy_rel"),
         "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_str"),
-        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True)}
+        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True)
+        }
 
 qcep_ccp_funcs = {
         "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
         "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_strength"),
         "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True),
-        "EFG_e_Na": lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_e", element="Na", first_only=True, arr_type="arr")).tolist(),
-        "EFG_n_Na":lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_n", element="Na", first_only=True, arr_type="arr")).tolist(),
-        "EFG_t_Na":lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_t", element="Na", first_only=True, arr_type="arr")).tolist()}
+        "EFG_e":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_e", first_only=True, arr_type="arr").items()},
+         "EFG_n":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_n", first_only=True, arr_type="arr").items()},
+        "EFG_t":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_t", first_only=True, arr_type="arr").items()}
+        }
 
 qcep_funcs = {
         "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="exc_energy"),
         "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="osc_strength"),
         "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="qcep.json", raw_key="scf_energy", first_only=True),
-        "EFG_e_Na": lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="qcep.json", raw_key="EFG_tensor_e", element="Na", first_only=True, arr_type="arr")).tolist(),
-        "EFG_n_Na":lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="qcep.json", raw_key="EFG_tensor_n", element="Na", first_only=True, arr_type="arr")).tolist(),
-        "EFG_t_Na":lambda path,n: np.linalg.eigvals(raw_atomic(path=path, n=n, rawfile="qcep.json", raw_key="EFG_tensor_t", element="Na", first_only=True, arr_type="arr")).tolist()}
+        "EFG_e":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="qcep.json", raw_key="EFG_tensor_e", first_only=True, arr_type="arr").items()},
+         "EFG_n":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="qcep.json", raw_key="EFG_tensor_n", first_only=True, arr_type="arr").items()},
+        "EFG_t":lambda path, atomstring, n:\
+        {k: np.linalg.eigvals(v).tolist() for k,v in\
+         raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="qcep.json", raw_key="EFG_tensor_t", first_only=True, arr_type="arr").items()}
+        }
+
