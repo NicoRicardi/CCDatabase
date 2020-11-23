@@ -121,7 +121,8 @@ def parse_simple_matrix(n, readlin, stop_signals=None, asmatrix=False):
 
 
 def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json', 
-                overwrite_vals=True, large_fn='matrices.npz', size_thresh=3):
+                overwrite_vals=True, large_fn='matrices.npz',
+                size_thresh=3, printout=False):
     """Parse the QChem file for a list of hooks
 
     Parameters
@@ -174,13 +175,15 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json',
                 elif otype == 'geometry':
                     out = parse_molecule(n, lines, join=True)
                     if len(out) > size_thresh:
-                        print("Matrix is too large, saving %s in file." % key)
+                        if printout:
+                            print("Matrix is too large, saving %s in file." % key)
                         large[key] = large[key]+[np.array(out, dtype="object")] if key in large.keys() else [np.array(out, dtype="object")]
                         out = large_fn
                 elif otype == 'frag_geoms':
                     out = parse_molecule(n, lines, join=False)
                     if max([len(i) for i in out]) > size_thresh:
-                        print("Matrix is too large, saving %s matrix in file." % key)
+                        if printout:
+                            print("Matrix is too large, saving %s matrix in file." % key)
                         large[key] = large[key]+[np.array(out, dtype="object")] if key in large.keys() else [np.array(out, dtype="object")]
                         out = large_fn
                 elif otype == 'simple matrix':
@@ -189,13 +192,15 @@ def parse_qchem(fname, hooks, to_file=True, json_file='CCParser.json',
                     else:
                         out = parse_simple_matrix(n, lines)
                     if len(out) > size_thresh:  # large matrix
-                        print("Matrix is too large, saving %s matrix in file." % key)
+                        if printout:
+                            print("Matrix is too large, saving %s matrix in file." % key)
                         large[key] = large[key]+[np.array(out)] if key in large.keys() else [np.array(out)]
                         out = large_fn
                 elif otype == 'symmetric matrix':
                     out = parse_symmetric_matrix(n, lines)
                     if len(out) > size_thresh:  # large matrix
-                        print("Matrix is too large, saving %s matrix in file." % key)
+                        if printout:
+                            print("Matrix is too large, saving %s matrix in file." % key)
                         large[key] = large[key]+[np.array(out)] if key in large.keys() else [np.array(out)]
                         out = large_fn
                 elif otype == 'vector':
