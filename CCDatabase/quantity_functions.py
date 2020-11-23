@@ -17,7 +17,6 @@ from CCDatabase.utils import caches
 
 @cachetools.cached(cache=caches["npz"])
 def cached_load(npzfile):
-    print("NOT CACHED!")
     return np.load(npzfile, allow_pickle=True)
 
 def vals_from_npz(filepath,key):
@@ -61,7 +60,6 @@ def deal_with_array(arr,to="arr"):
         the array like in the requested format
     """
     if type(arr) not in [list, np.ndarray, np.matrix]:
-        print("type", type(arr))
         raise ValueError("It is neither a list, nor an array, nor a matrix")
     options = {"arr": np.array, "array": np.array, "np.array": np.array,
                "np.ndarray": np.array, np.array: np.array,
@@ -107,8 +105,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0,
     if not raw_key:
         raise ValueError("you didn't specify the raw quantity's key")
     if n < 0:
-        print("CRITICAL - raw_to_complex: negative index. Most likely you didn't specify that a quantity is in ex_qs")
-        raise ValueError  #message in print to appear also when in "try"  statements
+        raise ValueError("negative index. Most likely you didn't specify that a quantity is in ex_qs")
     if first_only and n > 0:
         raise ValueError("You want a value only, but are asking for n > 0")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -260,8 +257,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
     if not raw_key:
         raise ValueError("you didn't specify the raw quantity's key")
     if n < 0:
-        print("CRITICAL - raw_atomic: negative index. Most likely you didn't specify that a quantity is in ex_qs")  # log not there in qfuncs
-        raise ValueError  #message in print to appear also when in "try"  statements
+        raise ValueError("negative index. Most likely you didn't specify that a quantity is in ex_qs")
     if first_only and n > 0:
         raise ValueError("You want a value only, but are asking for n > 0")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -272,11 +268,9 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
     elif "xyz" in raws.keys():
         geomkey = "xyz"
         if frag:
-            print("CRITICAL - raw_atomic: fragment geometries not available")  # log not there in qfuncs
-            raise ValueError
+            raise ValueError("fragment geometries not available")
     else:
-        print("CRITICAL - raw_atomic: no type of geometry (frag_xyz/xyz) available")  # log not there in qfuncs
-        raise ValueError
+        raise ValueError("no type of geometry (frag_xyz/xyz) available")
     geoms = raws[geomkey][0][0]
     if  re.match(".+npz", geoms):
         npzfile = os.path.join(path,geoms)
@@ -296,8 +290,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
     all_vals = raws[raw_key]
     atomlist = all_atoms if all_frag_avail else frag_atoms
     if len(all_vals)%len(atomlist) != 0:
-        print("CRITICAL - raw_atomic: The total number of values available is not a multiple of the number of atoms!")
-        raise AssertionError  # qfunc is called in try statement. Use logging, not assertion messages
+        raise AssertionError("The total number of values available is not a multiple of the number of atoms!")
     idict = get_index_dict(atomstring, atomlist)
     valsdict = {}
     for name,idxs in idict.items():
