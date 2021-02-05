@@ -1041,7 +1041,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                             else:
                                 qval = func(path=path, n=s)
                             vals[s] = qval  # nb will become a str when dumped
-                            ccdlog.debug("{} = {}".format(s, qval))
+                            ccdlog.debug("q:{}, s:{} = {}".format(q, s, qval))
                             s += 1
                         except Exception as e:  # max num of vals
                             if s == 0:  # ex_q not declared, e.g. ex_en_0
@@ -1051,7 +1051,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                              Error while calculating {}_{}. Error message below \n {}""".format(q, s-1, e))
                             else:
                                 failed = True 
-                                ccdlog.info("Error while calculating {}_{}. Error message below \n {}""".format(q, s-1, e))
+                                ccdlog.info("Error while calculating {}_{}. Error message below \n {}""".format(q, s, e))
                     if len(vals) == 0:
                         ccdlog.error("Errors when calculating {} in {}".format(q, path))
                         missing.append(q)
@@ -1300,7 +1300,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 else:
                                     values = [item[str(v)] for v in range(shift, len(item)+1)]  # all in order
                                     if look_for_more_states:
-                                                missing.append("{}_{}".format(q,v+1))  # try to parse one more state
+                                                missing.append("{}_{}".format(q,len(values)+1))  # try to parse one more state
                                 ccdlog.info("states {shift}-{n} in {q}".format(shift=shift,n=len(item) - 1 + shift, q=q))
                             except KeyError:  # not ordered (1,3,4,..) or atmk missing
                                 max_state = max([int(i) for i in  item.keys()])
