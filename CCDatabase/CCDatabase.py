@@ -1394,11 +1394,12 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                     for vl in range(natmklst[n][natmk])]
             else:
                 if nsl[n] - shift == 0:  # only one state
-                    xp_qlist += q
+                    xp_qlist.append(q)
                 else:
                     xp_qlist += ["{}_{}".format(q, s+shift) for s in range(nsl[n] + 1 - shift)]
         else:
             xp_qlist.append(q)
+#    print("xp_qlist",xp_qlist)
     rows = levelnames + xp_qlist 
     ccdlog.debug("obtained rows")
     df = pd.concat(columns, axis=1)  # every column is a j 
