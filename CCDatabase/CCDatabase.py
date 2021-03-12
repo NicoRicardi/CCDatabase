@@ -20,7 +20,7 @@ import re
 import CCDatabase.utils as ut
 import logging
 import copy as cp
-from CCDatabase.utils import caches
+from CCDatabase.quantity_functions import ccp_funcs, qcep_ccp_funcs, qcep_funcs
 
 # set up logger. NB avoid homonimity with other module's loggers (e.g. ccp)
 ccdlog = logging.getLogger("ccd")
@@ -547,7 +547,7 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
     if parser_args is None:
         parserargsdict = {p: parser_args for p in parsers_used}
         ccdlog.info("obtained \"parserargsdict\" as None for all parsers")
-    elif type(parser_args) is dict:  # TODO: check functions as keys
+    elif type(parser_args) is dict:
         if np.array([type(k) != str for k in parser_args.keys()]):
             for k,v in parser_args.items():
                 if type(k) != str:
@@ -768,22 +768,17 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             4 "non_stdfile,quant": checks for "quant" in "non_stdfile" in current jobfolder
             5 "fol,non_stdfile,quant" or "paralfol,file,quant": loks for "quant" in "non-stdfile" in sub/paral-fol
         """
-        stdfile = True  # q is supposed to be in a standard json file
         if "," in q:  # in another calc (not case 1)
             splt = q.split(",")
             if len(splt) == 2 and "." in splt[0]:  # case 4
                 ccdlog.debug("case 4")
                 fname = splt[0]
-                type_ = fname.split(".")[-1]
                 path_tmp = path
-                stdfile = True if type_ == "json" else False  # actually not in a standard parser_file
             else:  # cases 2,3,5
                 fol = splt[0]
                 if len(splt) == 3:  # case 5
                     ccdlog.debug("case 5")
                     fname = splt[1]
-                    type_ = fname.split("."[-1])
-                    stdfile = True if type_ == "json" else False  # actually not in a standard parser_file
                 else:  # cases 2,3
                     fname = parser_file
                 subdirs = gl.glob(os.path.join(path, "*", ""))  # subdirectories of path (e.g. MP2_A for F&T)
@@ -800,20 +795,6 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             q = splt[-1]
             filepath = os.path.join(path_tmp, fname)
             ccdlog.debug("filepath is {}".format(filepath))
-            if not stdfile:
-                ccdlog.debug("non-standard file")
-                if type_ == "xlsx":  # excel file
-                    df = pd.read_excel(filepath)
-                    if q not in df.columns:  # nvals not available yet
-                        missing.append(qlist[n])  # original q, not split
-                    continue  # no need to run all other ifs
-                elif type_ == "csv":  # csv file
-                    df = pd.read_csv(filepath)
-                    if q not in df.columns:
-                        missing.append(qlist[n])  # original q, not split
-                    continue  # no need to run all other ifs
-                else:
-                    raise TypeError("This type of non-json file is not implemented yet")
         else:  # case 1
             ccdlog.debug("case 1")
             path_tmp = path
@@ -821,10 +802,10 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         ### case is determined. path_tmp and filepath are set
         if path_tmp not in data.keys():
             ccdlog.debug("No data from {} yet".format(path_tmp))
-            data[path_tmp] = ut.load_js(filepath) if os.path.exists(filepath) else {}  # load if exists, else empty, will reparse
+            data[path_tmp] = ut.dict_from_file(filepath)
             if path_tmp not in reparsed.keys():
                 reparsed[path_tmp] = {}
-            reparsed[path_tmp][parsername] = False  # full q, not split
+            reparsed[path_tmp][parsername] = False  
         if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and not reparsed[path_tmp][parsername]:  # quantity not in json, not reparsed yet
             if parsername != False:  # no parsing for human-generated quantities (e.g. correspondance)
                 # Here parserdict should be {q1: pname1,..}, parserargsdict {q1:[arg1,..],..}, parserkwargsdict {q:{kw1:arg1,..},..}
@@ -840,7 +821,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                 except:
                     ccdlog.critical("could not parse in {}".format(path_tmp))
                 if os.path.exists(filepath):
-                    data[path_tmp] = ut.load_js(filepath)  # let's read reparsed json
+                    data[path_tmp].update(ut.load_js(filepath))  # let's read reparsed json/xlsx/df
                 else:
                     ccdlog.critical("{} does not exist. Either did not parse or parsed and saved elsewhere".format(filepath))
                     data[path_tmp] = {}
@@ -919,15 +900,12 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
     if type(funcdict) is str:
         funcdict = (''.join([i for i in funcdict if i.isalpha()])).lower()  # removes non-aplhabetic
         if funcdict == "ccp":
-            from CCDatabase.quantity_functions import ccp_funcs
-            funcdict = ccp_funcs  # TODO check what is better
+            funcdict = ccp_funcs  
             ccdlog.info("imported ccp_funcs as funcdict")
         elif funcdict == "qcepccp":
-            from CCDatabase.quantity_functions import qcep_ccp_funcs
             funcdict = qcep_ccp_funcs
             ccdlog.info("imported qcep_ccp_funcs as funcdict")
         elif funcdict == "qcep":
-            from CCDatabase.quantity_functions import qcep_funcs
             funcdict = qcep_funcs
             ccdlog.info("imported qcep_funcs as funcdict")
     elif funcdict != dict:
@@ -1171,7 +1149,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     natmklst = [[1 for i in s.split(",")] if s else [1] for s in atomiclist]  # max natoms per atomkey
     columns = []
     for j in joblist:
-        ut.clear_caches(caches)
+        ut.clear_caches(ut.caches)
         path = os.path.join(*j)
         if not os.path.exists(path):
             ccdlog.critical("{} does not exist! skipping it".format(path))
