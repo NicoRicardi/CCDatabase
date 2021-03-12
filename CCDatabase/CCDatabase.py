@@ -20,6 +20,7 @@ import re
 import CCDatabase.utils as ut
 import logging
 import copy as cp
+from CCDatabase.utils import caches
 
 # set up logger. NB avoid homonimity with other module's loggers (e.g. ccp)
 ccdlog = logging.getLogger("ccd")
@@ -919,7 +920,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
         funcdict = (''.join([i for i in funcdict if i.isalpha()])).lower()  # removes non-aplhabetic
         if funcdict == "ccp":
             from CCDatabase.quantity_functions import ccp_funcs
-            funcdict = ccp_funcs
+            funcdict = ccp_funcs  # TODO check what is better
             ccdlog.info("imported ccp_funcs as funcdict")
         elif funcdict == "qcepccp":
             from CCDatabase.quantity_functions import qcep_ccp_funcs
@@ -1170,7 +1171,6 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     natmklst = [[1 for i in s.split(",")] if s else [1] for s in atomiclist]  # max natoms per atomkey
     columns = []
     for j in joblist:
-        from CCDatabase.utils import caches
         ut.clear_caches(caches)
         path = os.path.join(*j)
         if not os.path.exists(path):
