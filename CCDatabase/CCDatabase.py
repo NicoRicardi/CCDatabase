@@ -20,6 +20,7 @@ import re
 import CCDatabase.utils as ut
 import logging
 import copy as cp
+import shutil as sh
 from CCDatabase.quantity_functions import ccp_funcs, qcep_ccp_funcs, qcep_funcs
 
 # set up logger. NB avoid homonimity with other module's loggers (e.g. ccp)
@@ -59,7 +60,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     if type(expr) is not list:
         raise TypeError("Expr must be either list/tuple or string")
     ### Turning wildcards into regex
-    expr = [i.replace("*", ".+").replace("?", ".") for i in expr]    
+    expr = [i.replace(".", "\.").replace("*", ".+").replace("?", ".") for i in expr]    
     ### Handling default startdir if none specified
     startdir = os.getcwd() if not startdir else startdir
     ### Handling default trash if none specified
@@ -75,7 +76,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     for dirname,subdirlist,filelist in os.walk(startdir):   # walking through tree
         for fname in filelist:  # loop over files found
             for e in expr:  # loop over wildcard expressions
-                if not(keep^bool(re.match(e, fname))):  #move or not based on "keep"
+                if not(keep^bool(re.match(e, fname))):  # move or not based on "keep"
                     src = os.path.join(dirname, fname)
                     dest = os.path.join(trash, fname)
                     if os.path.exists(dest):
@@ -86,7 +87,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
                         while os.path.exists(dest):  # avoid overwriting it
                             dest = "{}_{}.{}".format(bname, count,ext)
                             count += 1
-                    os.move(src, dest)
+                    sh.move(src, dest)
                     print("moved {} to {}".format(os.path.join(dirname,  fname), trash))
                     moved.append((os.path.abspath(src), os.path.abspath(dest)))
     histdict.update({ID:moved})  # {..., ID:[(src1,dest1),(src2,dest2),...]}      
@@ -162,7 +163,7 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
             while os.path.exists(dest):  # avoid overwriting it
                 dest = "{}_{}.{}".format(bname ,count, ext)
                 count += 1
-            os.move(src, dest)
+            sh.move(src, dest)
             print("restored {}".format(dest))
         del histdict[str(ID)]  # removing entry from histfile
         for n,line in enumerate(lines):
