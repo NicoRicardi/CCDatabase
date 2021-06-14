@@ -11,6 +11,8 @@ import os
 import logging
 import re
 import cachetools
+import pandas as pd
+
 
 caches = {"npz": cachetools.LRUCache(maxsize=256)}
 
@@ -151,7 +153,7 @@ def load_js(fname):
         try:
             return js.load(f)
         except:
-            return {}
+            return {}  
 
 def dump_js(obj, fname):
     """
@@ -172,7 +174,39 @@ def dump_js(obj, fname):
     """
     with open(fname, "w") as f:
         js.dump(obj, f)
-        
+
+def dict_from_file(filepath):
+    """
+    Note
+    ----
+    Returns whatever is in the file in the form of a dictionary.
+    For dataframe, strips the NaN to allow counting (rq_in_keys)
+    If the file does not exist, returns empty dictionary
+    
+    Parameters
+    ----------
+    filepath: str
+        the filepath
+    
+    Returns
+    -------
+    dict
+        the dictionary of what is contained in the file
+    """
+    if not os.path.exists(filepath):
+        return {} 
+    type_ = filepath.split(".")[-1]
+    if type_ == "json":
+        return load_js(filepath)
+    elif type_ == "xlsx":  # excel file
+        df = pd.read_excel(filepath)
+        return {k: v.dropna() for k,v in dict(df).items()}
+    elif type_ == "csv":  # csv file
+        df = pd.read_csv(filepath)
+        return {k: v.dropna() for k,v in dict(df).items()}
+    else:
+        raise TypeError("This type of non-json file is not implemented yet")
+                    
 def deal_with_type(obj, condition=False, to=None):
     """
     Note
