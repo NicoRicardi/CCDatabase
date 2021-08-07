@@ -167,8 +167,19 @@ def group_values(vals):
             vals[n1] = to_use
     return vals
 
-def get_index_dict(s,atomlist):
+def get_index_dict(s, atomlist):
     """
+    Parameters
+    ----------
+    s: str
+        atomstring
+    atomlist: list
+        list of atoms in your geometry
+    
+    Returns
+    -------
+    dict
+        {atomkey: [indexes]}
     """
     l=s.split(",")
     idxs = {}
