@@ -14,7 +14,10 @@ import cachetools
 import pandas as pd
 
 
-caches = {"npz": cachetools.LRUCache(maxsize=256)}
+caches = {"npz": cachetools.LRUCache(maxsize=8),
+          "json": cachetools.LRUCache(maxsize=10),
+          "non_fdet_terms": cachetools.LRUCache(maxsize=1),
+          "fdet_terms": cachetools.LRUCache(maxsize=1)}
 
 def clear_caches(cachedict):
     for v in cachedict.values():
@@ -133,6 +136,7 @@ def split_path(path):
         splt = os.path.split(splt[0])
     return splt
 
+@cachetools.cached(cache=caches["json"])
 def load_js(fname):
     """
     Note

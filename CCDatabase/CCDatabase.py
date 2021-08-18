@@ -277,7 +277,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem", 
+    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem",  # Here may have to change overwrite for ccp
                                           to_file=True, to_console=False, to_json=True)) \
                                           if parser is None else (parser, [file]+parser_args, parser_kwargs)
     ccdlog.debug("parsing!")
@@ -1150,7 +1150,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
     natmklst = [[1 for i in s.split(",")] if s else [1] for s in atomiclist]  # max natoms per atomkey
     columns = []
     for j in joblist:
-        ut.clear_caches(ut.caches)
+#        ut.clear_caches(ut.caches)
         path = os.path.join(*j)
         if not os.path.exists(path):
             ccdlog.critical("{} does not exist! skipping it".format(path))

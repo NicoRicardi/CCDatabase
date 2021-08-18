@@ -19,7 +19,7 @@ from CCDatabase.utils import caches
 def cached_load(npzfile):
     return np.load(npzfile, allow_pickle=True)
 
-def vals_from_npz(filepath,key):
+def vals_from_npz(filepath, key):
     """
     Example of use
     ----
@@ -41,7 +41,7 @@ def vals_from_npz(filepath,key):
     return npz[key]
 
 
-def deal_with_array(arr,to="arr"):
+def deal_with_array(arr, to="arr"):
     """
     Note
     ----
@@ -112,7 +112,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0,
     rawfile = os.path.join(path, rawfile)
     raws = ut.load_js(rawfile)
     vals = raws[raw_key]
-    if group_values and np.array([type(i) in [float,np.float32,np.float64] for i in vals]):
+    if group_values and np.array([type(i) in [float,np.float32,np.float64] for i in vals]).all():
         vals = group_values(raws[raw_key])
     val = vals[n][0] if linenumbers else vals[n]
     if type(val) == str and re.match(".+npz", val):
@@ -323,6 +323,190 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
         if not v:
             del to_return[k]
     return to_return
+
+
+@cachetools.cached(cache=caches["non_fdet_terms"])
+def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    E = {}
+    # AB
+    if os.path.isdir(os.path.join(path, "AB_MP2")):
+        raw = ut.load_js(os.path.join(path, "AB_MP2", rawfile))
+        E["HF_AB"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+        E["E_2_AB"] =raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    elif os.path.isdir(os.path.join(path, "AB_HF")):
+        raw = ut.load_js(os.path.join(path, "AB_HF", rawfile))
+        E["HF_AB"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    else:
+        print("Could not find AB_MP2 nor AB_HF")
+    # A
+    if os.path.isdir(os.path.join(path, "A_MP2")):
+        raw = ut.load_js(os.path.join(path, "A_MP2", rawfile))
+        E["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+        E["E_2_A"] =raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    elif os.path.isdir(os.path.join(path, "A_HF")):
+        raw = ut.load_js(os.path.join(path, "A_HF", rawfile))
+        E["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    else:
+        print("Could not find A_MP2 nor A_HF")
+   # A_gh 
+    if os.path.isdir(os.path.join(path, "A_MP2_gh")):
+        raw = ut.load_js(os.path.join(path, "A_MP2_gh", rawfile))
+        E["HF_A_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+        E["E_2_A_gh"] =raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    elif os.path.isdir(os.path.join(path, "A_HF_gh")):
+        raw = ut.load_js(os.path.join(path, "A_HF_gh", rawfile))
+        E["HF_A_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    else:
+        print("Could not find A_MP2_gh nor A_HF_gh")
+    # B
+    if os.path.isdir(os.path.join(path, "B_MP2")):
+        raw = ut.load_js(os.path.join(path, "B_MP2", rawfile))
+        E["HF_B"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+        E["E_2_B"] =raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    elif os.path.isdir(os.path.join(path, "B_HF")):
+        raw = ut.load_js(os.path.join(path, "B_HF", rawfile))
+        E["HF_B"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    else:
+        print("Could not find B_MP2 nor B_HF")
+    # B_gh
+    if os.path.isdir(os.path.join(path, "B_MP2_gh")):
+        raw = ut.load_js(os.path.join(path, "B_MP2_gh", rawfile))
+        E["HF_B_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+        E["E_2_B_gh"] =raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    elif os.path.isdir(os.path.join(path, "B_HF_gh")):
+        raw = ut.load_js(os.path.join(path, "B_HF_gh", rawfile))
+        E["HF_B_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    else:
+        print("Could not find B_MP2_gh nor B_HF_gh")
+    return E
+
+
+def get_ref_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    return get_non_fdet_terms(ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers)
+
+@cachetools.cached(cache=caches["non_fdet_int"])
+def get_non_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    d = get_non_fdet_terms(path, rawfile=rawfile, linenumbers=linenumbers)
+    E_int = {}
+    E_int["HF"] = d["HF_AB"] - d["HF_A"] - d["HF_B"]
+    try:
+        E_int["HF_CP"] = d["HF_AB"] - d["HF_A_gh"] - d["HF_B_gh"]
+    except KeyError:
+        print("at least some HF-ghost value unavailable")
+    try:
+        E_int["MP"] = E_int["HF"] + d["E_2_AB"] - d["E_2_A"] - d["E_2_B"]
+    except KeyError:
+        print("at least some MP value unavailable")
+    try:
+        E_int["MP_CP"] = E_int["HF_CP"] + d["E_2_AB"]  - d["E_2_A_gh"] - d["E_2_B_gh"]
+    except KeyError:
+        print("at least some MP-ghost value unavailable")
+    return E_int
+    
+def get_ref_int(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    return get_non_fdet_int(ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers)
+
+def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if os.path.isdir(os.path.join(path, "MP2_B")):
+        bfol = os.path.join(path, "MP2_B")
+    elif os.path.isdir(os.path.join(path, "HF_B")):
+        bfol = os.path.join(path, "HF_B")
+    else:
+        cyfols = [i for i in os.listdir(path) if "cy" in i]
+        n_iters = len(cyfols)
+        bfol = os.path.join(path, "cy{}".format(n_iters - 1 - n_iters%2))
+    raw = ut.load_js(os.path.join(bfol, rawfile))
+    d = {}
+    cycles = raw["cycle_energies"][-1][0] if linenumbers else raw["cycle_energies"][-1]
+    if type(cycles) == str and re.match(".+npz", cycles):
+        cycles = vals_from_npz(os.path.join(path, cycles), "cycle_energies")
+    d["HF_B"] = cycles[-1]
+    try:
+        d["E_2_B"]= raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    except:
+        print("MP2_B not available")
+    return d
+
+@cachetools.cached(cache=caches["fdet_terms"])
+def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if os.path.isdir(os.path.join(path, "MP2_A")):
+        afol = os.path.join(path, "MP2_A")
+    else:
+        cyfols = [i for i in os.listdir(path) if "cy" in i]
+        n_iters = len(cyfols) - 1
+        afol = os.path.join(path, "cy{}".format(n_iters - n_iters%2))
+    raw = ut.load_js(os.path.join(afol, rawfile))
+    d = {}
+    d["J"] = raw["J_int"][0][0] if linenumbers else raw["J_int"][0]
+    d["V_NN"] = raw["V_AB"][0][0] if linenumbers else raw["V_AB"][0]
+    d["AnucB"] = raw["AnucB"][0][0] if linenumbers else raw["AnucB"][0]
+    d["BnucA"] = raw["BnucA"][0][0] if linenumbers else raw["BnucA"][0]
+    # Fix xc vs x-c and lin/upd    
+    d["Exc_nad"] = raw["Exc_nad"][1][0] if linenumbers else raw["Exc_nad"][1]
+    d["Ts_nad"] = raw["Ts_nad"][1][0] if linenumbers else raw["Ts_nad"][1]
+    d["Exc_nad_ref"] = raw["Exc_nad"][0][0] if linenumbers else raw["Exc_nad"][0]
+    d["Ts_nad_ref"] = raw["Ts_nad"][0][0] if linenumbers else raw["Ts_nad"][0]
+    d["Delta_lin"] = raw["fde_delta_lin"][0][0] if linenumbers else raw["fde_delta_lin"][0]
+    d["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
+    d["E_2_A"] = raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
+    d["expansion"] = raw["fde_expansion"][-1][0] if linenumbers else raw["fde_expansion"][-1]
+    d.update(**get_energy_B(path=path, rawfile=rawfile, linenumbers=linenumbers))
+    return d
+
+@cachetools.cached(cache=caches["fdet_terms"])
+def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    fdet = get_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
+    ref = get_ref_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
+    E = {}
+    E["Delta_HF_A"] = fdet["HF_A"] - ref["HF_A"] if fdet["expansion"] == "ME" else \
+    fdet["HF_A"] - ref["HF_A_gh"]
+    E["Delta_HF_B"] = fdet["HF_B"] - ref["HF_B"] if fdet["expansion"] == "ME" else \
+    fdet["HF_B"] - ref["HF_B_gh"]
+    E["Delta_HF"] = E["Delta_HF_B"] + E["Delta_HF_A"]
+    E["elst_int"] = fdet["V_NN"] + fdet["J"] + fdet["AnucB"] + fdet["BnucA"]
+    E["nonel,lin"] = fdet["Ts_nad_ref"] + fdet["Exc_nad_ref"] + fdet["Delta_lin"]
+    E["nonel"] = fdet["Ts_nad"] + fdet["Exc_nad"]
+    try:
+        E["Delta_E_2_A"] = fdet["E_2_A"] - ref["E_2_A"] if fdet["expansion"] == "ME" else \
+        fdet["E_2_A"] - ref["E_2_A_gh"]
+        E["Delta_E_2_B"] = fdet["E_2_B"] - ref["E_2_B"] if fdet["expansion"] == "ME" else \
+        fdet["E_2_B"] - ref["E_2_B_gh"]
+        E["Delta_E_2"] = E["Delta_E_2_A"] + E["Delta_E_2_B"]
+    except KeyError:
+        print("Missing some MP contribution. Only HF will be calculated")
+    return E
+    
+def get_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True, n=0, lin=True, MP=True):
+    """
+    """
+    if n != 0:
+        raise ValueError("Only Ground-State energy")
+    E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
+    E_int = E["Delta_HF"] + E["elst_int"]
+    E_int +=  E["nonel,lin"] if lin else E["nonel"]
+    if MP:
+        E_int += E["Delta_E_2"]
+    return E_int
     
 """
 for quantity functions it is often useful to use some general function with several parameters,
@@ -331,15 +515,22 @@ e.g.
 "ex_en": lambda path, n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="exc_energies_rel")
 """
 ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy_rel"),
-        "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_str"),
-        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True)
-        }
+        "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy_rel"),
+        "osc": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_str"),
+        "SCF": lambda path, n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True),
+        "E_linfdet_hf": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=False),
+        "E_fdet_hf": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=False),
+        "E_linfdet_mp": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=True),
+        "E_fdet_mp": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=True),
+        "E_ref_HF": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF"],
+        "E_ref_HF_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF_CP"],
+        "E_ref_MP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP"],
+        "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP_CP"]}
 
 qcep_ccp_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
-        "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_strength"),
-        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True),
+        "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
+        "osc": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_strength"),
+        "SCF": lambda path, n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True),
         "EFG_e":lambda path, atomstring, n:\
         {k: np.linalg.eigvals(v).tolist() for k,v in\
          raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="CCParser.json", raw_key="EFG_tensor_e", first_only=True, arr_type="arr").items()},
@@ -352,9 +543,9 @@ qcep_ccp_funcs = {
         }
 
 qcep_funcs = {
-        "ex_en": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="exc_energy"),
-        "osc": lambda path,n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="osc_strength"),
-        "SCF": lambda path,n: raw_to_complex(path=path, n=n, rawfile="qcep.json", raw_key="scf_energy", first_only=True),
+        "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="exc_energy"),
+        "osc": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="qcep.json", raw_key="osc_strength"),
+        "SCF": lambda path, n: raw_to_complex(path=path, n=n, rawfile="qcep.json", raw_key="scf_energy", first_only=True),
         "EFG_e":lambda path, atomstring, n:\
         {k: np.linalg.eigvals(v).tolist() for k,v in\
          raw_atomic(path=path, atomstring=atomstring, n=n, rawfile="qcep.json", raw_key="EFG_tensor_e", first_only=True, arr_type="arr").items()},
