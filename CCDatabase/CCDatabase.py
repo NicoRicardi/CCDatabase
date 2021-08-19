@@ -783,8 +783,8 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                     fname = splt[1]
                 else:  # cases 2,3
                     fname = parser_file
-                subdirs = gl.glob(os.path.join(path, "*", ""))  # subdirectories of path (e.g. MP2_A for F&T)
-                paraldirs = gl.glob(os.path.join(ut.split_path(path)[0], "*", ""))  # directories in the parent folder (e.g. iso if path="emb")
+                subdirs = [ut.path_basename(i) for i in gl.glob(os.path.join(path, "*", ""))]  # subdirectories of path (e.g. MP2_A for F&T)
+                paraldirs = [ut.path_basename(i) for i in gl.glob(os.path.join(ut.split_path(path)[0], "*", ""))]  # directories in the parent folder (e.g. iso if path="emb")
                 if fol in subdirs and fol not in paraldirs:  # it is a subdir (case 2)
                     ccdlog.debug("case 2")
                     path_tmp = os.path.join(path, fol)
