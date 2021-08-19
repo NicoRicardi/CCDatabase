@@ -17,7 +17,15 @@ import pandas as pd
 caches = {"npz": cachetools.LRUCache(maxsize=8),
           "json": cachetools.LRUCache(maxsize=10),
           "non_fdet_terms": cachetools.LRUCache(maxsize=1),
-          "fdet_terms": cachetools.LRUCache(maxsize=1)}
+          "non_fdet_int": cachetools.LRUCache(maxsize=1),
+          "fdet_terms": cachetools.LRUCache(maxsize=1),
+          "fdet_grouped": cachetools.LRUCache(maxsize=1),
+          "find_A": cachetools.LRUCache(maxsize=4),
+          "find_3": cachetools.LRUCache(maxsize=4),
+          "elst_ref": cachetools.LRUCache(maxsize=1),
+          "elst_sum_iso": cachetools.LRUCache(maxsize=1),
+          "elst_change_ref": cachetools.LRUCache(maxsize=1)}
+
 
 def clear_caches(cachedict):
     for v in cachedict.values():
@@ -135,6 +143,27 @@ def split_path(path):
     if splt[-1] == "":
         splt = os.path.split(splt[0])
     return splt
+
+def path_basename(path):
+    """
+    Note
+    ----
+    same as os.path.basename(path) but avoids issues with trailing slash.
+    
+    Parameters
+    ----------
+    path: str
+        the path to get the basename of
+    
+    Returns
+    -------
+    list
+        the basename
+    """
+    basename = os.path.basename(path)
+    if basename == "":
+        basename = os.path.basename(os.path.split(path)[0])
+    return basename
 
 @cachetools.cached(cache=caches["json"])
 def load_js(fname):

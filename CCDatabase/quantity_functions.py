@@ -12,6 +12,8 @@ import numpy as np
 import copy as cp
 import cachetools
 import itertools as ittl
+import subprocess as sp
+import glob as gl
 
 from CCDatabase.utils import caches
 
@@ -418,7 +420,8 @@ def get_ref_int(path=None, rawfile="CCParser.json", linenumbers=True):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return get_non_fdet_int(ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers)
 
-def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True):
+@cachetools.cached(cache=caches["find_B"])
+def find_emb_B(path=None):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -430,7 +433,27 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True):
         cyfols = [i for i in os.listdir(path) if "cy" in i]
         n_iters = len(cyfols)
         bfol = os.path.join(path, "cy{}".format(n_iters - 1 - n_iters%2))
-    raw = ut.load_js(os.path.join(bfol, rawfile))
+    return bfol
+@cachetools.cached(cache=caches["find_A"])
+def find_emb_A(path=None):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if os.path.isdir(os.path.join(path, "MP2_A")):
+        afol = os.path.join(path, "MP2_A")
+    else:
+        cyfols = [i for i in os.listdir(path) if "cy" in i]
+        n_iters = len(cyfols) - 1
+        afol = os.path.join(path, "cy{}".format(n_iters - n_iters%2))
+    return afol
+
+def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=False):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if find:
+        path = os.path.join(path, find_emb_B(path=path))
+    raw = ut.load_js(os.path.join(path, rawfile))
     d = {}
     cycles = raw["cycle_energies"][-1][0] if linenumbers else raw["cycle_energies"][-1]
     if type(cycles) == str and re.match(".+npz", cycles):
@@ -442,18 +465,13 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True):
         print("MP2_B not available")
     return d
 
-@cachetools.cached(cache=caches["fdet_terms"])
-def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=False):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
-    if os.path.isdir(os.path.join(path, "MP2_A")):
-        afol = os.path.join(path, "MP2_A")
-    else:
-        cyfols = [i for i in os.listdir(path) if "cy" in i]
-        n_iters = len(cyfols) - 1
-        afol = os.path.join(path, "cy{}".format(n_iters - n_iters%2))
-    raw = ut.load_js(os.path.join(afol, rawfile))
+    if find:
+        path = os.path.join(path, find_emb_A(path=path))
+    raw = ut.load_js(os.path.join(path, rawfile))
     d = {}
     d["J"] = raw["J_int"][0][0] if linenumbers else raw["J_int"][0]
     d["V_NN"] = raw["V_AB"][0][0] if linenumbers else raw["V_AB"][0]
@@ -468,13 +486,25 @@ def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
     d["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     d["E_2_A"] = raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
     d["expansion"] = raw["fde_expansion"][-1][0] if linenumbers else raw["fde_expansion"][-1]
-    d.update(**get_energy_B(path=path, rawfile=rawfile, linenumbers=linenumbers))
     return d
 
+
 @cachetools.cached(cache=caches["fdet_terms"])
+def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    afol = os.path.join(path, find_emb_A(path=path))
+    bfol = os.path.join(path, find_emb_B(path=path))
+    d = get_fdet_terms_A(path=afol)
+    d.update(**get_energy_B(path=bfol, rawfile=rawfile, linenumbers=linenumbers))
+    return d
+
+@cachetools.cached(cache=caches["fdet_grouped"])
 def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
     """
     """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     fdet = get_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
     ref = get_ref_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
     E = {}
@@ -499,6 +529,7 @@ def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
 def get_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True, n=0, lin=True, MP=True):
     """
     """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if n != 0:
         raise ValueError("Only Ground-State energy")
     E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
@@ -507,7 +538,142 @@ def get_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True, n=0, lin=
     if MP:
         E_int += E["Delta_E_2"]
     return E_int
-    
+
+def elst_hf(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    raw = ut.load_js(os.path.join(path, rawfile))
+    J = raw["tot_coulomb"][-1][0] if linenumbers else raw["tot_coulomb"][-1]
+    V_ne = raw["nuc_attr"][-1][0] if linenumbers else raw["nuc_attr"][-1]
+    V_nn = raw["nuc_repu"][-1][0] if linenumbers else raw["nuc_repu"][-1]
+    return  J + V_ne + V_nn
+
+def elst_fdet(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    afol = os.path.join(path, find_emb_A(path=path))
+    bfol = os.path.join(path, find_emb_B(path=path))
+    elst_A = elst_hf(path=afol, rawfile=rawfile, linenumbers=linenumbers)
+    elst_B = elst_hf(path=bfol, rawfile=rawfile, linenumbers=linenumbers)
+    fdet = get_fdet_terms_A(path=afol, rawfile=rawfile, linenumbers=linenumbers)
+    elst_int = fdet["J"] + fdet["V_NN"] + fdet["AnucB"] + fdet["BnucA"] 
+    return elst_A + elst_B + elst_int
+
+@cachetools.cached(cache=caches["elst_ref"])
+def elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if os.path.isdir(os.path.join(path, "AB_MP2")):
+        abfol = os.path.join(path, "AB_MP2")
+    elif os.path.isdir(os.path.join(path, "AB_HF")):
+        abfol = os.path.join(path, "AB_HF")
+    else:
+        raise FileNotFoundError("Could not find AB reference folder")
+    return elst_hf(path=abfol, rawfile=rawfile, linenumbers=linenumbers)
+
+def get_elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    mainfol = ut.split_path(path)[0]
+    return elst_ref(path=mainfol, rawfile=rawfile, linenumbers=linenumbers)
+
+def deduce_expansion(path=None):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    basename = ut.path_basename(path).upper()
+    if "ME" in basename and "SE" not in basename:
+        return "ME"
+    elif "SE" in basename and "ME" not in basename:
+        return "SE"
+    try:
+        grep = str(sp.checkout("grep expansion {}".format(os.path.join(path, "*/*.out")))).lower()
+    except:
+        try:
+            grep = str(sp.checkout("grep expansion {}".format(os.path.join(path, "*/*")))).lower()
+        except:
+            return "ME"
+    if "me" in grep and "se" not in grep:
+        return "ME"
+    if "se" in grep and "me" not in grep:
+        return "SE"
+    else:
+        raise FileNotFoundError("Could not determine expansion")
+
+@cachetools.cached(cache=caches["elst_sum_iso"])        
+def elst_sum_iso(path=None, rawfile="CCParser.json", linenumbers=True, expansion=None):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    mono = expansion == "ME"
+    if expansion is None:
+        raise ValueError("You must provide the expansion")
+    # A
+    if os.path.isdir(os.path.join(path, "A_MP2" if mono else "A_MP2_gh")):
+        afol = os.path.join(path, "A_MP2" if mono else "A_MP2_gh")
+    elif os.path.isdir(os.path.join(path, "A_HF" if mono else "A_HF_gh")):
+        afol = os.path.join(path, "A_HF" if mono else "A_HF_gh")
+    else:
+        raise FileNotFoundError("Could not find isolated A")
+    # B
+    if os.path.isdir(os.path.join(path, "B_MP2" if mono else "B_MP2_gh")):
+        bfol = os.path.join(path, "B_MP2" if mono else "B_MP2_gh")
+    elif os.path.isdir(os.path.join(path, "B_HF" if mono else "B_HF_gh")):
+        bfol = os.path.join(path, "B_HF" if mono else "B_HF_gh")
+    else:
+        raise FileNotFoundError("Could not find isolated B")
+    elst_A = elst_hf(path=afol, rawfile=rawfile, linenumbers=linenumbers)
+    elst_B = elst_hf(path=bfol, rawfile=rawfile, linenumbers=linenumbers)
+
+    intfol = False
+    for exp in expansion.upper(), expansion.lower():
+        suspects = ["FT*{}".format(exp), "FnT*{}".format(exp)]
+        for sus in suspects:
+            globbed = gl.glob(os.path.join(path, sus))
+            if not globbed:
+                continue
+            for fol in globbed:
+                if os.path.isdir(os.path.join(fol, "cy0")):
+                    intfol = os.path.join(fol, "cy0")
+                    break  # Following part breaks all loops.
+            else:
+                continue
+            break
+        else:
+            continue
+        break
+    if not intfol:
+        raise FileNotFoundError("Could not find electrostatic interaction for sum of isolated fragments.\
+                                \nGenerally this is in the 0-th cycle of freeze and thaw, please insert in \
+                                for A embedded in isolated B")
+    raw = ut.load_js(os.path.join(intfol, rawfile))
+    J =  raw["J_sum_iso"][0] if type(raw["J_sum_iso"][0]) != list else raw["J_sum_iso"][0][0]  # not trusting linenumbers on this one
+    AnucB = raw["AnucB_sum_iso"][0] if type(raw["AnucB_sum_iso"][0]) != list else raw["AnucB_sum_iso"][0][0]
+    BnucA = raw["BnucA_sum_iso"][0] if type(raw["BnucA_sum_iso"][0]) != list else raw["BnucA_sum_iso"][0][0]
+    V_NN = raw["V_AB"][0][0] if linenumbers else raw["V_AB"][0]
+    elst_int = J + AnucB + BnucA + V_NN
+    return elst_A + elst_B + elst_int
+
+def get_elst_int_sum_iso(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    expansion = deduce_expansion(path=path)
+    return elst_sum_iso(path=ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers, expansion=expansion)
+
+@cachetools.cached(cache=caches["elst_change_ref"])
+def elst_change_ref(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    return get_elst_ref(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
+
+def elst_change_fdet(path=None, rawfile="CCParser.json", linenumbers=True):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    return elst_fdet(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
+
 """
 for quantity functions it is often useful to use some general function with several parameters,
 define all of them but "path" and "n" into a lambda function, which is then saved as quantity function.
@@ -525,7 +691,9 @@ ccp_funcs = {
         "E_ref_HF": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF"],
         "E_ref_HF_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF_CP"],
         "E_ref_MP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP"],
-        "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP_CP"]}
+        "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP_CP"],
+        "elst_change_ref": lambda path, n: elst_change_ref(path=path, rawfile="CCParser.json"),
+        "elst_change_fdet": lambda path, n: elst_change_fdet(path=path, rawfile="CCParser.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),

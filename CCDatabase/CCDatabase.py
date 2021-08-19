@@ -277,7 +277,7 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem",  # Here may have to change overwrite for ccp
+    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem", overwrite_file=True, 
                                           to_file=True, to_console=False, to_json=True)) \
                                           if parser is None else (parser, [file]+parser_args, parser_kwargs)
     ccdlog.debug("parsing!")
@@ -677,7 +677,8 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         raw quantities to check. Default checks from variables.json
         If there is no ",", searches for the quantity directly in the parser's json file in path.
         Otherwise, the string before the comma is considered as the folder name to look into.
-        If this folder name is available as a subfolder (e.g. F&T, Macrocycles, Prepol)
+        This folder can be a subfolder (e.g. F&T, Macrocycles, Prepol) or a parallel folder (e.g. "../sup/").
+        One can also give q as "folder, file, quantity"
     ext: str
         wildcard-like expression to match. Default is "*.out"
     ignore: str

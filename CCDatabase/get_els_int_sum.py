@@ -9,7 +9,9 @@ Created on Wed Aug 18 23:57:43 2021
 import os
 import numpy as np
 import subprocess as sp
+#import re
 import CCDatabase.utils as ut
+import warnings
 
 def has_header(fname):
     """
@@ -34,7 +36,7 @@ def is_square(integer):
     else:
         return False
 
-def get_elst_int_sum(file, jsfile="CCParser.json", with_ccp=True):
+def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=True):
     mainfol = ut.split_path(file)[0] if ut.split_path(file)[0] else os.getcwd()
     # Get potentials
     if os.path.isfile(os.path.join(mainfol,"v_coul.txt")):
@@ -64,23 +66,27 @@ def get_elst_int_sum(file, jsfile="CCParser.json", with_ccp=True):
     else:
         raise FileNotFoundError("Cannot find file for v_B")  
     
-    # Get V_NANB and expansion
-    if os.path.isfile(os.path.join(mainfol,jsfile)):
-        jsdata = ut.load_js(os.path.join(mainfol,jsfile))
-    if "V_AB" in jsdata.keys:
-        V_NN = jsdata["V_AB"][0]
-        if type(V_NN) == list:  # value and linenumber
-            V_NN = V_NN[0]
+    # Get expansion
+    jsdata = ut.load_js(os.path.join(mainfol,jsfile)) if os.path.isfile(os.path.join(mainfol,jsfile)) else {}
+    if "expansion" in jsdata.keys():
         if expansion:
             assert expansion == jsdata["fde_expansion"][0][0] or jsdata["fde_expansion"][0]  # linenumber or not
         elif "fde_expansion" in jsdata.keys():
             expansion = jsdata["fde_expansion"][0]
             if type(expansion) == list:
+                if not linenumbers:
+                    warnings.warn("get_elst_int_sum: You are adding values without \"linenumbers\"\
+                              in a json file which has them. This can lead to issues in reading data.\
+                              Consider passing \"linenumbers=True\", dummy linenumbers will be added")
                 expansion = expansion[0]
+            elif linenumbers:
+                warnings.warn("get_elst_int_sum: You are adding values with \"linenumbers\"\
+                              in a json file which does not have them. This can lead to issues in reading data.\
+                              Consider passing \"linenumbers=False\"")
     elif with_ccp:
         import CCParser as ccp
         parsed = ccp.Parser(file, to_json=True, json_file=jsfile, overwrite=False, overwrite_vals=False)
-        V_NN = parsed.results.V_AB.get_last()  # check
+#        V_NN = parsed.results.V_AB.get_last()  # check
         if expansion:
             assert expansion == parsed.results.fde_expansion # check
         else:
@@ -91,9 +97,22 @@ def get_elst_int_sum(file, jsfile="CCParser.json", with_ccp=True):
             expansion = "ME" if "ME" in s else "SE"
         except:
             expansion = "ME"  # qchem default
-        s = str(sp.checkout("grep \"Nuc_A <-> Nuc_B\" {}".format(file)))
-        V__NN = float(re.search("-?\d+\.\d+",s).group())
-        
+#        s = str(sp.checkout("grep \"Nuc_A <-> Nuc_B\" {}".format(file)))
+#        V_NN = float(re.search("-?\d+\.\d+",s).group())
+#        
+#    if "V_AB" in jsdata.keys:
+#        V_NN = jsdata["V_AB"][0]
+#        if type(V_NN) == list:  # value and linenumber
+#            if not linenumbers:
+#                warnings.warn("get_elst_int_sum: You are adding values without \"linenumbers\"\
+#                              in a json file which has them. This can lead to issues in reading data.\
+#                              Consider passing \"linenumbers=True\", dummy linenumbers will be added")
+#            V_NN = V_NN[0]
+#        elif linenumbers:
+#            warnings.warn("get_elst_int_sum: You are adding values with \"linenumbers\"\
+#                              in a json file which does not have them. This can lead to issues in reading data.\
+#                              Consider passing \"linenumbers=False\"")
+#        
     # Get DMs
     if os.path.isfile(os.path.join(mainfol, "Densmat_A.txt")):
         dmf_A = os.path.join(mainfol, "Densmat_A.txt")
@@ -103,8 +122,8 @@ def get_elst_int_sum(file, jsfile="CCParser.json", with_ccp=True):
         dmf_B = os.path.join(mainfol, "Densmat_B.txt")
     elif os.path.isfile(os.path.join(mainfol, "frag_0_HF_{}.txt".format(expansion))):
         dmf_B = os.path.join(mainfol, "frag_0_HF_{}.txt".format(expansion))
-    dm_A = np.loadtxt(dmf_A, dtype=np.float64, skiprows=1 if has_header(fname) else 0)
-    dm_B = np.loadtxt(dmf_B, dtype=np.float64, skiprows=1 if has_header(fname) else 0)
+    dm_A = np.loadtxt(dmf_A, dtype=np.float64, skiprows=1 if has_header(file) else 0)
+    dm_B = np.loadtxt(dmf_B, dtype=np.float64, skiprows=1 if has_header(file) else 0)
     lA, lB = dm_A.shape[0], dm_B.shape[0]
     if is_square(lA):
         nbas = int(np.sqrt(lA))
@@ -118,9 +137,14 @@ def get_elst_int_sum(file, jsfile="CCParser.json", with_ccp=True):
     elif is_square(lB/2):
         nbas = int(np.sqrt(lB/2))
         dm_B = dm_B.reshape([2,nbas, nbas]).sum(axis=0)
-    J = np.trace(np.dot(dm_A, v_J))
-    AnucB = np.trace(np.dot(dm_A, v_B))  
-    BnucA= np.trace(np.dot(dm_B, v_A))  
-    tot = J + AnucB + BnucA + V_NN
+    J = np.trace(np.dot(dm_A, v_j))
+    AnucB = np.trace(np.dot(dm_A, v_b))  
+    BnucA= np.trace(np.dot(dm_B, v_a))
+    if linenumbers:
+        J = [J, -1]
+        AnucB = [AnucB, -1]
+        BnucA = [BnucA, -1]
+    jsdata.update(dict(J_sum_iso=[J], AnucB_sum_iso=[AnucB], BnucA_sum_iso=[BnucA]))  # Using same structure as ccp
+    ut.dump_js(jsdata, os.path.join(mainfol,jsfile))
     
     
