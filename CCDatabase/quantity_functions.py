@@ -414,9 +414,11 @@ def get_non_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True):
         print("at least some MP-ghost value unavailable")
     return E_int
     
-def get_ref_int(path=None, rawfile="CCParser.json", linenumbers=True):
+def get_ref_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     """
     """
+    if n != 0:
+        raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return get_non_fdet_int(ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers)
 
@@ -527,7 +529,7 @@ def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
         print("Missing some MP contribution. Only HF will be calculated")
     return E
     
-def get_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True, n=0, lin=True, MP=True):
+def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=True, MP=True):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -663,15 +665,19 @@ def get_elst_int_sum_iso(path=None, rawfile="CCParser.json", linenumbers=True):
     return elst_sum_iso(path=ut.split_path(path)[0], rawfile=rawfile, linenumbers=linenumbers, expansion=expansion)
 
 @cachetools.cached(cache=caches["elst_change_ref"])
-def elst_change_ref(path=None, rawfile="CCParser.json", linenumbers=True):
+def elst_change_ref(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     """
     """
+    if n != 0:
+        raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return get_elst_ref(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
 
-def elst_change_fdet(path=None, rawfile="CCParser.json", linenumbers=True):
+def elst_change_fdet(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     """
     """
+    if n != 0:
+        raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return elst_fdet(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
 
@@ -689,12 +695,12 @@ ccp_funcs = {
         "E_FDET_HF": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=False),
         "E_linFDET_MP": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=True),
         "E_FDET_MP": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=True),
-        "E_ref_HF": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF"],
-        "E_ref_HF_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF_CP"],
-        "E_ref_MP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP"],
-        "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP_CP"],
-        "elst_change_ref": lambda path, n: elst_change_ref(path=path, rawfile="CCParser.json"),
-        "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, rawfile="CCParser.json")}
+        "E_ref_HF": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["HF"],
+        "E_ref_HF_CP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["HF_CP"],
+        "E_ref_MP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP"],
+        "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP_CP"],
+        "elst_change_ref": lambda path, n: elst_change_ref(path=path, n=n, rawfile="CCParser.json"),
+        "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, n=n, rawfile="CCParser.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
