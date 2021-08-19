@@ -23,6 +23,10 @@ def cached_load(npzfile):
 
 def vals_from_npz(filepath, key):
     """
+    Note
+    ----
+    Always use absolute path!!! Using the same filename while being in a different location would return the cached value!!
+    
     Example of use
     ----
     In [1]: vals = ut.load_js("/home/folder/raws.json" )
@@ -118,7 +122,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0,
         vals = group_values(raws[raw_key])
     val = vals[n][0] if linenumbers else vals[n]
     if type(val) == str and re.match(".+npz", val):
-        val = vals_from_npz(os.path.join(path,val), raw_key)[n]
+        val = vals_from_npz(os.path.join(path, val), raw_key)[n]
     if type(val) not in [bool, int, float, str]:
         val = deal_with_array(val, to=arr_type)
     return val
@@ -314,7 +318,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
             vals = []
         for nv, val in enumerate(vals):
             if  type(val) == str and re.match(".+npz", val):
-                vals[nv] = vals_from_npz(os.path.join(path,val), raw_key)[idxs[nv]]
+                vals[nv] = vals_from_npz(os.path.join(path, val), raw_key)[idxs[nv]]
             if type(vals[nv]) not in [bool, int, float]:
                 vals[nv] = deal_with_array(vals[nv], to=arr_type)
         valsdict[name] = vals
@@ -461,7 +465,7 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=Fals
     cycles = raw["cycle_energies"][-1][0] if linenumbers else raw["cycle_energies"][-1]
     if type(cycles) == str and re.match(".+npz", cycles):
         cycles = vals_from_npz(os.path.join(path, cycles), "cycle_energies")
-    d["HF_B"] = cycles[-1]
+    d["HF_B"] = cycles[-1][-1]
     try:
         d["E_2_B"]= raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
     except:
