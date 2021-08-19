@@ -93,10 +93,10 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
             expansion = parsed.results.fde_expansion # check
     else:
         try:
-            s = str(sp.check_output("grep expansion {}".format(file))).upper()
+            s = str(sp.check_output("grep -i expansion {}".format(file))).upper()
             expansion = "ME" if "ME" in s else "SE"
         except:
-            expansion = "ME"  # qchem default
+            raise FileNotFoundError("Could not determine expansion")
 #        s = str(sp.checkout("grep \"Nuc_A <-> Nuc_B\" {}".format(file)))
 #        V_NN = float(re.search("-?\d+\.\d+",s).group())
 #        

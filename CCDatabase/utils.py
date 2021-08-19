@@ -21,7 +21,7 @@ caches = {"npz": cachetools.LRUCache(maxsize=8),
           "fdet_terms": cachetools.LRUCache(maxsize=1),
           "fdet_grouped": cachetools.LRUCache(maxsize=1),
           "find_A": cachetools.LRUCache(maxsize=4),
-          "find_3": cachetools.LRUCache(maxsize=4),
+          "find_B": cachetools.LRUCache(maxsize=4),
           "elst_ref": cachetools.LRUCache(maxsize=1),
           "elst_sum_iso": cachetools.LRUCache(maxsize=1),
           "elst_change_ref": cachetools.LRUCache(maxsize=1)}

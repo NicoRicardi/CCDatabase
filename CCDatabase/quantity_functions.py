@@ -434,6 +434,7 @@ def find_emb_B(path=None):
         n_iters = len(cyfols)
         bfol = os.path.join(path, "cy{}".format(n_iters - 1 - n_iters%2))
     return bfol
+
 @cachetools.cached(cache=caches["find_A"])
 def find_emb_A(path=None):
     """
@@ -587,12 +588,12 @@ def deduce_expansion(path=None):
     elif "SE" in basename and "ME" not in basename:
         return "SE"
     try:
-        grep = str(sp.checkout("grep expansion {}".format(os.path.join(path, "*/*.out")))).lower()
+        grep = str(sp.checkout("grep -i expansion {}".format(os.path.join(path, "*/*.out")))).lower()
     except:
         try:
-            grep = str(sp.checkout("grep expansion {}".format(os.path.join(path, "*/*")))).lower()
+            grep = str(sp.checkout("grep -i expansion {}".format(os.path.join(path, "*/*")))).lower()
         except:
-            return "ME"
+            raise FileNotFoundError("Could not determine expansion")
     if "me" in grep and "se" not in grep:
         return "ME"
     if "se" in grep and "me" not in grep:
@@ -684,16 +685,16 @@ ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy_rel"),
         "osc": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="osc_str"),
         "SCF": lambda path, n: raw_to_complex(path=path, n=n, rawfile="CCParser.json", raw_key="scf_energy", first_only=True),
-        "E_linfdet_hf": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=False),
-        "E_fdet_hf": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=False),
-        "E_linfdet_mp": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=True),
-        "E_fdet_mp": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=True),
+        "E_linFDET_HF": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=False),
+        "E_FDET_HF": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=False),
+        "E_linFDET_MP": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=True, MP=True),
+        "E_FDET_MP": lambda path, n: get_fdet_int(path=path, n=n, rawfile="CCParser.json", lin=False, MP=True),
         "E_ref_HF": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF"],
         "E_ref_HF_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["HF_CP"],
         "E_ref_MP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP"],
         "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, rawfile="CCParser.json")["MP_CP"],
         "elst_change_ref": lambda path, n: elst_change_ref(path=path, rawfile="CCParser.json"),
-        "elst_change_fdet": lambda path, n: elst_change_fdet(path=path, rawfile="CCParser.json")}
+        "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, rawfile="CCParser.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
