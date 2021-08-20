@@ -267,7 +267,8 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     # Finding file
     files = [i for i in gl.glob(os.path.join(path, ext)) if i not in gl.glob(os.path.join(path, ignore))]  # e.g. all *.out which are not slurm*.out
     if len(files) == 0:
-        raise FileNotFoundError("Either no matching file or inexistent path")  
+        ccdlog.critical("No matching file in {}".format(path))
+        return {}
     elif len(files) == 1:
         file = files[0]
         ccdlog.info("File found!")
@@ -792,8 +793,9 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                     ccdlog.debug("case 3")
                     path_tmp = os.path.join(ut.split_path(path)[0], fol)  
                 else:
-                    raise ValueError("""the location of your quantity {} cannot be understood.
-                             Most likely it is either not present or double""".format(qlist[n]))
+                    ccdlog.critical("the location of your quantity {} cannot be understood.\
+                             Most likely it is either not present or double. Continuing with other quantities".format(qlist[n]))
+                    continue
             q = splt[-1]
             filepath = os.path.join(path_tmp, fname)
             ccdlog.debug("filepath is {}".format(filepath))
