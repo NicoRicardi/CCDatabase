@@ -814,9 +814,9 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             ccdlog.debug("No data from {} yet".format(path_tmp))
             data[path_tmp] = ut.dict_from_file(filepath, cached=True)
             if path_tmp not in reparsed.keys():
-                reparsed[path_tmp] = {}
-            reparsed[path_tmp][parsername] = False  
-        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and not reparsed[path_tmp][parsername]:  # quantity not in json, not reparsed yet
+                reparsed[path_tmp] = []
+            reparsed[path_tmp].append(parsername) 
+        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and parsername not in reparsed[path_tmp]:  # quantity not in json, not reparsed yet
             if parsername != False:  # no parsing for human-generated quantities (e.g. correspondance)
                 # Here parserdict should be {q1: pname1,..}, parserargsdict {q1:[arg1,..],..}, parserkwargsdict {q:{kw1:arg1,..},..}
                 ccdlog.info("reparsing in folder {}".format(path_tmp))
@@ -834,9 +834,8 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                     data[path_tmp].update(ut.load_js(filepath, cached=False))  # let's read reparsed json/xlsx/df
                 else:
                     ccdlog.critical("{} does not exist. Either did not parse or parsed and saved elsewhere".format(filepath))
-                    data[path_tmp] = {}
-            reparsed[path_tmp][parsername] = True  
-        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and reparsed[path_tmp][parsername]:
+            reparsed[path_tmp].append(parsername) 
+        if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and parsername in reparsed[path_tmp]:
             missing.append(qlist[n])  # original q, not split
             ccdlog.error("{} missing {}".format(path_tmp,q))
     return missing   
