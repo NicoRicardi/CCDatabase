@@ -54,24 +54,24 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
     
     if os.path.isfile(os.path.join(mainfol,"v_nucA.txt")):
         v_a = np.loadtxt(os.path.join(mainfol,"v_nucA.txt"))
-    elif os.path.isfile(os.path.join(mainfol,"v_nuc1.txt")):
-        v_a = np.loadtxt(os.path.join(mainfol,"v_nuc1.txt"))
+    elif os.path.isfile(os.path.join(mainfol,"v_nuc_1.txt")):
+        v_a = np.loadtxt(os.path.join(mainfol,"v_nuc_1.txt"))
     else:
         raise FileNotFoundError("Cannot find file for v_A")
         
     if os.path.isfile(os.path.join(mainfol,"v_nucB.txt")):
         v_b = np.loadtxt(os.path.join(mainfol,"v_nucB.txt"))
-    elif os.path.isfile(os.path.join(mainfol,"v_nuc0.txt")):
-        v_b = np.loadtxt(os.path.join(mainfol,"v_nuc0.txt"))
+    elif os.path.isfile(os.path.join(mainfol,"v_nuc_0.txt")):
+        v_b = np.loadtxt(os.path.join(mainfol,"v_nuc_0.txt"))
     else:
         raise FileNotFoundError("Cannot find file for v_B")  
     
     # Get expansion
     jsdata = ut.load_js(os.path.join(mainfol,jsfile)) if os.path.isfile(os.path.join(mainfol,jsfile)) else {}
-    if "expansion" in jsdata.keys():
+    if "fde_expansion" in jsdata.keys():
         if expansion:
             assert expansion == jsdata["fde_expansion"][0][0] or jsdata["fde_expansion"][0]  # linenumber or not
-        elif "fde_expansion" in jsdata.keys():
+        else:
             expansion = jsdata["fde_expansion"][0]
             if type(expansion) == list:
                 if not linenumbers:
@@ -85,12 +85,13 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
                               Consider passing \"linenumbers=False\"")
     elif with_ccp:
         import CCParser as ccp
-        parsed = ccp.Parser(file, to_json=True, json_file=jsfile, overwrite=False, overwrite_vals=False)
+        parsed = ccp.Parser(file, to_json=True, json_file=jsfile, to_console=False,
+                            overwrite_file=False, overwrite_vals=False)
 #        V_NN = parsed.results.V_AB.get_last()  # check
         if expansion:
-            assert expansion == parsed.results.fde_expansion # check
+            assert expansion == parsed.results.fde_expansion[0] 
         else:
-            expansion = parsed.results.fde_expansion # check
+            expansion = parsed.results.fde_expansion[0]
     else:
         try:
             s = str(sp.check_output("grep -i expansion {}".format(file))).upper()
@@ -126,20 +127,23 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
     dm_B = np.loadtxt(dmf_B, dtype=np.float64, skiprows=1 if has_header(file) else 0)
     lA, lB = dm_A.shape[0], dm_B.shape[0]
     if is_square(lA):
-        nbas = int(np.sqrt(lA))
-        dm_A = 2*dm_A.reshape([nbas, nbas])  # NB supposes only alpha!!!
+        nbasA = int(np.sqrt(lA))
+        dm_A = 2*dm_A.reshape([nbasA, nbasA])  # NB supposes only alpha!!!
     elif is_square(lA/2):
-        nbas = int(np.sqrt(lA/2))
-        dm_A = dm_A.reshape([2,nbas, nbas]).sum(axis=0)
+        nbasA = int(np.sqrt(lA/2))
+        dm_A = dm_A.reshape([2,nbasA, nbasA]).sum(axis=0)
     if is_square(lB):
-        nbas = int(np.sqrt(lB))
-        dm_B = 2*dm_B.reshape([nbas, nbas])  # NB supposes only alpha!!!
+        nbasB = int(np.sqrt(lB))
+        dm_B = 2*dm_B.reshape([nbasB, nbasB])  # NB supposes only alpha!!!
     elif is_square(lB/2):
-        nbas = int(np.sqrt(lB/2))
-        dm_B = dm_B.reshape([2,nbas, nbas]).sum(axis=0)
-    J = np.trace(np.dot(dm_A, v_j))
-    AnucB = np.trace(np.dot(dm_A, v_b))  
-    BnucA= np.trace(np.dot(dm_B, v_a))
+        nbasB = int(np.sqrt(lB/2))
+        dm_B = dm_B.reshape([2, nbasB, nbasB]).sum(axis=0)
+    v_j = v_j.reshape([nbasA, nbasA])
+    v_b = v_b.reshape([nbasA, nbasA])
+    v_a = v_b.reshape([nbasB, nbasB])
+    J = np.einsum('ab,ba', dm_A, v_j)
+    AnucB = np.einsum('ab,ba', dm_A, v_b) 
+    BnucA= np.einsum('ab,ba', dm_B, v_a)
     if linenumbers:
         J = [J, -1]
         AnucB = [AnucB, -1]
