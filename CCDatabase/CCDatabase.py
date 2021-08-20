@@ -278,9 +278,13 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         file = files[idx]
         ccdlog.warning("Several matching files!! Using the shortest file ({})".format(file))
     #Let's get started and parse
-    parser, parser_args, parser_kwargs = (ccp.Parser, [file], dict(software="qchem", overwrite_file=True, 
-                                          to_file=True, to_console=False, to_json=True)) \
-                                          if parser is None else (parser, [file]+parser_args, parser_kwargs)
+    if parser in [None, "ccp", ccp.Parser]:
+        parser, parser_args = ccp.Parser, [file]
+        if not parser_kwargs: 
+            parser_kwargs = dict(software="qchem", overwrite_file=False, 
+                                 to_file=True, to_console=False, to_json=True)
+    else:
+        parser_args = [file] + parser_args
     ccdlog.debug("parsing!")
     data = parser(*parser_args,**parser_kwargs)
     return data
@@ -547,8 +551,8 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
     None is accepted as *args for ccp.Parser
     """
     if parser_args is None:
-        parserargsdict = {p: parser_args for p in parsers_used}
-        ccdlog.info("obtained \"parserargsdict\" as None for all parsers")
+        parserargsdict = {p: [] for p in parsers_used}
+        ccdlog.info("obtained \"parserargsdict\" as empty list for all parsers")
     elif type(parser_args) is dict:
         if np.array([type(k) != str for k in parser_args.keys()]):
             for k,v in parser_args.items():
@@ -590,8 +594,8 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
     None is accepted as **kwargs for ccp.Parser
     """
     if parser_kwargs is None:
-        parserkwargsdict = {p: parser_kwargs for p in parsers_used}
-        ccdlog.info("obtained \"parserkwargsdict\" as None for all parsers")
+        parserkwargsdict = {p: {} for p in parsers_used}
+        ccdlog.info("obtained \"parserkwargsdict\" as empty dictionary for all parsers")
     else:  # parser_kwargs != None
         if type(parser_kwargs) in [tuple, list]:
             if len(parser_kwargs) == 1 and type(parser_kwargs[0]) is dict:
@@ -1079,10 +1083,11 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
         {"pname": pfunc/None}
         None => ccp.
         if {pfunc: "pname"} it will be inverted
-    parser: None ,dict, str, func, list(if raw == True)                 
+    parser: None ,dict, str, func,# list(if raw == True)                 
         {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
         if str/func, uses for all qs
-        list allowed only if raw == True
+        # list allowed only if raw == True
+        # TODO: check if list works (possible only if reqs is also a list)
     parser_args: None, dict, list
         {"pname1": args1, pname1, ..}
         list will be used for all parser
