@@ -21,6 +21,7 @@ import CCDatabase.utils as ut
 import logging
 import copy as cp
 import shutil as sh
+import traceback
 from CCDatabase.quantity_functions import ccp_funcs, qcep_ccp_funcs, qcep_funcs
 
 # set up logger. NB avoid homonimity with other module's loggers (e.g. ccp)
@@ -286,7 +287,11 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
     else:
         parser_args = [file] + parser_args
     ccdlog.debug("parsing!")
-    data = parser(*parser_args,**parser_kwargs)
+    try:
+        data = parser(*parser_args,**parser_kwargs)
+    except Exception as e:
+        ccdlog.critical("Exception while parsing! {}".format(e))
+        ccdlog.critical("Traceback: {}".format(traceback.format_exc()))
     return data
 
 def check_qlist(qlist, key, fp, jsdata):
@@ -815,7 +820,6 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
             data[path_tmp] = ut.dict_from_file(filepath, cached=True)
             if path_tmp not in reparsed.keys():
                 reparsed[path_tmp] = []
-            reparsed[path_tmp].append(parsername) 
         if not ut.rq_in_keys(data[path_tmp], q, nvals=nvals) and parsername not in reparsed[path_tmp]:  # quantity not in json, not reparsed yet
             if parsername != False:  # no parsing for human-generated quantities (e.g. correspondance)
                 # Here parserdict should be {q1: pname1,..}, parserargsdict {q1:[arg1,..],..}, parserkwargsdict {q:{kw1:arg1,..},..}
@@ -1036,12 +1040,16 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 failed = None
                                 s += 1
                                 ccdlog.info("""Probably q had to be added to ex_qs but was not.
-                                             Error while calculating {}_{}. Error message below \n {}""".format(q, s-1, e))
+                                             Error while calculating {}_{} in {}. Error message below.\
+                                             Traceback if printlevel=10 \n {}""".format(q, s-1, path, e))
+                                ccdlog.debug("Traceback:\n {}".format(traceback.format_exc()))
+                                
                             else:
                                 failed = True 
-                                ccdlog.info("Error while calculating {}_{}. Error message below \n {}""".format(q, s, e))
+                                ccdlog.info("Error while calculating {}_{} in {}. Error message below.\
+                                            Traceback if printlevel=10 \n {}""".format(q, s, path, e))
+                                ccdlog.debug("Traceback:\n {}".format(traceback.format_exc()))
                     if len(vals) == 0:
-                        ccdlog.error("Errors when calculating {} in {}".format(q, path))
                         missing.append(q)
                     elif len(vals) == 1:
                         data[q] = vals[0]
