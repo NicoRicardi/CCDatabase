@@ -1046,6 +1046,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                         ccdlog.debug("{} has many values. Added both dict and individual values".format(q))
             else:
                 ccdlog.error("cannot calculate {} because of missing raw quantity/ies".format(q))
+                ccdlog.debug("missing: {}".format(miss))
                 missing.append(q)
     ut.dump_js(data, datafp)
     ccdlog.info("dumped into {}".format(datafp))                        

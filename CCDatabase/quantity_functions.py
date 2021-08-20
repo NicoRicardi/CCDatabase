@@ -484,7 +484,7 @@ def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=
     d["V_NN"] = raw["V_AB"][0][0] if linenumbers else raw["V_AB"][0]
     d["AnucB"] = raw["AnucB"][0][0] if linenumbers else raw["AnucB"][0]
     d["BnucA"] = raw["BnucA"][0][0] if linenumbers else raw["BnucA"][0]
-    # Fix xc vs x-c and lin/upd    
+    # Fix lin/upd    
     d["Exc_nad"] = raw["Exc_nad"][1][0] if linenumbers else raw["Exc_nad"][1]
     d["Ts_nad"] = raw["Ts_nad"][1][0] if linenumbers else raw["Ts_nad"][1]
     d["Exc_nad_ref"] = raw["Exc_nad"][0][0] if linenumbers else raw["Exc_nad"][0]
