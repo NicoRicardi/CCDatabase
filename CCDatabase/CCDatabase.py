@@ -67,7 +67,7 @@ def move_to_trash(expr, startdir="", trash="", keep=True, logfile="operations.lo
     trash = os.path.join(os.getcwd(), "Trash") if not trash else trash
     ut.mkdif(trash)
     try:
-        histdict = ut.load_js(histfile)  # read history file and look for highest ID
+        histdict = ut.load_js(histfile, cached=False)  # read history file and look for highest ID
         ID = max([int(i) for i in histdict.keys()]) + 1  # get ID and add 1
     except FileNotFoundError:  #history file is not there yet
         histdict = {}
@@ -148,7 +148,7 @@ def undo_move(IDs, logfile="operations.log", histfile="history.json"):
     overwriting is avoided and the file is copied as file_n.ext.
     """
     IDs = ut.deal_with_type(IDs, orig=str, to=lambda x: [x])  # if only 1 ID,turn to list
-    histdict = ut.load_js(histfile)
+    histdict = ut.load_js(histfile, cached=False)
     with open(logfile, "r") as f:
         lines = f.readlines()
     for ID in IDs:  # looping over all IDs
@@ -190,7 +190,7 @@ def get_joblist(fname="variables.json"):
     list(tuples)
         the list of "jobs" (e.g. [job1,job2,job3...] with job being ("A","B","basis",[...],"calc")) 
     """
-    data = ut.load_js(fname) 
+    data = ut.load_js(fname, cached=False) 
     if "joblist" in data.keys():
         return(data["joblist"])
     else:
@@ -310,7 +310,7 @@ def check_qlist(qlist, key, fp, jsdata):
     if type(qlist) is str:
         if re.match(".+\.json", qlist):  # actually a json file
             fp = cp.copy(qlist)
-            jsdata = ut.load_js(fp)
+            jsdata = ut.load_js(fp, cached=False)
             if type(jsdata) is list:
                 qlist = cp.copy(jsdata)
                 fp, jsdata = None, None  # back to None because it only had qlist
@@ -409,7 +409,7 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         elif type(reqs) is str:
             if re.match(".+\.json", reqs):  # actually a json file (qlist or its own)
                 if jsdata is not None and reqs == fp:  # not already read
-                    jsdata = ut.load_js(reqs)
+                    jsdata = ut.load_js(reqs, cached=False)
                 if type(jsdata) is not dict:
                     raise ValueError("Your json file is not a dictionary!!")
                 reqsdict = jsdata["requisites"] if "requisites" in jsdata.keys() else jsdata
@@ -804,7 +804,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
         ### case is determined. path_tmp and filepath are set
         if path_tmp not in data.keys():
             ccdlog.debug("No data from {} yet".format(path_tmp))
-            data[path_tmp] = ut.dict_from_file(filepath)
+            data[path_tmp] = ut.dict_from_file(filepath, cached=True)
             if path_tmp not in reparsed.keys():
                 reparsed[path_tmp] = {}
             reparsed[path_tmp][parsername] = False  
@@ -823,7 +823,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                 except:
                     ccdlog.critical("could not parse in {}".format(path_tmp))
                 if os.path.exists(filepath):
-                    data[path_tmp].update(ut.load_js(filepath))  # let's read reparsed json/xlsx/df
+                    data[path_tmp].update(ut.load_js(filepath, cached=False))  # let's read reparsed json/xlsx/df
                 else:
                     ccdlog.critical("{} does not exist. Either did not parse or parsed and saved elsewhere".format(filepath))
                     data[path_tmp] = {}
@@ -949,7 +949,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
     datafp = os.path.join(path, "data.json")  # path of complex quantities json file
     if os.path.exists(datafp):
         try:
-            data = ut.load_js(datafp)
+            data = ut.load_js(datafp, cached=True)
             ccdlog.info("Loaded {}".format(datafp))
         except:
             data = {}
@@ -1161,7 +1161,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
         jsfp = os.path.join(path, "data.json")
         cnt = 0
         while cnt <= 1:  # counter to reparse at most once
-            data = ut.load_js(jsfp) if os.path.exists(jsfp) else {}
+            data = ut.load_js(jsfp, cached=True) if os.path.exists(jsfp) else {}
             column = list(j)  
             missing = []
             if data == {}:  # no need to loop over qlist

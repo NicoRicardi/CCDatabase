@@ -165,8 +165,7 @@ def path_basename(path):
         basename = os.path.basename(os.path.split(path)[0])
     return basename
 
-@cachetools.cached(cache=caches["json"])
-def load_js(fname):
+def load_js_nocache(fname):
     """
     Note
     ----
@@ -187,6 +186,53 @@ def load_js(fname):
             return js.load(f)
         except:
             return {}  
+        
+@cachetools.cached(cache=caches["json"])
+def load_js_cached(fname):
+    """
+    Note
+    ----
+    1.This is cached!!
+    2.Some datatype may change when load=>dump=>load (e.g. tuple=> list, {1:"one"}=>{'1':'one'})
+    
+    Parameters
+    ----------
+    fname: str
+        filepath to load
+    
+    Returns
+    -------
+    dict
+        the dictionary in the json file
+    """
+    return load_js_nocache(fname)
+
+def load_js(fname, cached=True):
+    """
+    Note
+    ----
+    1.Careful with cache! Always use full paths, never filenames!!!
+    2.Some datatype may change when load=>dump=>load (e.g. tuple=> list, {1:"one"}=>{'1':'one'})
+    
+    Parameters
+    ----------
+    fname: str
+        filepath to load
+    cached:  bool
+        whether to use the cache or not
+    
+    Returns
+    -------
+    dict
+        the dictionary in the json file
+    """
+    if cached:
+        return load_js_cached(fname)
+    else:
+        to_return = load_js_nocache(fname)
+        if (fname,) in caches["json"]:
+            caches["json"]._Cache__data[(fname,)] = to_return
+        return to_return
 
 def dump_js(obj, fname):
     """
@@ -208,7 +254,7 @@ def dump_js(obj, fname):
     with open(fname, "w") as f:
         js.dump(obj, f)
 
-def dict_from_file(filepath):
+def dict_from_file(filepath, cached=True): #asdf
     """
     Note
     ----
@@ -230,7 +276,7 @@ def dict_from_file(filepath):
         return {} 
     type_ = filepath.split(".")[-1]
     if type_ == "json":
-        return load_js(filepath)
+        return load_js(filepath, cached=cached)
     elif type_ == "xlsx":  # excel file
         df = pd.read_excel(filepath)
         return {k: v.dropna() for k,v in dict(df).items()}

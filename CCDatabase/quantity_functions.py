@@ -116,7 +116,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0,
         raise ValueError("You want a value only, but are asking for n > 0")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     rawfile = os.path.join(path, rawfile)
-    raws = ut.load_js(rawfile)
+    raws = ut.load_js(rawfile, cached=True)
     vals = raws[raw_key]
     if group_values and np.array([type(i) in [float,np.float32,np.float64] for i in vals]).all():
         vals = group_values(raws[raw_key])
@@ -279,7 +279,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
         raise ValueError("You want a value only, but are asking for n > 0")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     rawfile = os.path.join(path, rawfile)
-    raws = ut.load_js(rawfile)
+    raws = ut.load_js(rawfile, cached=True)
     if "frag_xyz" in raws.keys():
         geomkey = "frag_xyz"
     elif "xyz" in raws.keys():
@@ -332,7 +332,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
 
 
 @cachetools.cached(cache=caches["non_fdet_terms"])
-def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -454,7 +454,7 @@ def find_emb_A(path=None):
         afol = os.path.join(path, "cy{}".format(n_iters - n_iters%2))
     return afol
 
-def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=False):
+def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=False):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -472,7 +472,7 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=Fals
         print("MP2_B not available")
     return d
 
-def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=False):
+def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=False):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -546,7 +546,7 @@ def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=
         E_int += E["Delta_E_2"]
     return E_int
 
-def elst_hf(path=None, rawfile="CCParser.json", linenumbers=True):
+def elst_hf(path=None, rawfile="CCParser.json", linenumbers=True):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -608,7 +608,7 @@ def deduce_expansion(path=None):
         raise FileNotFoundError("Could not determine expansion")
 
 @cachetools.cached(cache=caches["elst_sum_iso"])        
-def elst_sum_iso(path=None, rawfile="CCParser.json", linenumbers=True, expansion=None):
+def elst_sum_iso(path=None, rawfile="CCParser.json", linenumbers=True, expansion=None):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
