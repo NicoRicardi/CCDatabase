@@ -1263,6 +1263,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 column.append(item if item else np.nan)
                                 ccdlog.debug("added {} to \"missing\"".format(oldqlist[n]))
                             else:
+                                column.append(item if item else np.nan)
                                 ccdlog.debug("{} could not be obtained".format(oldqlist[n]))
                         elif type(item) is dict:
                             if not list(item.keys())[0].isnumeric():  # only one state, atomic values
