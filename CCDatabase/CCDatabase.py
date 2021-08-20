@@ -788,14 +788,16 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                     fname = splt[1]
                 else:  # cases 2,3
                     fname = parser_file
-                subdirs = [ut.path_basename(i) for i in gl.glob(os.path.join(path, "*", ""))]  # subdirectories of path (e.g. MP2_A for F&T)
-                paraldirs = [ut.path_basename(i) for i in gl.glob(os.path.join(ut.split_path(path)[0], "*", ""))]  # directories in the parent folder (e.g. iso if path="emb")
-                if fol in subdirs and fol not in paraldirs:  # it is a subdir (case 2)
+                as_subfol = os.path.join(path, fol)
+                is_subfol = os.path.isdir(as_subfol)
+                as_paralfol = os.path.join(ut.split_path(path)[0], fol)
+                is_paralfol = os.path.isdir(as_paralfol)
+                if is_subfol and not is_paralfol:  # it is a subdir (case 2)
                     ccdlog.debug("case 2")
-                    path_tmp = os.path.join(path, fol)
-                elif fol not in subdirs and fol in paraldirs:  # it is a parallel dir (case 3)
+                    path_tmp = as_subfol
+                elif not is_subfol and is_paralfol:  # it is a parallel dir (case 3)
                     ccdlog.debug("case 3")
-                    path_tmp = os.path.join(ut.split_path(path)[0], fol)  
+                    path_tmp = as_paralfol
                 else:
                     ccdlog.critical("the location of your quantity {} cannot be understood.\
                              Most likely it is either not present or double. Continuing with other quantities".format(qlist[n]))
