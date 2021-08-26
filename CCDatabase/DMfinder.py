@@ -34,7 +34,7 @@ def find_matrix(fname, wildcardlist=[], jsonfile="CCParser.json", prop_key="ext_
     elif type(wildcardlist) not in [tuple, list]:
         wildcardlist = [wildcardlist]
     json_filepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    old = ut.load_js(json_filepath) if os.path.exists(json_filepath) else {}
+    old = ut.load_js(json_filepath) if os.path.isfile(json_filepath) else {}
     matching = [ut.split_path(fp)[1] for wc in wildcardlist for fp in gl.glob(os.path.join(path,wc))]
     old[prop_key] = matching  # always overwrites values because if file is no longer there, pointer is useless
     ut.dump_js(old, json_filepath)
@@ -84,7 +84,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
     else:
         raise NotImplementedError("Unknown expansion!! Only ME and SE so far!")
     json_filepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    old = ut.load_js(json_filepath) if os.path.exists(json_filepath) else {}
+    old = ut.load_js(json_filepath) if os.path.isfile(json_filepath) else {}
     new = {}
 #    if "{}" in prop_key:
 #        prop_key = prop_key.format(expansion)
@@ -137,7 +137,7 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
     else:
         abfile = False
     json_filepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    old = ut.load_js(json_filepath) if os.path.exists(json_filepath) else {}
+    old = ut.load_js(json_filepath) if os.path.isfile(json_filepath) else {}
     new = {}
     if abfile:
         if not os.path.isfile(os.path.join(abfol, ccpfile)):
@@ -180,7 +180,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
     else:
         bfile = False
     json_filepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    old = ut.load_js(json_filepath) if os.path.exists(json_filepath) else {}
+    old = ut.load_js(json_filepath) if os.path.isfile(json_filepath) else {}
     new = {}
     if afile:
         if not os.path.isfile(os.path.join(afol, ccpfile)):
@@ -223,11 +223,11 @@ def get_all(fname, filename="Densmat_SCF.txt", ref="HF_ref", iso="HF_iso", FDET=
                       jsonfile="DMfinder.json", ccpfile="CCParser.json"):
     path = ut.split_path(fname)[0]
     json_filepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    old = ut.load_js(json_filepath) if os.path.exists(json_filepath) else {}
+    old = ut.load_js(json_filepath) if os.path.isfile(json_filepath) else {}
     old.update(find_fdet_dmfiles(fname, filename=filename, prop_key=FDET,
-                                 jsonfile=False, ccpfile=ccpfile))   # jsonfile=False because we only  write at the end
+                                 jsonfile="", ccpfile=ccpfile))   # jsonfile="" because we only  write at the end
     old.update(find_ref_dmfile(fname, filename=filename, prop_key=ref,
-                                 jsonfile=False, ccpfile=ccpfile)) 
+                                 jsonfile="", ccpfile=ccpfile)) 
     old.update(find_iso_dmfiles(fname, filename=filename, prop_key=iso,
-                                 jsonfile=False, ccpfile=ccpfile)) 
+                                 jsonfile="", ccpfile=ccpfile)) 
     ut.dump_js(old, json_filepath)

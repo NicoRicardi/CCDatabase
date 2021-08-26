@@ -527,8 +527,9 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         ccdlog.info("obtained \"parserdict\" as \"ccp\" for all raw quantities")
     else:  #parser != None
         if type(parser) is str:
+            toprint = parser
             parser = {q: parser for q in rawlist}  # not parserdict!!
-            ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(parser))
+            ccdlog.info("obtained \"parserdict\" as \"{}\" for all raw quantities".format(toprint))
         if type(parser) is dict:
             tmp = np.array([ i in parser.keys() for i in rawlist])
             if not tmp.all():
