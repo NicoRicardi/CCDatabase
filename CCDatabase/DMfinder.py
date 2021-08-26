@@ -160,7 +160,7 @@ def find_ref_dmfile(fname, filename="Densmat_SCF.txt", prop_key="HF_ref",
     path = ut.split_path(fname)[0]
     fol = ut.split_path(path)[0]  # parent folder
     jsonfilepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
-    return locate_iso_dmfiles(path=fol, filename="Densmat_SCF.txt",
+    return locate_ref_dmfile(path=fol, filename="Densmat_SCF.txt",
                               prop_key=prop_key, jsonfile=jsonfilepath if jsonfile else "", ccpfile=ccpfile)
     
 @cachetools.cached(cache=caches["locate_fdet_dmfiles"])
