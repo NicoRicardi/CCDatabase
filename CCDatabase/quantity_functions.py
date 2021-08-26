@@ -792,17 +792,18 @@ def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
     ccdlog = logging.getLogger("ccd")
     ut.setupLogger()
     first_dec = lambda x: min([n for n, i in enumerate(np.format_float_positional(x).split(".")[-1]) if i != "0"])
+    check_int = lambda x: first_dec(round(x) - x)
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     expansion = deduce_expansion(path=path)
     raw = ut.load_js(os.path.join(path, rawfile))
     d1, gridpoints, weights = key_to_density(raw, k1, b_only=b_only, expansion=expansion)
     int1 = np.dot(weights, d1)
     ccdlog.info("{} integrates to {}".format(k1, int1))
-    assert first_dec(int1) >= 4, "Non-integer integration for {}".format(k1)
+    assert check_int(int1) >= 4, "Non-integer integration for {}".format(k1)
     d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints, weights=weights, b_only=b_only, expansion=expansion)
     int2 = np.dot(weights, d2)
     ccdlog.info("{} integrates to {}".format(k2, int2))
-    assert first_dec(int2) >= 4, "Non-integer integration for {}".format(k2)
+    assert check_int(int2) >= 4, "Non-integer integration for {}".format(k2)
     return d1, d2, gridpoints, weights
 
 def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
@@ -822,7 +823,7 @@ def M_value(path=None, n=0, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json"):
     d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
                                                           k2=k2, b_only=True,
                                                           rawfile=rawfile)
-    d = d2 -d1
+    d = d1 - d2
     pos = np.where(d > 0)
     d[pos] = 0
     return np.dot(weights, d)
@@ -850,7 +851,7 @@ ccp_funcs = {
         "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
-        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")}
+        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
