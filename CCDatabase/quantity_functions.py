@@ -14,38 +14,11 @@ import cachetools
 import itertools as ittl
 import subprocess as sp
 import glob as gl
+from pyscf import gto, eval_ao, eval_rho
+from pyscf.dft import gen_grid
+import dmtools.BasisSet as bset
 
 from CCDatabase.utils import caches
-
-@cachetools.cached(cache=caches["npz"])
-def cached_load(npzfile):
-    return np.load(npzfile, allow_pickle=True)
-
-def vals_from_npz(filepath, key):
-    """
-    Note
-    ----
-    Always use absolute path!!! Using the same filename while being in a different location would return the cached value!!
-    
-    Example of use
-    ----
-    In [1]: vals = ut.load_js("/home/folder/raws.json" )
-    In [2]: print(vals[key])
-    [["file.npz",1], ["file.npz",4], ..]
-    In [3]: vals = vals_from_npz("/home/folder/file.npz", key)
-    In [4]: print(vals)
-    [array([0,1,2,3,4]), array([10,20,30,40,50]), ...]
-    
-    Parameters
-    ----------
-    filepath: str
-        absolute filepath of the npz file
-    key: str
-        the key to return
-    """
-    npz = cached_load(filepath)
-    return npz[key]
-
 
 def deal_with_array(arr, to="arr"):
     """
@@ -122,7 +95,7 @@ def raw_to_complex(path=None, rawfile="CCParser.json", raw_key="", n=0,
         vals = group_values(raws[raw_key])
     val = vals[n][0] if linenumbers else vals[n]
     if type(val) == str and re.match(".+npz", val):
-        val = vals_from_npz(os.path.join(path, val), raw_key)[n]
+        val = ut.vals_from_npz(os.path.join(path, val), raw_key)[n]
     if type(val) not in [bool, int, float, str]:
         val = deal_with_array(val, to=arr_type)
     return val
@@ -144,7 +117,7 @@ def group_values(vals):
     list
         the values with the updated number of digits
     """
-    decimals = lambda x: len(str(x).split(".")[-1])
+    decimals = lambda x: len(np.format_float_positional(x).split(".")[-1])
     options = {n: [] for n in range(len(vals))}
     decs = {n: decimals(vals[n]) for n in range(len(vals))}
     max_d = max(decs.values())
@@ -291,7 +264,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
     geoms = raws[geomkey][0][0]
     if  re.match(".+npz", geoms):
         npzfile = os.path.join(path,geoms)
-        geoms = vals_from_npz(npzfile, geomkey)
+        geoms = ut.vals_from_npz(npzfile, geomkey)
     else:
         if geomkey == "frag_xyz":
             geoms = [np.array(geom, dtype="object") for geom in geoms]
@@ -318,7 +291,7 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
             vals = []
         for nv, val in enumerate(vals):
             if  type(val) == str and re.match(".+npz", val):
-                vals[nv] = vals_from_npz(os.path.join(path, val), raw_key)[idxs[nv]]
+                vals[nv] = ut.vals_from_npz(os.path.join(path, val), raw_key)[idxs[nv]]
             if type(vals[nv]) not in [bool, int, float]:
                 vals[nv] = deal_with_array(vals[nv], to=arr_type)
         valsdict[name] = vals
@@ -464,7 +437,7 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=Fals
     d = {}
     cycles = raw["cycle_energies"][-1][0] if linenumbers else raw["cycle_energies"][-1]
     if type(cycles) == str and re.match(".+npz", cycles):
-        cycles = vals_from_npz(os.path.join(path, cycles), "cycle_energies")
+        cycles = ut.vals_from_npz(os.path.join(path, cycles), "cycle_energies")
     d["HF_B"] = cycles[-1][-1]
     try:
         d["E_2_B"]= raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
@@ -594,10 +567,10 @@ def deduce_expansion(path=None):
     elif "SE" in basename and "ME" not in basename:
         return "SE"
     try:
-        grep = str(sp.checkout("grep -i expansion {}".format(os.path.join(path, "*/*.out")))).lower()
+        grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*/*.out")))).lower()
     except:
         try:
-            grep = str(sp.checkout("grep -i expansion {}".format(os.path.join(path, "*/*")))).lower()
+            grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*/*")))).lower()
         except:
             raise FileNotFoundError("Could not determine expansion")
     if "me" in grep and "se" not in grep:
@@ -684,6 +657,167 @@ def elst_change_fdet(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
         raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return elst_fdet(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
+ 
+def has_header(fname):
+    """
+    Parameters
+    ----------
+    fname: str
+        the filename to check
+        
+    Returns
+    -------
+    bool
+        whether the file has a header
+    """
+    first_line_splt = str(sp.check_output(["head", "-n 1", fname]))[2:].split()
+    header = True if len(first_line_splt) > 1 else False
+    return header
+
+def is_square(integer):
+    root = np.sqrt(integer)
+    if int(root + 0.5) ** 2 == integer: 
+        return True
+    else:
+        return False
+    
+def read_density(dmf, header=None, not_full=True):  # TODO docstring
+    """
+    Parameters
+    ----------
+    fname: str
+        the DM filename
+    head: bool/None
+        whether the file has a header, with None(default) that is deduced
+    alpha_only: bool/None
+        whether the file has only one matrix(alpha), with None(default) that is deduced
+    
+    Return
+    ------
+    np.array(2, Nbas, Nbas)
+        alpha and beta DM
+    """
+    if header == None:
+        header = has_header(dmf)
+    dm = np.loadtxt(dmf, dtype=np.float64, skiprows=1 if header else 0)
+    nl = dm.shape[0]
+    if is_square(nl):
+        nbas = int(np.sqrt(nl))
+        dm = dm.reshape([nbas, nbas])
+        if not_full:
+             dm *= 2
+    if is_square(nl/2):
+        nbas = int(np.sqrt(nl))
+        dm = 2*dm.reshape([nbas, nbas]).sum(axis=0)
+    return dm
+
+def read_and_reorder(dmf, coords, bas):
+    """
+    """
+    dm = read_density(dmf)
+    try:
+        corr_path = os.environ.get("BAS_CORRESP")
+    except:
+        raise FileNotFoundError("Could not determine \"BAS_CORRESP\" environment variable.\
+                                Please set it in your .bashrc and place there basis correspondence files.")
+    corr_file = os.path.join(corr_path, bas.resplace(".nwchem",".corr"))
+    d = ut.load_js(corr_file, cached=False)
+    if d["source"] == "qchem" and d["destination"] == "pyscf":
+        order = bset.get_order(corr_file)
+    elif d["source"] == "destination" and d["qchem"] == "pyscf":
+        order = bset.get_rev_order(corr_file)
+    else:
+        raise ValueError("Not a qchem <=> pyscf reordering")
+    atomlist = [i[0].replace("X-","") for i in coords]
+    sort_arr = bset.get_sort_arr(atomlist, order)
+    return bset.reorder(dm, sort_arr)
+    
+def dm_on_grid(mol, dm, points):
+    """
+    """
+    ao_mol = eval_ao(mol, points, deriv=0)
+    rho = eval_rho(mol, ao_mol, dm, xctype="LDA")
+    return rho
+
+def read_key(rawdict, k, b_only=False):
+    if k not in rawdict.keys():
+        kb = k+"_B"
+        dmfb, coordsb, basB = rawdict[kb]
+        dmb = read_and_reorder(dmfb, coordsb, basB)
+        molb = gto.M(coordsb, basis=ut.read_file(basB))
+        to_return = [molb, dmb]
+        if not b_only:
+            ka = k+"_A"
+            dmfa, coordsa, basA = rawdict[ka]
+            dma = read_and_reorder(dmfa, coordsa, basA)
+            mola = gto.M(coordsa, basis=ut.read_file(basA))
+            to_return.extend([mola, dma])
+        return to_return
+    else:
+        dmf, coords, bas = rawdict[k]
+        dm = read_and_reorder(dmf, coords, bas)
+        mol = gto.M(coords, basis=ut.read_file(bas))
+        return mol, dm
+
+def get_grid(mol, gridlevel=4):
+    """
+    """
+    grid = gen_grid.Grids(mol)
+    grid.level = gridlevel
+    grid.build()
+    return grid.coords, grid.weights
+
+def key_to_density(rawdict, k, gridpoints=False, b_only=False, expansion="ME"):
+    tmp = read_key(rawdict, k, b_only=b_only)
+    if len(tmp) == 4:
+        separate = True
+        molb, dmb, mola, dma = tmp
+    else:
+        separate = False
+        mol, dm = tmp
+    if not gridpoints:
+        if separate:
+            mol = mola + molb if expansion == "ME" else mola
+        gridpoints, weights = get_grid(mol)
+    d = dm_on_grid(mola, dma, gridpoints) + dm_on_grid(molb, dmb, gridpoints) if\
+    separate else dm_on_grid(mol, dm, gridpoints)
+    return d, gridpoints, weights
+    
+def densities_on_gridpoints(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref",
+            b_only=False, rawfile="DMfinder.json"):
+    """
+    """
+    decimals = lambda x: len(np.format_float_positional(x).split(".")[-1])
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    expansion = deduce_expansion(path=path)
+    raw = ut.load_js(os.path.join(path, rawfile))
+    d1, gridpoints, weights = key_to_density(raw, k1, b_only=b_only, expansion=expansion)
+    assert decimals(np.dot(weights, d1)) <= 6, "Non-integer integration for {}".format(k1)
+    d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints,b_only=False, expansion=expansion)
+    assert decimals(np.dot(weights, d2)) <= 6, "Non-integer integration for {}".format(k2)
+    return d1, d2, gridpoints, weights
+
+def L2_norm(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"):
+    """
+    """
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
+    d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
+                                                          k2=k2, rawfile=rawfile)
+    return np.dot(weights, np.absolute(d2 - d1))**0.5
+
+def M_value(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"):
+    """
+    """
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
+    d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
+                                                          k2=k2, b_only=True,
+                                                          rawfile=rawfile)
+    d = d2 -d1
+    pos = np.where(d > 0)
+    d[pos] = 0
+    return np.dot(weights, d)
 
 """
 for quantity functions it is often useful to use some general function with several parameters,
@@ -704,7 +838,11 @@ ccp_funcs = {
         "E_ref_MP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP"],
         "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP_CP"],
         "elst_change_ref": lambda path, n: elst_change_ref(path=path, n=n, rawfile="CCParser.json"),
-        "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, n=n, rawfile="CCParser.json")}
+        "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, n=n, rawfile="CCParser.json"),
+        "L2_FDET_ref": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"),
+        "L2_iso_ref": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_ref", rawfile="DMfinder.json"),
+        "L2_iso_FDET": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_FDET", rawfile="DMfinder.json"),
+        "M_value": lambda path, n: M_value(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),

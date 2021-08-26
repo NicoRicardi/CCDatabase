@@ -24,12 +24,51 @@ caches = {"npz": cachetools.LRUCache(maxsize=8),
           "find_B": cachetools.LRUCache(maxsize=4),
           "elst_ref": cachetools.LRUCache(maxsize=1),
           "elst_sum_iso": cachetools.LRUCache(maxsize=1),
-          "elst_change_ref": cachetools.LRUCache(maxsize=1)}
+          "elst_change_ref": cachetools.LRUCache(maxsize=1),
+          "read_file": cachetools.LRUCache(maxsize=2)
+          }
 
 
 def clear_caches(cachedict):
     for v in cachedict.values():
         v.clear()
+        
+@cachetools.cached(cache=caches["npz"])
+def cached_load(npzfile):
+    return np.load(npzfile, allow_pickle=True)
+
+def vals_from_npz(filepath, key):
+    """
+    Note
+    ----
+    Always use absolute path!!! Using the same filename while being in a different location would return the cached value!!
+    
+    Example of use
+    ----
+    In [1]: vals = ut.load_js("/home/folder/raws.json" )
+    In [2]: print(vals[key])
+    [["file.npz",1], ["file.npz",4], ..]
+    In [3]: vals = vals_from_npz("/home/folder/file.npz", key)
+    In [4]: print(vals)
+    [array([0,1,2,3,4]), array([10,20,30,40,50]), ...]
+    
+    Parameters
+    ----------
+    filepath: str
+        absolute filepath of the npz file
+    key: str
+        the key to return
+    """
+    npz = cached_load(filepath)
+    return npz[key]
+
+@cachetools.cached(cache=caches["read_file"])
+def read_file(fname):
+    """
+    """
+    with open(fname, "r") as f:
+        s = f.read()
+    return s
 
 def russdoll(obj):
     """

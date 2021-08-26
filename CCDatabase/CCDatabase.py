@@ -283,7 +283,9 @@ def find_and_parse(path, ext="*.out", ignore="slurm*", parser=None,
         parser, parser_args = ccp.Parser, [file]
         if not parser_kwargs: 
             parser_kwargs = dict(software="qchem", overwrite_file=False, 
-                                 to_file=True, to_console=False, to_json=True)
+                                 to_file=True, to_console=False,
+                                 to_json=True, json_file="CCParser.json",
+                                 large_fn="matrices.npz")
     else:
         parser_args = [file] + parser_args
     ccdlog.debug("parsing!")

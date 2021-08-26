@@ -40,13 +40,13 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
     mainfol = ut.split_path(file)[0] if ut.split_path(file)[0] else os.getcwd()
     # Get potentials
     if os.path.isfile(os.path.join(mainfol,"v_coul.txt")):
-        v_j_file = "v_coul.txt"
+        v_j_file = os.path.join(mainfol,"v_coul.txt")
         expansion = False
     elif os.path.isfile(os.path.join(mainfol,"v_coulomb_ME.txt")):
-        v_j_file = "v_coulomb_ME.txt"
+        v_j_file = os.path.join(mainfol,"v_coulomb_ME.txt")
         expansion = "ME"
     elif os.path.isfile(os.path.join(mainfol,"v_coulomb_SE.txt")):
-        v_j_file = "v_coulomb_SE.txt"
+        v_j_file = os.path.join(mainfol,"v_coulomb_SE.txt")
         expansion = "SE"
     else:
         raise FileNotFoundError("Cannot find the Coulomb potential file")
@@ -98,7 +98,7 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
             expansion = "ME" if "ME" in s else "SE"
         except:
             raise FileNotFoundError("Could not determine expansion")
-#        s = str(sp.checkout("grep \"Nuc_A <-> Nuc_B\" {}".format(file)))
+#        s = str(sp.check_output("grep \"Nuc_A <-> Nuc_B\" {}".format(file)))
 #        V_NN = float(re.search("-?\d+\.\d+",s).group())
 #        
 #    if "V_AB" in jsdata.keys:
@@ -140,10 +140,10 @@ def elst_int_sum_iso(file, jsfile="CCParser.json", with_ccp=True, linenumbers=Tr
         dm_B = dm_B.reshape([2, nbasB, nbasB]).sum(axis=0)
     v_j = v_j.reshape([nbasA, nbasA])
     v_b = v_b.reshape([nbasA, nbasA])
-    v_a = v_b.reshape([nbasB, nbasB])
-    J = np.einsum('ab,ba', dm_A, v_j)
-    AnucB = np.einsum('ab,ba', dm_A, v_b) 
-    BnucA= np.einsum('ab,ba', dm_B, v_a)
+    v_a = v_a.reshape([nbasB, nbasB])
+    J = np.einsum('ab,ba', v_j, dm_A)
+    AnucB = np.einsum('ab,ba',v_b, dm_A) 
+    BnucA= np.einsum('ab,ba', v_a, dm_B)
     if linenumbers:
         J = [J, -1]
         AnucB = [AnucB, -1]
