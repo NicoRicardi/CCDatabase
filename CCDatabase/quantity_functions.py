@@ -14,7 +14,8 @@ import cachetools
 import itertools as ittl
 import subprocess as sp
 import glob as gl
-from pyscf import gto, eval_ao, eval_rho
+from pyscf import gto
+from pyscf.dft.numint import eval_ao, eval_rho
 from pyscf.dft import gen_grid
 import dmtools.BasisSet as bset
 
