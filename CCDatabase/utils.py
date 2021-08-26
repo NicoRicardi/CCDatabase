@@ -25,7 +25,10 @@ caches = {"npz": cachetools.LRUCache(maxsize=8),
           "elst_ref": cachetools.LRUCache(maxsize=1),
           "elst_sum_iso": cachetools.LRUCache(maxsize=1),
           "elst_change_ref": cachetools.LRUCache(maxsize=1),
-          "read_file": cachetools.LRUCache(maxsize=2)
+          "read_file": cachetools.LRUCache(maxsize=2),
+          "locate_iso_dmfiles": cachetools.LRUCache(maxsize=1),
+          "locate_ref_dmfile": cachetools.LRUCache(maxsize=1),
+          "locate_fdet_dmfiles": cachetools.LRUCache(maxsize=1)
           }
 
 
