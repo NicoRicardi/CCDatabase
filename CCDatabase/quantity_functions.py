@@ -728,7 +728,7 @@ def read_and_reorder(dmf, coords, bas):
     elif d["source"] == "destination" and d["qchem"] == "pyscf":
         order = bset.get_rev_order(corr_file)
     else:
-        raise ValueError("Not a qchem <=> pyscf reordering")
+        raise ValueError("{} to {} is not a qchem <=> pyscf reordering!".format(d["source"], d["destination"]))
     atomlist = [i[0].replace("X-","") for i in coords]
     sort_arr = bset.get_sort_arr(atomlist, order)
     return bset.reorder(dm, sort_arr)
@@ -793,9 +793,11 @@ def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
     expansion = deduce_expansion(path=path)
     raw = ut.load_js(os.path.join(path, rawfile))
     d1, gridpoints, weights = key_to_density(raw, k1, b_only=b_only, expansion=expansion)
-    assert decimals(np.dot(weights, d1)) <= 6, "Non-integer integration for {}".format(k1)
+    int1 = np.dot(weights, d1)
+    assert decimals(int1) <= 5, "Non-integer integration for {}: {}".format(k1, int1)
     d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints,b_only=False, expansion=expansion)
-    assert decimals(np.dot(weights, d2)) <= 6, "Non-integer integration for {}".format(k2)
+    int2 = np.dot(weights, d2)
+    assert decimals(int2) <= 5, "Non-integer integration for {}: {}".format(k2, int2)
     return d1, d2, gridpoints, weights
 
 def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
