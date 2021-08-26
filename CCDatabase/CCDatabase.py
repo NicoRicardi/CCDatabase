@@ -382,10 +382,11 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         json dictionary if useful
     qlist: list
         pre-processed qlist
-    parserfuncs: {},dict
+    parserfuncs: {},dict, callable
         {"pname": pfunc/None}
         None => ccp.
         if {pfunc: "pname"} it will be inverted
+        callable works only if parser is only one.
     parser: None ,dict, str, func, list(if raw == True)                 
         {"q1": "pname1", "q2":"pname2"} or {"q1": pfunc1, "q2": pfunc2}
         if str/func, uses for all qs
@@ -466,7 +467,47 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
         parserfuncs = {"ccp": None,
                        "qcep": qcep.parse_qchem}
     else:
-        try:
+        if type(parserfuncs) != dict:
+            check_if_func = True
+            if type(parserfuncs) in [tuple, list]:
+                if len(parserfuncs) == 1:  # actually only one parser                                                      
+                    parserfuncs = parserfuncs[0]
+                    ccdlog.info("\"parserfuncs\" was a single element list. Will be used for all quantities")   
+                if raw:
+                    if type(parser) not in [tuple, list]:
+                        raise ValueError("\"parserfuncs\" is a list but \"parser\" is not. Could not establish pname-pfunc correspondence")
+                    if len(parserfuncs) == len(parser):                                                                       
+                        parserfuncs = {parser[n]: parserfuncs[n] for n in range(len(qlist))}  
+                        check_if_func = False                                   
+                        ccdlog.info("obtained \"parserdict\"")                                                            
+                    else:                                                                                                 
+                        raise ValueError("""You gave a list as "parser" but the length does not match that of "qlist" """)
+                else:
+                    raise TypeError("\"parser\" cannot be a list. it can be dict/str/None")
+            if check_if_func:
+                try:  # this changes with python versions, hence try/except
+                    is_func = callable(parserfuncs)  # whether it is a function
+                except:
+                    is_func = hasattr(parserfuncs,"__call__")  # whether it is a function
+                if is_func: 
+                    if type(parser) == str:
+                        if parser == "ccp" and parserfuncs.__name__ != "Parser":
+                            ccdlog.warning("parser=\"ccp\" would call CCParser.Parser, \
+                                           but you provided another function. Your function will be used!")
+                        parsername = parser  
+                    elif parser is not None:
+                        if type(parser) in [list, tuple]:
+                            all_same = np.array([i == parser[0] for i in parser]).all() 
+                        if type(parser) == dict:
+                            all_same = np.array([i == list(parser.keys())[0] for i in parser.vals()]).all() 
+                        if not all_same:
+                            raise ValueError("You gave only one parserfunc but called for several parsernames!!")
+                    else:
+                        ccdlog.warning("parser=None would call CCParser.Parser, \
+                                           but you provided another function. Your function will be used!")
+                        parsername = parserfuncs.__name__
+                    parserfuncs = {parsername: parserfuncs}
+        try:  # by now it has to be a dictionary
             all_vals_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.values()]).all()
             all_keys_funcs = np.array([callable(p) or (p==None) for p in parserfuncs.keys()]).all()
         except:
@@ -503,11 +544,11 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
             parserdict = parser
             ccdlog.info("obtained \"parserdict\" with all necessary keys")
         elif type(parser) in [list,tuple]:
+            if len(parser) == 1:  # actually only one parser                                                      
+                    parserdict = {q: parser[0] for q in qlist} 
+                    ccdlog.info("\"parserdict\" was a single element list. Will be used for all quantities")   
             if raw:
-                if len(parser) == 1:  # actually only one parser                                                      
-                    parserdict = {q: parser[0] for q in qlist}                                                        
-                    ccdlog.info("\"parserdict\" was a single element list. Will be used for all quantities")          
-                elif len(parser) == len(qlist):                                                                       
+                if len(parser) == len(qlist):                                                                       
                     parserdict = {qlist[n]: parser[n] for n in range(len(qlist))}                                     
                     ccdlog.info("obtained \"parserdict\"")                                                            
                 else:                                                                                                 
