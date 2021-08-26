@@ -745,19 +745,19 @@ def read_key(rawdict, k, b_only=False):
         kb = k+"_B"
         dmfb, coordsb, basB = rawdict[kb]
         dmb = read_and_reorder(dmfb, coordsb, basB)
-        molb = gto.M(coordsb, basis=ut.read_file(basB))
+        molb = gto.M(atom=coordsb, basis=ut.read_file(basB))
         to_return = [molb, dmb]
         if not b_only:
             ka = k+"_A"
             dmfa, coordsa, basA = rawdict[ka]
             dma = read_and_reorder(dmfa, coordsa, basA)
-            mola = gto.M(coordsa, basis=ut.read_file(basA))
+            mola = gto.M(atom=coordsa, basis=ut.read_file(basA))
             to_return.extend([mola, dma])
         return to_return
     else:
         dmf, coords, bas = rawdict[k]
         dm = read_and_reorder(dmf, coords, bas)
-        mol = gto.M(coords, basis=ut.read_file(bas))
+        mol = gto.M(atom=coords, basis=ut.read_file(bas))
         return mol, dm
 
 def get_grid(mol, gridlevel=4):
