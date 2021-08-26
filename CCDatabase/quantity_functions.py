@@ -777,7 +777,7 @@ def key_to_density(rawdict, k, gridpoints=False, b_only=False, expansion="ME"):
     else:
         separate = False
         mol, dm = tmp
-    if not gridpoints:
+    if gridpoints is False:
         if separate:
             mol = mola + molb if expansion == "ME" else mola
         gridpoints, weights = get_grid(mol)
