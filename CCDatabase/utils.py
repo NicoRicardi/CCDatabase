@@ -352,8 +352,12 @@ def deal_with_type(obj, condition=False, to=None):
             try:
                 return to(obj)
             except:
-                print("utils.deal_with_type: failed to return to(obj), returning obj")
-                return obj
+                to_return = to()
+                if to_return:
+                    return to_return
+                else:
+                    print("utils.deal_with_type: failed to return to(obj), returning obj")
+                    return obj
         else:
             return obj
     else:

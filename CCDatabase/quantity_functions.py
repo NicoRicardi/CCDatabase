@@ -568,10 +568,10 @@ def deduce_expansion(path=None):
     elif "SE" in basename and "ME" not in basename:
         return "SE"
     try:
-        grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*/*.out")))).lower()
+        grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*", "*.out")), shell=True)).lower()
     except:
         try:
-            grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*/*")))).lower()
+            grep = str(sp.check_output("grep -i expansion {}".format(os.path.join(path, "*", "*")), shell=True)).lower()
         except:
             raise FileNotFoundError("Could not determine expansion")
     if "me" in grep and "se" not in grep:
