@@ -784,7 +784,7 @@ def key_to_density(rawdict, k, gridpoints=False, b_only=False, expansion="ME"):
     separate else dm_on_grid(mol, dm, gridpoints)
     return d, gridpoints, weights
     
-def densities_on_gridpoints(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref",
+def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
             b_only=False, rawfile="DMfinder.json"):
     """
     """
@@ -798,16 +798,16 @@ def densities_on_gridpoints(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref",
     assert decimals(np.dot(weights, d2)) <= 6, "Non-integer integration for {}".format(k2)
     return d1, d2, gridpoints, weights
 
-def L2_norm(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"):
+def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     """
     """
     if n != 0:
         raise NotImplementedError("Only GS so far!")
     d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
                                                           k2=k2, rawfile=rawfile)
-    return np.dot(weights, np.absolute(d2 - d1))**0.5
+    return 0.5*np.dot(weights, np.absolute(d2 - d1))
 
-def M_value(path=None, n=0, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"):
+def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     """
     """
     if n != 0:
@@ -840,9 +840,9 @@ ccp_funcs = {
         "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP_CP"],
         "elst_change_ref": lambda path, n: elst_change_ref(path=path, n=n, rawfile="CCParser.json"),
         "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, n=n, rawfile="CCParser.json"),
-        "L2_FDET_ref": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"),
-        "L2_iso_ref": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_ref", rawfile="DMfinder.json"),
-        "L2_iso_FDET": lambda path, n: L2_norm(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_FDET", rawfile="DMfinder.json"),
+        "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"),
+        "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_ref", rawfile="DMfinder.json"),
+        "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_FDET", rawfile="DMfinder.json"),
         "M_value": lambda path, n: M_value(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json")}
 
 qcep_ccp_funcs = {
