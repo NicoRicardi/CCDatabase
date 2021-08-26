@@ -114,13 +114,13 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
     return new
     
 def find_iso_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_iso",
-                     jsonfile="DMfinder.json"):
+                     jsonfile="DMfinder.json", ccpfile="CCParser.json"):
     path = ut.split_path(fname)[0]
     fol = ut.split_path(path)[0]  # parent folder
     jsonfilepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
     expansion = deduce_expansion(path=path)
     return locate_iso_dmfiles(path=fol, filename="Densmat_SCF.txt", expansion=expansion,
-                       prop_key=prop_key, jsonfile=jsonfilepath)
+                       prop_key=prop_key, jsonfile=jsonfilepath, ccpfile=ccpfile)
     
 @cachetools.cached(cache=caches["locate_ref_dmfile"])
 def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
@@ -154,14 +154,14 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
     return new
         
 def find_ref_dmfile(fname, filename="Densmat_SCF.txt", prop_key="HF_ref",
-                    jsonfile="DMfinder.json"):
+                    jsonfile="DMfinder.json", ccpfile="CCParser.json"):
     """
     """
     path = ut.split_path(fname)[0]
     fol = ut.split_path(path)[0]  # parent folder
     jsonfilepath = jsonfile if ut.split_path(jsonfile)[0] else os.path.join(path, jsonfile)
     return locate_iso_dmfiles(path=fol, filename="Densmat_SCF.txt",
-                              prop_key=prop_key, jsonfile=jsonfilepath)
+                              prop_key=prop_key, jsonfile=jsonfilepath, ccpfile=ccpfile)
     
 @cachetools.cached(cache=caches["locate_fdet_dmfiles"])
 def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
