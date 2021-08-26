@@ -769,7 +769,7 @@ def get_grid(mol, gridlevel=4):
     grid.build()
     return grid.coords, grid.weights
 
-def key_to_density(rawdict, k, gridpoints=False, b_only=False, expansion="ME"):
+def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, expansion="ME"):
     tmp = read_key(rawdict, k, b_only=b_only)
     if len(tmp) == 4:
         separate = True
@@ -799,7 +799,7 @@ def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
     int1 = np.dot(weights, d1)
     ccdlog.info("{} integrates to {}".format(k1, int1))
     assert first_dec(int1) >= 4, "Non-integer integration for {}".format(k1)
-    d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints,b_only=False, expansion=expansion)
+    d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints, weights=weights, b_only=False, expansion=expansion)
     int2 = np.dot(weights, d2)
     ccdlog.info("{} integrates to {}".format(k2, int2))
     assert first_dec(int2) >= 4, "Non-integer integration for {}".format(k2)
