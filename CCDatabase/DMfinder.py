@@ -94,7 +94,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         raw = ut.load_js(os.path.join(afol, ccpfile))
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
-            coords = ut.vals_from_npz("frag_xyz")[-1][0].tolist()
+            coords = ut.vals_from_npz(coords, "frag_xyz")[-1][0].tolist()
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
         basA = find_basfile(afol)
         new[prop_key+"_A"] = [afile, coords, basA]
@@ -104,7 +104,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         raw = ut.load_js(os.path.join(bfol, ccpfile))
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
-            coords = ut.vals_from_npz("frag_xyz")[-1][0].tolist()
+            coords = ut.vals_from_npz(coords, "frag_xyz")[-1][0].tolist()
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
         basB = find_basfile(bfol)
         new[prop_key+"_B"] = [bfile, coords, basB]
@@ -145,7 +145,7 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
         raw = ut.load_js(os.path.join(abfol, ccpfile))
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
-            coords = ut.vals_from_npz("frag_xyz")[-1][0].tolist()
+            coords = ut.vals_from_npz(coords, "frag_xyz")[-1][0].tolist()
         bas = find_basfile(abfol)
         new[prop_key] = [abfile, coords, bas]
         if jsonfile:
@@ -188,9 +188,10 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         raw = ut.load_js(os.path.join(afol, ccpfile))
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
-            coords = ut.vals_from_npz("frag_xyz")[-1][0].tolist()
+            npz = coords
+            coords = ut.vals_from_npz(npz, "frag_xyz")[-1][0].tolist()
             if expansion == "SE":
-                ghost = ut.vals_from_npz("frag_xyz")[-1][1]
+                ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
                 ghost[:,0] = "X-" + ghost[:,0]
                 coords.extend(ghost.tolist())
         elif expansion == "SE":
@@ -204,9 +205,10 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         raw = ut.load_js(os.path.join(bfol, ccpfile))
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
-            coords = ut.vals_from_npz("frag_xyz")[-1][0].tolist()
+            npz = coords
+            coords = ut.vals_from_npz(npz, "frag_xyz")[-1][0].tolist()
             if expansion == "SE":
-                ghost = ut.vals_from_npz("frag_xyz")[-1][1]
+                ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
                 ghost[:,0] = "X+" + ghost[:,0]
                 coords.extend(ghost.tolist())
         elif expansion == "SE":
