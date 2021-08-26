@@ -840,10 +840,10 @@ ccp_funcs = {
         "E_ref_MP_CP": lambda path, n: get_ref_int(path=path, n=n, rawfile="CCParser.json")["MP_CP"],
         "elst_change_ref": lambda path, n: elst_change_ref(path=path, n=n, rawfile="CCParser.json"),
         "elst_change_FDET": lambda path, n: elst_change_fdet(path=path, n=n, rawfile="CCParser.json"),
-        "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json"),
-        "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_ref", rawfile="DMfinder.json"),
-        "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="DM_HF_iso", k2="DM_HF_FDET", rawfile="DMfinder.json"),
-        "M_value": lambda path, n: M_value(path=path, n=n, k1="DM_HF_FDET", k2="DM_HF_ref", rawfile="DMfinder.json")}
+        "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
+        "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
+        "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
+        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
