@@ -708,8 +708,8 @@ def read_density(dmf, header=None, not_full=True):  # TODO docstring
         if not_full:
              dm *= 2
     if is_square(nl/2):
-        nbas = int(np.sqrt(nl))
-        dm = 2*dm.reshape([nbas, nbas]).sum(axis=0)
+        nbas = int(np.sqrt(nl/2))
+        dm = dm.reshape([2, nbas, nbas]).sum(axis=0)
     return dm
 
 def read_and_reorder(dmf, coords, bas):
@@ -721,7 +721,7 @@ def read_and_reorder(dmf, coords, bas):
     except:
         raise FileNotFoundError("Could not determine \"BAS_CORRESP\" environment variable.\
                                 Please set it in your .bashrc and place there basis correspondence files.")
-    corr_file = os.path.join(corr_path, bas.resplace(".nwchem",".corr"))
+    corr_file = os.path.join(corr_path, ut.path_basename(bas).replace(".nwchem",".corr"))
     d = ut.load_js(corr_file, cached=False)
     if d["source"] == "qchem" and d["destination"] == "pyscf":
         order = bset.get_order(corr_file)
