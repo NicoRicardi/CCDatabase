@@ -799,7 +799,7 @@ def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
     int1 = np.dot(weights, d1)
     ccdlog.info("{} integrates to {}".format(k1, int1))
     assert first_dec(int1) >= 4, "Non-integer integration for {}".format(k1)
-    d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints, weights=weights, b_only=False, expansion=expansion)
+    d2, *_ = key_to_density(raw, k2, gridpoints=gridpoints, weights=weights, b_only=b_only, expansion=expansion)
     int2 = np.dot(weights, d2)
     ccdlog.info("{} integrates to {}".format(k2, int2))
     assert first_dec(int2) >= 4, "Non-integer integration for {}".format(k2)
@@ -814,7 +814,7 @@ def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")
                                                           k2=k2, rawfile=rawfile)
     return 0.5*np.dot(weights, np.absolute(d2 - d1))
 
-def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
+def M_value(path=None, n=0, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json"):
     """
     """
     if n != 0:
