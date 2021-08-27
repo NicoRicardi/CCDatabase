@@ -786,7 +786,7 @@ def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, ex
             case = 2
         if len(tmp) == 3:
             molb, dmb, mola = tmp
-        case = 3
+            case = 3
         mol = mola + molb if expansion == "ME" else mola
     if gridpoints is False:
         gridpoints, weights = get_grid(mol)
@@ -795,7 +795,7 @@ def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, ex
     elif case == 2:
         d = dm_on_grid(mola, dma, gridpoints) + dm_on_grid(molb, dmb, gridpoints)
     else:
-        dm_on_grid(molb, dmb, gridpoints)
+        d = dm_on_grid(molb, dmb, gridpoints)
     return d, gridpoints, weights
     
 def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
@@ -864,7 +864,7 @@ ccp_funcs = {
         "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
-        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json")}
+        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
