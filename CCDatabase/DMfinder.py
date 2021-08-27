@@ -98,7 +98,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
-            elconf = raw["elconf"][-1][0] 
+            elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
         elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basA = find_basfile(afol)
@@ -113,7 +113,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
-            elconf = raw["elconf"][-1][0] 
+            elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
         elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basB = find_basfile(bfol)
@@ -158,7 +158,7 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
             coords = ut.vals_from_npz(os.path.join(abfol, coords), "frag_xyz")[-1][0].tolist()
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
-            elconf = raw["elconf"][-1][0] 
+            elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
         elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         bas = find_basfile(abfol)
@@ -214,7 +214,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
             coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
-            elconf = raw["elconf"][-1][0] 
+            elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
         elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basA = find_basfile(afol)
@@ -232,6 +232,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
             coords, cnt = "read", 0
             while coords == "read":  # if empty because "read", get previous
                 coords = ut.vals_from_npz(npz, "frag_xyz")[-1 - cnt][0].tolist()
+                cnt += 1
             if expansion == "SE":
                 ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
                 ghost[:,0] = "X+" + ghost[:,0]
@@ -241,7 +242,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
             coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
-            elconf = raw["elconf"][-1][0] 
+            elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
         elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basB = find_basfile(bfol)

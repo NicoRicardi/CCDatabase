@@ -1485,6 +1485,7 @@ def correct_values(fplist, todel=[], toprocess={}):
     for fp in fplist:
         if not os.path.isfile(fp):
             ccdlog.warning("{} does not exist or is not a file".format(fp))
+            continue
         d = ut.load_js(fp, cached=False)
         for td in todel:
             if td in d.keys():
