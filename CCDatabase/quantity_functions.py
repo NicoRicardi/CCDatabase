@@ -777,20 +777,25 @@ def get_grid(mol, gridlevel=4):
 
 def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, expansion="ME"):
     tmp = read_key(rawdict, k, b_only=b_only)
-    tosum = False
     if len(tmp) == 2:
         mol, dm = tmp
+        case = 1
     else:
         if len(tmp) == 4:
             molb, dmb, mola, dma = tmp
-            tosum = True
+            case = 2
         if len(tmp) == 3:
             molb, dmb, mola = tmp
+        case = 3
         mol = mola + molb if expansion == "ME" else mola
     if gridpoints is False:
         gridpoints, weights = get_grid(mol)
-    d = dm_on_grid(mola, dma, gridpoints) + dm_on_grid(molb, dmb, gridpoints) if\
-    tosum else dm_on_grid(mol, dm, gridpoints)
+    if case == 1:
+        d = dm_on_grid(mol, dm, gridpoints)
+    elif case == 2:
+        d = dm_on_grid(mola, dma, gridpoints) + dm_on_grid(molb, dmb, gridpoints)
+    else:
+        dm_on_grid(molb, dmb, gridpoints)
     return d, gridpoints, weights
     
 def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
