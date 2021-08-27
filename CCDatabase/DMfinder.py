@@ -100,7 +100,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
-        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
+        elconf = elconf[0] if len(elconf) == 1 else elconf[1]
         basA = find_basfile(afol)
         new[prop_key+"_A"] = [elconf, afile, coords, basA]
     if bfile:
@@ -115,7 +115,7 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
-        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
+        elconf = elconf[0] if len(elconf) == 1 else elconf[1]
         basB = find_basfile(bfol)
         new[prop_key+"_B"] = [elconf, bfile, coords, basB]
     if (afile or bfile) and jsonfile:
@@ -160,7 +160,7 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
-        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
+        elconf = elconf[0] if len(elconf) == 1 else elconf[1]
         bas = find_basfile(abfol)
         new[prop_key] = [elconf, abfile, coords, bas]
         if jsonfile:
@@ -216,7 +216,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
-        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
+        elconf = elconf[0] if len(elconf) == 1 else elconf[1]
         basA = find_basfile(afol)
         new[prop_key+"_A"] = [elconf, afile, coords, basA]
     if bfile:
@@ -244,7 +244,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
             cnt += 1
-        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
+        elconf = elconf[0] if len(elconf) == 1 else elconf[1]
         basB = find_basfile(bfol)
         new[prop_key+"_B"] = [elconf, bfile, coords, basB]
     if (afile or bfile) and jsonfile:
