@@ -747,13 +747,13 @@ def read_key(rawdict, k, b_only=False):
         elconfb, dmfb, coordsb, basB = rawdict[kb]
         dmb = read_and_reorder(dmfb, coordsb, basB)
         molb = gto.M(atom=coordsb, basis=ut.read_file(basB),
-                     charge=elconfb[0], spin=elconfb[1])
+                     charge=elconfb[0], spin=elconfb[1] - 1)
         to_return = [molb, dmb]
         ka = k+"_A"
         if ka in rawdict.keys():
             elconfa, dmfa, coordsa, basA = rawdict[ka]
             mola = gto.M(atom=coordsa, basis=ut.read_file(basA),
-                         charge=elconfa[0], spin=elconfa[1])
+                         charge=elconfa[0], spin=elconfa[1] - 1)
             if b_only:
                 to_return.append(mola)
             else:
@@ -764,7 +764,7 @@ def read_key(rawdict, k, b_only=False):
         elconf, dmf, coords, bas = rawdict[k]
         dm = read_and_reorder(dmf, coords, bas)
         mol = gto.M(atom=coords, basis=ut.read_file(bas),
-                    charge=elconf[0], spin=elconf[1])
+                    charge=elconf[0], spin=elconf[1] - 1)
         return mol, dm
 
 def get_grid(mol, gridlevel=4):
