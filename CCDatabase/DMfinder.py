@@ -96,8 +96,13 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         if type(coords) == str:
             coords = ut.vals_from_npz(os.path.join(afol, coords), "frag_xyz")[-1][0].tolist()
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
+        elconf, cnt = [], 0
+        while not elconf:  # if empty because "read", get previous
+            elconf = raw["elconf"][-1][0] 
+            cnt += 1
+        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basA = find_basfile(afol)
-        new[prop_key+"_A"] = [afile, coords, basA]
+        new[prop_key+"_A"] = [elconf, afile, coords, basA]
     if bfile:
         if not os.path.isfile(os.path.join(bfol, ccpfile)):
             find_and_parse(afol)
@@ -106,8 +111,13 @@ def locate_iso_dmfiles(path=None, filename="Densmat_SCF.txt", expansion="ME",
         if type(coords) == str:
             coords = ut.vals_from_npz(os.path.join(bfol, coords), "frag_xyz")[-1][0].tolist()
         coords = [[i[0].replace("@", "X-")]+i[1:] for  i in coords]
+        elconf, cnt = [], 0
+        while not elconf:  # if empty because "read", get previous
+            elconf = raw["elconf"][-1][0] 
+            cnt += 1
+        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basB = find_basfile(bfol)
-        new[prop_key+"_B"] = [bfile, coords, basB]
+        new[prop_key+"_B"] = [elconf, bfile, coords, basB]
     if (afile or bfile) and jsonfile:
         old.update(new)
         ut.dump_js(old, json_filepath)
@@ -146,8 +156,13 @@ def locate_ref_dmfile(path=None, filename="Densmat_SCF.txt", prop_key="HF_ref",
         coords = raw["frag_xyz"][-1][0]
         if type(coords) == str:
             coords = ut.vals_from_npz(os.path.join(abfol, coords), "frag_xyz")[-1][0].tolist()
+        elconf, cnt = [], 0
+        while not elconf:  # if empty because "read", get previous
+            elconf = raw["elconf"][-1][0] 
+            cnt += 1
+        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         bas = find_basfile(abfol)
-        new[prop_key] = [abfile, coords, bas]
+        new[prop_key] = [elconf, abfile, coords, bas]
         if jsonfile:
             old.update(new)
             ut.dump_js(old, json_filepath)
@@ -197,16 +212,26 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         elif expansion == "SE":
             ghost = raw["frag_xyz"][-1][1]
             coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
+        elconf, cnt = [], 0
+        while not elconf:  # if empty because "read", get previous
+            elconf = raw["elconf"][-1][0] 
+            cnt += 1
+        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basA = find_basfile(afol)
-        new[prop_key+"_A"] = [afile, coords, basA]
+        new[prop_key+"_A"] = [elconf, afile, coords, basA]
     if bfile:
         if not os.path.isfile(os.path.join(bfol, ccpfile)):
             find_and_parse(afol)
         raw = ut.load_js(os.path.join(bfol, ccpfile))
-        coords = raw["frag_xyz"][-1][0]
+        coords, cnt = "read", 0
+        while coords == "read":  # if empty because "read", get previous
+            coords = raw["frag_xyz"][-1 - cnt][0]
+            cnt += 1
         if type(coords) == str:
             npz = os.path.join(bfol, coords)
-            coords = ut.vals_from_npz(npz, "frag_xyz")[-1][0].tolist()
+            coords, cnt = "read", 0
+            while coords == "read":  # if empty because "read", get previous
+                coords = ut.vals_from_npz(npz, "frag_xyz")[-1 - cnt][0].tolist()
             if expansion == "SE":
                 ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
                 ghost[:,0] = "X+" + ghost[:,0]
@@ -214,8 +239,13 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
         elif expansion == "SE":
             ghost = raw["frag_xyz"][-1][1]
             coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
+        elconf, cnt = [], 0
+        while not elconf:  # if empty because "read", get previous
+            elconf = raw["elconf"][-1][0] 
+            cnt += 1
+        elconf = elconf[0] if len(elconf) == 0 else elconf[1]
         basB = find_basfile(bfol)
-        new[prop_key+"_B"] = [bfile, coords, basB]
+        new[prop_key+"_B"] = [elconf, bfile, coords, basB]
     if (afile or bfile) and jsonfile:
         old.update(new)
         ut.dump_js(old, json_filepath)

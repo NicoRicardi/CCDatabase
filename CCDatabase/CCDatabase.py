@@ -1478,3 +1478,21 @@ def loopthrough(funcdict,joblist):
                 args = []
             ckwargs.update({"path": os.path.join(*job)})  # we join the tuple elements to obtain the path
             func(*args,**ckwargs)
+
+def correct_values(fplist, todel=[], toprocess={}):
+    """
+    """
+    for fp in fplist:
+        if not os.path.isfile(fp):
+            ccdlog.warning("{} does not exist or is not a file".format(fp))
+        d = ut.load_js(fp, cached=False)
+        for td in todel:
+            if td in d.keys():
+                del d[td]
+        for key, func in toprocess.items():
+            if key in d.keys():
+                try:
+                    d[key] = func(d[key])
+                except:
+                    ccdlog.error("Could not use function {} on {}, {}".format(func.__name__, fp, key))
+        ut.dump_js(d, fp)

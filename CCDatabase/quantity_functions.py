@@ -744,21 +744,27 @@ def dm_on_grid(mol, dm, points):
 def read_key(rawdict, k, b_only=False):
     if k not in rawdict.keys():
         kb = k+"_B"
-        dmfb, coordsb, basB = rawdict[kb]
+        elconfb, dmfb, coordsb, basB = rawdict[kb]
         dmb = read_and_reorder(dmfb, coordsb, basB)
-        molb = gto.M(atom=coordsb, basis=ut.read_file(basB))
+        molb = gto.M(atom=coordsb, basis=ut.read_file(basB),
+                     charge=elconfb[0], spin=elconfb[1])
         to_return = [molb, dmb]
-        if not b_only:
-            ka = k+"_A"
-            dmfa, coordsa, basA = rawdict[ka]
-            dma = read_and_reorder(dmfa, coordsa, basA)
-            mola = gto.M(atom=coordsa, basis=ut.read_file(basA))
-            to_return.extend([mola, dma])
+        ka = k+"_A"
+        if ka in rawdict.keys():
+            elconfa, dmfa, coordsa, basA = rawdict[ka]
+            mola = gto.M(atom=coordsa, basis=ut.read_file(basA),
+                         charge=elconfa[0], spin=elconfa[1])
+            if b_only:
+                to_return.append(mola)
+            else:
+                dma = read_and_reorder(dmfa, coordsa, basA)
+                to_return.extend([mola, dma])
         return to_return
     else:
-        dmf, coords, bas = rawdict[k]
+        elconf, dmf, coords, bas = rawdict[k]
         dm = read_and_reorder(dmf, coords, bas)
-        mol = gto.M(atom=coords, basis=ut.read_file(bas))
+        mol = gto.M(atom=coords, basis=ut.read_file(bas),
+                    charge=elconf[0], spin=elconf[1])
         return mol, dm
 
 def get_grid(mol, gridlevel=4):
@@ -771,18 +777,20 @@ def get_grid(mol, gridlevel=4):
 
 def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, expansion="ME"):
     tmp = read_key(rawdict, k, b_only=b_only)
-    if len(tmp) == 4:
-        separate = True
-        molb, dmb, mola, dma = tmp
-    else:
-        separate = False
+    tosum = False
+    if len(tmp) == 2:
         mol, dm = tmp
+    else:
+        if len(tmp) == 4:
+            molb, dmb, mola, dma = tmp
+            tosum = True
+        if len(tmp) == 3:
+            molb, dmb, mola = tmp
+        mol = mola + molb if expansion == "ME" else mola
     if gridpoints is False:
-        if separate:
-            mol = mola + molb if expansion == "ME" else mola
         gridpoints, weights = get_grid(mol)
     d = dm_on_grid(mola, dma, gridpoints) + dm_on_grid(molb, dmb, gridpoints) if\
-    separate else dm_on_grid(mol, dm, gridpoints)
+    tosum else dm_on_grid(mol, dm, gridpoints)
     return d, gridpoints, weights
     
 def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
@@ -815,7 +823,7 @@ def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")
                                                           k2=k2, rawfile=rawfile)
     return 0.5*np.dot(weights, np.absolute(d2 - d1))
 
-def M_value(path=None, n=0, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json"):
+def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     """
     """
     if n != 0:
@@ -823,10 +831,10 @@ def M_value(path=None, n=0, k1="HF_ref", k2="HF_FDET", rawfile="DMfinder.json"):
     d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
                                                           k2=k2, b_only=True,
                                                           rawfile=rawfile)
-    d = d1 - d2
+    d = d2 - d1
     pos = np.where(d > 0)
     d[pos] = 0
-    return np.dot(weights, d)
+    return -np.dot(weights, d)
 
 """
 for quantity functions it is often useful to use some general function with several parameters,
