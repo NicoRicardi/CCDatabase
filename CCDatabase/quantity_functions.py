@@ -12,7 +12,7 @@ import numpy as np
 import copy as cp
 import cachetools
 import itertools as ittl
-import subprocess as spA_C_VWN3'
+import subprocess as sp
 import glob as gl
 from pyscf import gto
 from pyscf.dft import numint
@@ -514,7 +514,7 @@ def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
-    if n != 0:A_C_VWN3'
+    if n != 0:
         raise ValueError("Only Ground-State energy")
     E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
     E_int = E["Delta_HF"] + E["elst_int"]
@@ -701,7 +701,7 @@ def read_density(dmf, header=None, not_full=True):  # TODO docstring
     np.array(2, Nbas, Nbas)
         alpha and beta DM
     """
-    if header == None:A_C_VWN3'
+    if header == None:
         header = has_header(dmf)
     dm = np.loadtxt(dmf, dtype=np.float64, skiprows=1 if header else 0)
     nl = dm.shape[0]
