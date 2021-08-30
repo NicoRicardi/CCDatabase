@@ -12,12 +12,12 @@ import numpy as np
 import copy as cp
 import cachetools
 import itertools as ittl
-import subprocess as sp
+import subprocess as spA_C_VWN3'
 import glob as gl
 from pyscf import gto
 from pyscf.dft import numint
 from pyscf.dft.numint import eval_ao, eval_rho, NumInt
-from pyscf.dft.xcfun import XC
+from pyscf.dft.libxc import XC
 from pyscf.dft import gen_grid
 import dmtools.BasisSet as bset
 import logging
@@ -514,7 +514,7 @@ def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
-    if n != 0:
+    if n != 0:A_C_VWN3'
         raise ValueError("Only Ground-State energy")
     E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
     E_int = E["Delta_HF"] + E["elst_int"]
@@ -701,7 +701,7 @@ def read_density(dmf, header=None, not_full=True):  # TODO docstring
     np.array(2, Nbas, Nbas)
         alpha and beta DM
     """
-    if header == None:
+    if header == None:A_C_VWN3'
         header = has_header(dmf)
     dm = np.loadtxt(dmf, dtype=np.float64, skiprows=1 if header else 0)
     nl = dm.shape[0]
@@ -859,6 +859,28 @@ def calc_kernel(func_kw, dmAvar, dmAnvar, dA, dB, grid, mola):
                                 dA, vxc_nad, fxc_nad)
     return np.einsum('ab,ba', fxc, dmAnvar - dmAvar)
 
+def get_xc_code(type_, val):
+    """
+    """
+    keys = XC.keys()
+    poss = []
+    if val in keys:
+        poss.append(val)
+    elif "LDA_{}_{}".format(type_, val) in keys():
+        poss.append("LDA_{}_{}".format(type_, val))
+    elif "GGA_{}_{}".format(type_, val) in keys():
+        "GGA_{}_{}".format(type_, val)
+    if len(poss) == 0:
+        raise ValueError("Could not find this functional in libxc!!")
+    elif len(poss) == 1:
+        return poss[0]
+    else:
+        value = XC[poss[0]]
+        if True in [XC[i] != value for i in poss]:
+            raise ValueError("Ambiguous value for this functional in libxc!!")
+        else:
+            return poss[0]
+        
 def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
     """
     """
@@ -871,8 +893,9 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     dA, dB = dm_on_grid(mola, dma, grid.coords), dm_on_grid(molb, dmb, grid.coords)
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
     afol = find_emb_A(path=path)
-    ccpdata = ut.load_js(os.path.join(afol, ccpfile))    
-    kw = {"T": XC[ccpdata["fde_Tfunc"][-1][0].upper()], "X": XC[ccpdata["fde_Xfunc"][-1][0].upper()], "C": XC[ccpdata["fde_Cfunc"][-1][0].upper()]}
+    ccpdata = ut.load_js(os.path.join(afol, ccpfile))   
+    d = {"fdeTfunct": "T", "fdeXfunc": "X", "fdeCfunc": "C", "fdeXCfunc": "XC"}
+    kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
     kernel = {"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
               [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)}
     return kernel
@@ -884,7 +907,7 @@ def kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder
     if n != 0:
         raise NotImplementedError("Only GS so far!")
     kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
-    return kernel["T_A"] + kernel["T_B"] + kernel["X_A"] + kernel["X_B"] + kernel["C_A"] + kernel["C_B"]
+    return sum(kernel.values())
 
 """
 for quantity functions it is often useful to use some general function with several parameters,
