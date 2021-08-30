@@ -15,7 +15,9 @@ import itertools as ittl
 import subprocess as sp
 import glob as gl
 from pyscf import gto
-from pyscf.dft.numint import eval_ao, eval_rho
+from pyscf.dft import numint
+from pyscf.dft.numint import eval_ao, eval_rho, NumInt
+from pyscf.dft.xcfun import XC
 from pyscf.dft import gen_grid
 import dmtools.BasisSet as bset
 import logging
@@ -767,13 +769,14 @@ def read_key(rawdict, k, b_only=False):
                     charge=elconf[0], spin=elconf[1] - 1)
         return mol, dm
 
-def get_grid(mol, gridlevel=4):
+def get_grid(mol, gridlevel=4, obj=False):
     """
     """
     grid = gen_grid.Grids(mol)
     grid.level = gridlevel
     grid.build()
-    return grid.coords, grid.weights
+    to_return = grid if object else (grid.coords, grid.weights)
+    return to_return
 
 def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, expansion="ME"):
     tmp = read_key(rawdict, k, b_only=b_only)
@@ -822,6 +825,7 @@ def densities_on_gridpoints(path=None, n=0, k1="HF_FDET", k2="HF_ref",
 def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     """
     """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if n != 0:
         raise NotImplementedError("Only GS so far!")
     d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
@@ -831,6 +835,7 @@ def densdiff(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")
 def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     """
     """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if n != 0:
         raise NotImplementedError("Only GS so far!")
     d1, d2, gridpoints, weights = densities_on_gridpoints(path=path, n=n, k1=k1,
@@ -840,6 +845,45 @@ def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
     pos = np.where(d > 0)
     d[pos] = 0
     return -np.dot(weights, d)
+
+
+def calc_kernel(func_kw, dmAvar, dmAnvar, dA, dB, grid, mola):
+    """
+    """
+    vxc_tot, fxc_tot = NumInt.eval_xc(func_kw, dA+dB, spin=0, deriv=2)[1:3]  # on grid
+    vxc_a, fxc_a = NumInt.eval_xc(func_kw, dA, spin=0, deriv=2)[1:3]
+    vxc_nad = (vxc_tot[0] - vxc_a[0], None, None, None)  # because of restricted
+    fxc_nad = (fxc_tot[0] - fxc_a[0],) + (None,)*9  # because of restricted
+    fxc = numint.nr_rks_fxc(NumInt, mola, grid, func_kw, dmAvar, dmAvar, 0, True,
+                                dA, vxc_nad, fxc_nad)
+    return np.einsum('ab,ba', fxc, dmAnvar - dmAvar)
+
+def get_kernel(path=None, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    raw = ut.load_js(os.path.join(path, dmfindfile))
+    expansion = deduce_expansion(path=path)
+    molb, dmb, mola, dma = read_key(raw, kvar, b_only=False)
+    mol = mola + molb if expansion == "ME" else mola
+    grid = get_grid(mol, obj=True)
+    dA, dB = dm_on_grid(mola, dma, grid.coords), dm_on_grid(molb, dmb, grid.coords)
+    molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
+    afol = find_emb_A(path=path)
+    ccpdata = ut.load_js(os.path.join(afol, ccpfile))    
+    kw = {"T": XC[ccpdata["fde_Tfunc"][-1][0]], "X": XC[ccpdata["fde_Xfunc"][-1][0]], "C": XC[ccpdata["fde_Cfunc"][-1][0]]}
+    kernel = {"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
+              [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)}
+    return kernel
+
+def kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
+    kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
+    return kernel["T_A"] + kernel["T_B"] + kernel["X_A"] + kernel["X_B"] + kernel["C_A"] + kernel["C_B"]
 
 """
 for quantity functions it is often useful to use some general function with several parameters,
@@ -864,7 +908,8 @@ ccp_funcs = {
         "densdiff_FDET_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
-        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json")}
+        "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
+        "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
