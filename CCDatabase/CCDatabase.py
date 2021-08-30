@@ -657,7 +657,7 @@ def check_other_args(fp, jsdata, qlist, parserfuncs, parser, parser_args, parser
                 parserkwargsdict = {p: parser_kwargs for p in parsers_used}
                 ccdlog.warning("You gave a dictionary, instead of a dictionary of dictionaries, as  \"parser_kwargs\". It will be used for all parsers.")
             else:
-                if np.array([type(k) != str for k in parser_kwargs.keys()]):
+                if np.array([type(k) != str for k in parser_kwargs.keys()]).any():
                     for k,v in parser_args.items():
                         if type(k) != str:
                             try:

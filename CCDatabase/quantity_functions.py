@@ -655,7 +655,7 @@ def elst_change_ref(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     return get_elst_ref(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
 
 def elst_change_fdet(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
-    """
+    """/home/nico/.local/lib/python3.6/site-packages
     """
     if n != 0:
         raise ValueError("Only Ground-State energy")
@@ -858,7 +858,7 @@ def calc_kernel(func_kw, dmAvar, dmAnvar, dA, dB, grid, mola):
                                 dA, vxc_nad, fxc_nad)
     return np.einsum('ab,ba', fxc, dmAnvar - dmAvar)
 
-def get_kernel(path=None, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -871,7 +871,7 @@ def get_kernel(path=None, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
     afol = find_emb_A(path=path)
     ccpdata = ut.load_js(os.path.join(afol, ccpfile))    
-    kw = {"T": XC[ccpdata["fde_Tfunc"][-1][0]], "X": XC[ccpdata["fde_Xfunc"][-1][0]], "C": XC[ccpdata["fde_Cfunc"][-1][0]]}
+    kw = {"T": XC[ccpdata["fde_Tfunc"][-1][0].upper()], "X": XC[ccpdata["fde_Xfunc"][-1][0].upper()], "C": XC[ccpdata["fde_Cfunc"][-1][0].upper()]}
     kernel = {"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
               [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)}
     return kernel
