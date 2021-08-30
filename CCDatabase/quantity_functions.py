@@ -850,11 +850,12 @@ def M_value(path=None, n=0, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"):
 def calc_kernel(func_kw, dmAvar, dmAnvar, dA, dB, grid, mola):
     """
     """
-    vxc_tot, fxc_tot = NumInt.eval_xc(func_kw, dA+dB, spin=0, deriv=2)[1:3]  # on grid
-    vxc_a, fxc_a = NumInt.eval_xc(func_kw, dA, spin=0, deriv=2)[1:3]
+    ni = NumInt()
+    vxc_tot, fxc_tot = ni.eval_xc(func_kw, dA+dB, spin=0, deriv=2)[1:3]  # on grid
+    vxc_a, fxc_a = ni.eval_xc(func_kw, dA, spin=0, deriv=2)[1:3]
     vxc_nad = (vxc_tot[0] - vxc_a[0], None, None, None)  # because of restricted
     fxc_nad = (fxc_tot[0] - fxc_a[0],) + (None,)*9  # because of restricted
-    fxc = numint.nr_rks_fxc(NumInt, mola, grid, func_kw, dmAvar, dmAvar, 0, True,
+    fxc = numint.nr_rks_fxc(ni, mola, grid, func_kw, dmAvar, dmAvar, 0, True,
                                 dA, vxc_nad, fxc_nad)
     return np.einsum('ab,ba', fxc, dmAnvar - dmAvar)
 
