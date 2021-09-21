@@ -1482,6 +1482,7 @@ def loopthrough(funcdict,joblist):
 def correct_values(fplist, todel=[], toprocess={}):
     """
     """
+    todel = ut.deal_with_type(todel, condition=str, to=lambda x: [x])
     for fp in fplist:
         if not os.path.isfile(fp):
             ccdlog.warning("{} does not exist or is not a file".format(fp))

@@ -892,12 +892,14 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     grid = get_grid(mol, obj=True)
     dA, dB = dm_on_grid(mola, dma, grid.coords), dm_on_grid(molb, dmb, grid.coords)
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
-    afol = find_emb_A(path=path)
-    ccpdata = ut.load_js(os.path.join(afol, ccpfile))   
+    fols = find_emb_A(path=path), find_emb_B(path=path)
     d = {"fde_Tfunct": "T", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
-    kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
-    kernel = {"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
-              [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)}
+    kernel = {}
+    for n in range(2):
+        ccpdata = ut.load_js(os.path.join(fols[n], ccpfile))   
+        kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
+        kernel.update({"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
+              [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)})
     if not kernel:
         raise BaseException("Somehow no kernel obtained!")
     return kernel
