@@ -899,7 +899,7 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
         ccpdata = ut.load_js(os.path.join(fols[n], ccpfile))   
         kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
         kernel.update({"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
-              [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k,v in kw.items() for n in range(2)})
+              [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k, v in kw.items()})
     if not kernel:
         raise BaseException("Somehow no kernel obtained!")
     return kernel
