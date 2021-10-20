@@ -8,6 +8,7 @@ Created on Mon Mar 15 15:58:40 2021
 import CCDatabase.utils as ut
 from CCDatabase.CCDatabase import find_and_parse
 import os
+import numpy as np
 import glob as gl
 from CCDatabase.utils import caches
 import cachetools
@@ -234,12 +235,25 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
                 coords = ut.vals_from_npz(npz, "frag_xyz")[-1 - cnt][0].tolist()
                 cnt += 1
             if expansion == "SE":
-                ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
-                ghost[:,0] = "X-" + ghost[:,0]
-                coords.extend(ghost.tolist())
+                frag_xyz = ut.vals_from_npz(npz, "frag_xyz")
+                if frag_xyz.shape[1] == 1:  # single fragment! probably B_gh
+                    frag_xyz = frag_xyz[0, 0]
+                    v_is_gh = np.vectorize(lambda x: "@")
+                    ghost = frag_xyz[v_is_gh(frag_xyz[:,0])]
+                    v_repl = np.vectorize(lambda x: x.replace("@", "X-"))
+                    ghost[:,0] = v_repl(ghost[:,0])
+                else:
+                    ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]    
+                    ghost[:,0] = "X-" + ghost[:,0]
+                    coords.extend(ghost.tolist())
         elif expansion == "SE":
-            ghost = raw["frag_xyz"][-1][1]
-            coords.extend([["X-"+i[0]]+i[1:] for  i in ghost])
+            frag_xyz = raw["frag_xyz"][-1]
+            if len(frag_xyz[-1]) == 1:
+                frag_xyz = frag_xyz[0, 0]
+                ghost = [[i[0].replace("@", "X-")]+i[1:]  for i in frag_xyz if "@" in i[0]]
+            else:
+                ghost = raw["frag_xyz"][-1][1]
+                coords.extend([["X-"+i[0]]+i[1:] for  i in ghost])
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
