@@ -850,6 +850,7 @@ def raw_quantities(path=None, qlist="variables.json", ext="*.out", ignore="slurm
                 else:
                     ccdlog.critical("the location of your quantity {} cannot be understood.\
                              Most likely it is either not present or double. Continuing with other quantities".format(qlist[n]))
+                    missing.append(qlist[n])
                     continue
             q = splt[-1]
             filepath = os.path.join(path_tmp, fname)
