@@ -211,7 +211,7 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
                 coords.extend(ghost.tolist())
         elif expansion == "SE":
             ghost = raw["frag_xyz"][-1][1]
-            coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
+            coords.extend([["X-"+i[0]]+i[1:] for  i in ghost])
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
@@ -235,11 +235,11 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
                 cnt += 1
             if expansion == "SE":
                 ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]
-                ghost[:,0] = "X+" + ghost[:,0]
+                ghost[:,0] = "X-" + ghost[:,0]
                 coords.extend(ghost.tolist())
         elif expansion == "SE":
             ghost = raw["frag_xyz"][-1][1]
-            coords.extend([["X+"+i[0]]+i[1:] for  i in ghost])
+            coords.extend([["X-"+i[0]]+i[1:] for  i in ghost])
         elconf, cnt = [], 0
         while not elconf:  # if empty because "read", get previous
             elconf = raw["elconf"][-1 - cnt][0] 
