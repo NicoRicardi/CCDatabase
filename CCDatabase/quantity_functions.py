@@ -775,7 +775,7 @@ def get_grid(mol, gridlevel=4, obj=False):
     grid = gen_grid.Grids(mol)
     grid.level = gridlevel
     grid.build()
-    to_return = grid if object else (grid.coords, grid.weights)
+    to_return = grid if obj else (grid.coords, grid.weights)
     return to_return
 
 def key_to_density(rawdict, k, gridpoints=False, weights=False, b_only=False, expansion="ME"):
