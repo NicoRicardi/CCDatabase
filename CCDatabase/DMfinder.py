@@ -238,13 +238,9 @@ def find_fdet_dmfiles(fname, filename="Densmat_SCF.txt", prop_key="HF_FDET",
                 frag_xyz = ut.vals_from_npz(npz, "frag_xyz")
                 if frag_xyz.shape[1] == 1:  # single fragment! probably B_gh
                     frag_xyz = frag_xyz[0, 0]
-                    v_is_gh = np.vectorize(lambda x: "@" in x)
-                    ghost = frag_xyz[v_is_gh(frag_xyz[:,0])]
                     v_repl = np.vectorize(lambda x: x.replace("@", "X-"))
-                    ghost[:,0] = v_repl(ghost[:,0])
-                    v_not_gh = np.vectorize(lambda x: "@"not in x)
-                    not_ghost = frag_xyz[v_not_gh(frag_xyz[:,0])]
-                    coords =  np.concatenate(not_ghost, ghost).tolist()
+                    frag_xyz[:,0] = v_repl(frag_xyz[:,0])
+                    coords = frag_xyz.tolist()
                 else:
                     ghost = ut.vals_from_npz(npz, "frag_xyz")[-1][1]    
                     ghost[:,0] = "X-" + ghost[:,0]
