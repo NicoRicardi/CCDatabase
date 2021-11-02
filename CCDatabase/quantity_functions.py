@@ -312,6 +312,8 @@ def raw_atomic(path=None, atomstring="", n=0, rawfile="CCParser.json",
 def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
+    ccdlog = logging.getLogger("ccd")
+    ut.setupLogger()
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     E = {}
     # AB
@@ -323,7 +325,7 @@ def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  #
         raw = ut.load_js(os.path.join(path, "AB_HF", rawfile))
         E["HF_AB"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     else:
-        print("Could not find AB_MP2 nor AB_HF")
+        ccdlog.error("Could not find AB_MP2 nor AB_HF")
     # A
     if os.path.isdir(os.path.join(path, "A_MP2")):
         raw = ut.load_js(os.path.join(path, "A_MP2", rawfile))
@@ -333,7 +335,7 @@ def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  #
         raw = ut.load_js(os.path.join(path, "A_HF", rawfile))
         E["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     else:
-        print("Could not find A_MP2 nor A_HF")
+        ccdlog.error("Could not find A_MP2 nor A_HF")
    # A_gh 
     if os.path.isdir(os.path.join(path, "A_MP2_gh")):
         raw = ut.load_js(os.path.join(path, "A_MP2_gh", rawfile))
@@ -343,7 +345,7 @@ def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  #
         raw = ut.load_js(os.path.join(path, "A_HF_gh", rawfile))
         E["HF_A_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     else:
-        print("Could not find A_MP2_gh nor A_HF_gh")
+        ccdlog.error("Could not find A_MP2_gh nor A_HF_gh")
     # B
     if os.path.isdir(os.path.join(path, "B_MP2")):
         raw = ut.load_js(os.path.join(path, "B_MP2", rawfile))
@@ -353,7 +355,7 @@ def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  #
         raw = ut.load_js(os.path.join(path, "B_HF", rawfile))
         E["HF_B"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     else:
-        print("Could not find B_MP2 nor B_HF")
+        ccdlog.error("Could not find B_MP2 nor B_HF")
     # B_gh
     if os.path.isdir(os.path.join(path, "B_MP2_gh")):
         raw = ut.load_js(os.path.join(path, "B_MP2_gh", rawfile))
@@ -363,7 +365,7 @@ def get_non_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):  #
         raw = ut.load_js(os.path.join(path, "B_HF_gh", rawfile))
         E["HF_B_gh"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
     else:
-        print("Could not find B_MP2_gh nor B_HF_gh")
+        ccdlog.error("Could not find B_MP2_gh nor B_HF_gh")
     return E
 
 
@@ -384,15 +386,15 @@ def get_non_fdet_int(path=None, rawfile="CCParser.json", linenumbers=True):
     try:
         E_int["HF_CP"] = d["HF_AB"] - d["HF_A_gh"] - d["HF_B_gh"]
     except KeyError:
-        print("at least some HF-ghost value unavailable")
+        ccdlog.info("at least some HF-ghost value unavailable")
     try:
         E_int["MP"] = E_int["HF"] + d["E_2_AB"] - d["E_2_A"] - d["E_2_B"]
     except KeyError:
-        print("at least some MP value unavailable")
+        ccdlog.info("at least some MP value unavailable")
     try:
         E_int["MP_CP"] = E_int["HF_CP"] + d["E_2_AB"]  - d["E_2_A_gh"] - d["E_2_B_gh"]
     except KeyError:
-        print("at least some MP-ghost value unavailable")
+        ccdlog.info("at least some MP-ghost value unavailable")
     return E_int
     
 def get_ref_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
@@ -433,7 +435,7 @@ def find_emb_A(path=None):
         afol = os.path.join(path, "cy{}".format(n_iters - n_iters%2))
     return afol
 
-def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=False):  # cached=True is omitted, uses default, we can because other funcs checked
+def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=False, MP=True):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -445,13 +447,11 @@ def get_energy_B(path=None, rawfile="CCParser.json", linenumbers=True, find=Fals
     if type(cycles) == str and re.match(".+npz", cycles):
         cycles = ut.vals_from_npz(os.path.join(path, cycles), "cycle_energies")
     d["HF_B"] = cycles[-1][-1]
-    try:
+    if MP:
         d["E_2_B"]= raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
-    except:
-        print("MP2_B not available")
     return d
 
-def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=False):  # cached=True is omitted, uses default, we can because other funcs checked
+def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=False, MP=True):  # cached=True is omitted, uses default, we can because other funcs checked
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -470,28 +470,29 @@ def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=
     d["Ts_nad_ref"] = raw["Ts_nad"][0][0] if linenumbers else raw["Ts_nad"][0]
     d["Delta_lin"] = raw["fde_delta_lin"][0][0] if linenumbers else raw["fde_delta_lin"][0]
     d["HF_A"] = raw["scf_energy"][-1][0] if linenumbers else raw["scf_energy"][-1]
-    d["E_2_A"] = raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
     d["expansion"] = raw["fde_expansion"][-1][0] if linenumbers else raw["fde_expansion"][-1]
+    if MP:
+        d["E_2_A"] = raw["mp_correction"][-1][0] if linenumbers else raw["mp_correction"][-1]
     return d
 
 
 @cachetools.cached(cache=caches["fdet_terms"])
-def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True, MP=True):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     afol = os.path.join(path, find_emb_A(path=path))
     bfol = os.path.join(path, find_emb_B(path=path))
-    d = get_fdet_terms_A(path=afol)
-    d.update(**get_energy_B(path=bfol, rawfile=rawfile, linenumbers=linenumbers))
+    d = get_fdet_terms_A(path=afol, rawfile=rawfile, linenumbers=linenumbers, MP=MP)
+    d.update(**get_energy_B(path=bfol, rawfile=rawfile, linenumbers=linenumbers, MP))
     return d
 
 @cachetools.cached(cache=caches["fdet_grouped"])
-def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
+def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True, MP=True):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
-    fdet = get_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
+    fdet = get_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers, MP=MP)
     ref = get_ref_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
     E = {}
     E["Delta_HF_A"] = fdet["HF_A"] - ref["HF_A"] if fdet["expansion"] == "ME" else \
@@ -502,14 +503,12 @@ def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True):
     E["elst_int"] = fdet["V_NN"] + fdet["J"] + fdet["AnucB"] + fdet["BnucA"]
     E["nonel,lin"] = fdet["Ts_nad_ref"] + fdet["Exc_nad_ref"] + fdet["Delta_lin"]
     E["nonel"] = fdet["Ts_nad"] + fdet["Exc_nad"]
-    try:
+    if MP:
         E["Delta_E_2_A"] = fdet["E_2_A"] - ref["E_2_A"] if fdet["expansion"] == "ME" else \
         fdet["E_2_A"] - ref["E_2_A_gh"]
         E["Delta_E_2_B"] = fdet["E_2_B"] - ref["E_2_B"] if fdet["expansion"] == "ME" else \
         fdet["E_2_B"] - ref["E_2_B_gh"]
         E["Delta_E_2"] = E["Delta_E_2_A"] + E["Delta_E_2_B"]
-    except KeyError:
-        print("Missing some MP contribution. Only HF will be calculated")
     return E
     
 def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=True, MP=True):
