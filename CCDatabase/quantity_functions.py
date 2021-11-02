@@ -484,7 +484,7 @@ def get_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True, MP=True
     afol = os.path.join(path, find_emb_A(path=path))
     bfol = os.path.join(path, find_emb_B(path=path))
     d = get_fdet_terms_A(path=afol, rawfile=rawfile, linenumbers=linenumbers, MP=MP)
-    d.update(**get_energy_B(path=bfol, rawfile=rawfile, linenumbers=linenumbers, MP))
+    d.update(**get_energy_B(path=bfol, rawfile=rawfile, linenumbers=linenumbers, MP=MP))
     return d
 
 @cachetools.cached(cache=caches["fdet_grouped"])
@@ -517,7 +517,7 @@ def get_fdet_int(path=None, n=0, rawfile="CCParser.json", linenumbers=True, lin=
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if n != 0:
         raise ValueError("Only Ground-State energy")
-    E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers)
+    E = group_fdet_terms(path=path, rawfile=rawfile, linenumbers=linenumbers, MP=MP)
     E_int = E["Delta_HF"] + E["elst_int"]
     E_int +=  E["nonel,lin"] if lin else E["nonel"]
     if MP:
