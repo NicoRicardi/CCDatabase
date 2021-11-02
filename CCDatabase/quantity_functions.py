@@ -425,6 +425,8 @@ def find_emb_A(path=None):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if os.path.isdir(os.path.join(path, "MP2_A")):
         afol = os.path.join(path, "MP2_A")
+    elif os.path.isdir(os.path.join(path, "HF_A")):
+        afol = os.path.join(path, "HF_A")
     else:
         cyfols = [i for i in os.listdir(path) if "cy" in i]
         n_iters = len(cyfols) - 1
