@@ -463,9 +463,8 @@ def get_fdet_terms_A(path=None, rawfile="CCParser.json", linenumbers=True, find=
     d["V_NN"] = raw["V_AB"][0][0] if linenumbers else raw["V_AB"][0]
     d["AnucB"] = raw["AnucB"][0][0] if linenumbers else raw["AnucB"][0]
     d["BnucA"] = raw["BnucA"][0][0] if linenumbers else raw["BnucA"][0]
-    # Fix lin/upd    
-    d["Exc_nad"] = raw["Exc_nad"][1][0] if linenumbers else raw["Exc_nad"][1]
-    d["Ts_nad"] = raw["Ts_nad"][1][0] if linenumbers else raw["Ts_nad"][1]
+    d["Exc_nad_upd"] = raw["Exc_nad"][1][0] if linenumbers else raw["Exc_nad"][1]
+    d["Ts_nad_upd"] = raw["Ts_nad"][1][0] if linenumbers else raw["Ts_nad"][1]
     d["Exc_nad_ref"] = raw["Exc_nad"][0][0] if linenumbers else raw["Exc_nad"][0]
     d["Ts_nad_ref"] = raw["Ts_nad"][0][0] if linenumbers else raw["Ts_nad"][0]
     d["Delta_lin"] = raw["fde_delta_lin"][0][0] if linenumbers else raw["fde_delta_lin"][0]
@@ -502,7 +501,7 @@ def group_fdet_terms(path=None, rawfile="CCParser.json", linenumbers=True, MP=Tr
     E["Delta_HF"] = E["Delta_HF_B"] + E["Delta_HF_A"]
     E["elst_int"] = fdet["V_NN"] + fdet["J"] + fdet["AnucB"] + fdet["BnucA"]
     E["nonel,lin"] = fdet["Ts_nad_ref"] + fdet["Exc_nad_ref"] + fdet["Delta_lin"]
-    E["nonel"] = fdet["Ts_nad"] + fdet["Exc_nad"]
+    E["nonel"] = fdet["Ts_nad_ref"] + fdet["Exc_nad_ref"]
     if MP:
         E["Delta_E_2_A"] = fdet["E_2_A"] - ref["E_2_A"] if fdet["expansion"] == "ME" else \
         fdet["E_2_A"] - ref["E_2_A_gh"]
