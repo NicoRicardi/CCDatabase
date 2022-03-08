@@ -924,7 +924,7 @@ def dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", 
         n_ex = len(raws[ex_en_kw])
         if n > n_ex:
             raise ValueError("The state requested is not available")
-        idx = -  + n -1
+        idx = - n_ex + n -1
         return rdips[idx][0] if linenumbers else rdips[idx]
     elif not n:
         if ex_en_kw in raws.keys():

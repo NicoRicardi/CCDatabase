@@ -1048,7 +1048,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[s] = qval  # nb will become a str when dumped
+                            vals[str(s)] = qval
                             data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
                         except Exception as e:
                             ccdlog.error("Errors while calculating {}, state {}, in {}".format(q, s, path))
@@ -1077,7 +1077,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[s] = qval  # nb will become a str when dumped
+                            vals[str(s)] = qval
                             ccdlog.debug("q:{}, s:{} = {}".format(q, s, qval))
                             s += 1
                         except Exception as e:  # max num of vals
