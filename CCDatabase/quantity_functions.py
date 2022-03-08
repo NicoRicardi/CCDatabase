@@ -698,7 +698,7 @@ def read_density(dmf, header=None, not_full=True):  # TODO docstring
     
     Return
     ------
-    np.array(2, Nbas, Nbas)
+    np.array(Nbas, Nbas)
         alpha and beta DM
     """
     if header == None:  
@@ -913,6 +913,42 @@ def kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder
     kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
     return sum(kernel.values())
 
+def dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True):
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    rawfile = os.path.join(path, rawfile)
+    raws = ut.load_js(rawfile, cached=True)
+    rdips = raws["dip_moment"]
+    if n:
+        if ex_en_kw not in raws.keys():
+            raise ValueError("No excited states in this rawfile!")
+        idx = - len(raws[ex_en_kw]) + n -1
+        return rdips[idx][0] if linenumbers else rdips[idx]
+    elif not n:
+        if ex_en_kw in raws.keys():
+            idx = len(rdips) - len(raws[ex_en_kw]) - 1
+        if not hf:
+            return rdips[idx][0] if linenumbers else rdips[idx]
+        else:
+            return rdips[idx - 1][0] if linenumbers else rdips[idx - 1]
+
+def tot_dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True):
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    rawfile = os.path.join(path, rawfile)
+    raws = ut.load_js(rawfile, cached=True)
+    rtots = raws["tot_dip"]
+    if n:
+        if ex_en_kw not in raws.keys():
+            raise ValueError("No excited states in this rawfile!")
+        idx = - len(raws[ex_en_kw]) + n -1
+        return rtots[idx][0] if linenumbers else rtots[idx]
+    elif not n:
+        if ex_en_kw in raws.keys():
+            idx = len(rtots) - len(raws[ex_en_kw]) - 1
+        if not hf:
+            return rtots[idx][0] if linenumbers else rtots[idx]
+        else:
+            return rtots[idx - 1][0] if linenumbers else rtots[idx - 1]
+    
 """
 for quantity functions it is often useful to use some general function with several parameters,
 define all of them but "path" and "n" into a lambda function, which is then saved as quantity function.
@@ -937,7 +973,8 @@ ccp_funcs = {
         "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
         "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
-        "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")}
+        "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"),
+         "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)[0]}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
