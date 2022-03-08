@@ -1048,7 +1048,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[str(s)] = qval
+                            vals[s] = qval  # will be a string when dumped
                             data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
                         except Exception as e:
                             ccdlog.error("Errors while calculating {}, state {}, in {}".format(q, s, path))
@@ -1077,7 +1077,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[str(s)] = qval
+                            vals[s] = qval  # will be a string when dumped
                             ccdlog.debug("q:{}, s:{} = {}".format(q, s, qval))
                             s += 1
                         except Exception as e:  # max num of vals
@@ -1325,7 +1325,8 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 column.append(item if item else np.nan)
                                 ccdlog.debug("{} could not be obtained".format(oldqlist[n]))
                         elif type(item) is dict:
-                            if not list(item.keys())[0].isnumeric():  # only one state, atomic values
+                            bool_ = not list(item.keys())[0].isnumeric()  if type(list(item.keys())[0]) == str else False
+                            if bool_:  # only one state, atomic values
                                 item = {str(shift): item}  # make it {s: atomicvalsdict}
                             ccdlog.warning("You did not specify states for {q}. This makes collection somewhat slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
                             values = []
