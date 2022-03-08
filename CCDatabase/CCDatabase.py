@@ -1040,7 +1040,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
             if len(miss) == 0:
                 ccdlog.debug("no requisite raw quantities missing")
                 shift = 1 if q in ex_qs else 0  # 1 if only excited state
-                if states:
+                if states is not False:
                     vals={}
                     for s in range(shift, states+1):  # if ES, python counting => fortran/human counting
                         try:
@@ -1056,7 +1056,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                             missing.append(q)
                     data[q] = vals  # e.g ex_en:{1:val1,2:val2}
                     ccdlog.debug("saved {} as both dictionary and individual values".format(q))
-                elif state_num:
+                elif state_num is not False:
                     try:
                         if atomiclist[n]:
                             qval = func(path=path, atomstring=atomiclist[n], n=s)

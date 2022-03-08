@@ -921,7 +921,10 @@ def dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", 
     if n:
         if ex_en_kw not in raws.keys():
             raise ValueError("No excited states in this rawfile!")
-        idx = - len(raws[ex_en_kw]) + n -1
+        n_ex = len(raws[ex_en_kw])
+        if n > n_ex:
+            raise ValueError("The state requested is not available")
+        idx = -  + n -1
         return rdips[idx][0] if linenumbers else rdips[idx]
     elif not n:
         if ex_en_kw in raws.keys():
@@ -939,7 +942,10 @@ def tot_dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_re
     if n:
         if ex_en_kw not in raws.keys():
             raise ValueError("No excited states in this rawfile!")
-        idx = - len(raws[ex_en_kw]) + n -1
+        n_ex = len(raws[ex_en_kw])
+        if n > n_ex:
+            raise ValueError("The state requested is not available")
+        idx = -  + n -1
         return rtots[idx][0] if linenumbers else rtots[idx]
     elif not n:
         if ex_en_kw in raws.keys():
@@ -974,7 +980,7 @@ ccp_funcs = {
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
         "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
         "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"),
-         "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)[0]}
+         "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
