@@ -1048,7 +1048,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[s] = qval  # will be a string when dumped
+                            vals[str(s)] = qval
                             data["{}_{}".format(q, s)] = qval  # e.g. ex_en_1 : val1
                         except Exception as e:
                             ccdlog.error("Errors while calculating {}, state {}, in {}".format(q, s, path))
@@ -1077,7 +1077,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[s] = qval  # will be a string when dumped
+                            vals[str(s)] = qval  # will be a string when dumped
                             ccdlog.debug("q:{}, s:{} = {}".format(q, s, qval))
                             s += 1
                         except Exception as e:  # max num of vals
@@ -1325,8 +1325,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                 column.append(item if item else np.nan)
                                 ccdlog.debug("{} could not be obtained".format(oldqlist[n]))
                         elif type(item) is dict:
-                            bool_ = not list(item.keys())[0].isnumeric()  if type(list(item.keys())[0]) == str else False
-                            if bool_:  # only one state, atomic values
+                            if not list(item.keys())[0].isnumeric():  # only one state, atomic values
                                 item = {str(shift): item}  # make it {s: atomicvalsdict}
                             ccdlog.warning("You did not specify states for {q}. This makes collection somewhat slower. Please consider using [max_state,{q}] or \"{q}_n\" with n being the desired state".format(q=q))
                             values = []
@@ -1339,11 +1338,11 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                             values.extend(to_ext)
                                             if len(to_ext) > natmklst[n][natmk]:
                                                     natmklst[n][natmk] = len(to_ext)
-                                            if look_for_more_states:
+                                            if look_for_more_states and cnt == 0:
                                                 missing.append(["{}_{}".format(q,v+1),atomiclist[n]])  # try to parse one more state
                                 else:
-                                    values = [item[str(v)] for v in range(shift, len(item)+1)]  # all in order
-                                    if look_for_more_states:
+                                    values = [item[str(v)] for v in range(shift, len(item)+shift)]  # all in order
+                                    if look_for_more_states and cnt == 0:
                                                 missing.append("{}_{}".format(q,len(values)+1))  # try to parse one more state
                                 ccdlog.info("states {shift}-{n} in {q}".format(shift=shift,n=len(item) - 1 + shift, q=q))
                             except KeyError:  # not ordered (1,3,4,..) or atmk missing
@@ -1367,12 +1366,12 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                                     missing_atms.append(atomkey)
                                         else:
                                             missing_states.append(v)
-                                    if look_for_more_states:                                        
+                                    if look_for_more_states and cnt == 0:                                        
                                         missing.extend([["{}_{}".format(q,k),atomiclist[n]] for k in missing_states])  # e.g. [["q_3","C1-C3"], ["q_5","C1-C3"]]
                                         missing.extend([["{}_{}".format(q,k),",".join(missing_atmks)] for k in partial_states])  # e.g. ["q_7","C2"], ["q_8","C2"]]
                                 else:
                                     values = [item[str(v)] if str(v) in item.keys() else np.nan for v in range(shift, max_state+1)]
-                                    if np.nan in values and look_for_more_states:
+                                    if np.nan in values and look_for_more_states and cnt == 0:
                                         missing.extend([n+shift for n,k in enumerate(values) if k == np.nan])
                                 ccdlog.warning("some state or atomkey missing in {q}, using np.nan for it".format(q=q))
                             start = len(column)  # starting point for this set of vals
