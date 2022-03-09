@@ -1116,7 +1116,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                  ex_qs=[], reqs=None, ext="*.out", ignore="slurm*", parser=None,
                  parserfuncs={},parser_file="CCParser.json",parser_args=None, 
                  parser_kwargs=None, check_input=True, funcdict="ccp",
-                 look_for_more_states=True, to_console=True, to_log=False, 
+                 look_for_more_states=False, to_console=True, to_log=False, 
                  logname="CCDatabase.log", printlevel=20):
     """
     Parameters
@@ -1237,7 +1237,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                     ccdlog.debug("quantity: {}".format(q))
                     shift = 1 if q in ex_qs else 0  # 1 if only excited state
                     item = data[q] if q in data.keys() else False  # can be value, or many values!
-                    if stateslist[n]:  # NB not "is not False"
+                    if stateslist[n] is not False:  
                         try:
                             if atomiclist[n]:
                                 values = []
@@ -1249,7 +1249,7 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                         if len(to_ext) > natmklst[n][natmk]:
                                                 natmklst[n][natmk] = len(to_ext)
                             else:
-                                values = [item[str(v)] for v in range(shift, stateslist[n]+1)]
+                                values = [item[str(v)] for v in range(shift, stateslist[n] + 1)]
                             # if q or str[v] gives key error goes to except
                             column.extend(values)
                             ccdlog.debug("gotten values for {} from its dictionary".format(q))
@@ -1319,10 +1319,10 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                         if q not in data.keys():
                             if cnt == 0:
                                 missing.append(oldqlist[n])
-                                column.append(item if item else np.nan)
+                                column.append(np.nan)
                                 ccdlog.debug("added {} to \"missing\"".format(oldqlist[n]))
                             else:
-                                column.append(item if item else np.nan)
+                                column.append(np.nan)
                                 ccdlog.debug("{} could not be obtained".format(oldqlist[n]))
                         elif type(item) is dict:
                             if not list(item.keys())[0].isnumeric():  # only one state, atomic values
@@ -1341,9 +1341,9 @@ def collect_data(joblist, levelnames=["A","B","basis","calc"], qlist="variables.
                                             if look_for_more_states and cnt == 0:
                                                 missing.append(["{}_{}".format(q,v+1),atomiclist[n]])  # try to parse one more state
                                 else:
-                                    values = [item[str(v)] for v in range(shift, len(item)+shift)]  # all in order
+                                    values = [item[str(v)] for v in range(shift, len(item) + shift)]  # all in order
                                     if look_for_more_states and cnt == 0:
-                                                missing.append("{}_{}".format(q,len(values)+1))  # try to parse one more state
+                                                missing.append("{}_{}".format(q,len(values) + 1))  # try to parse one more state
                                 ccdlog.info("states {shift}-{n} in {q}".format(shift=shift,n=len(item) - 1 + shift, q=q))
                             except KeyError:  # not ordered (1,3,4,..) or atmk missing
                                 max_state = max([int(i) for i in  item.keys()])
