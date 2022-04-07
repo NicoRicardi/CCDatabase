@@ -1077,7 +1077,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                                 qval = func(path=path, atomstring=atomiclist[n], n=s)
                             else:
                                 qval = func(path=path, n=s)
-                            vals[str(s)] = qval  # will be a string when dumped
+                            vals[str(s)] = qval  
                             ccdlog.debug("q:{}, s:{} = {}".format(q, s, qval))
                             s += 1
                         except Exception as e:  # max num of vals
@@ -1097,7 +1097,7 @@ def complex_quantities(path=None, qlist="variables.json", ex_qs=[], reqs=None, e
                     if len(vals) == 0:
                         missing.append(q)
                     elif len(vals) == 1:
-                        data[q] = vals[0]
+                        data[q] = vals["0"]
                         ccdlog.debug("{} is a single value".format(q))
                     else:
                         data[q] = vals
