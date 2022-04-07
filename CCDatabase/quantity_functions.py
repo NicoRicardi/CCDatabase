@@ -893,7 +893,7 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     dA, dB = dm_on_grid(mola, dma, grid.coords), dm_on_grid(molb, dmb, grid.coords)
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
     fols = find_emb_A(path=path), find_emb_B(path=path)
-    d = {"fde_Tfunct": "T", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
+    d = {"fde_Tfunc": "T", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
     kernel = {}
     for n in range(2):
         ccpdata = ut.load_js(os.path.join(fols[n], ccpfile))   
@@ -920,7 +920,7 @@ def kernel_sep(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     if n != 0:
         raise NotImplementedError("Only GS so far!")
     kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
-    keys_A, keys_B = [i for i in kernel.keys() if i.endswith("A")], [i for i in kernel.keys() if i.endswith("A")]
+    keys_A, keys_B = [i for i in kernel.keys() if i.endswith("A")], [i for i in kernel.keys() if i.endswith("B")]
     to_return = {"A": sum([kernel[i] for i in keys_A]), "B": sum([kernel[i] for i in keys_B])}
     return to_return
 
