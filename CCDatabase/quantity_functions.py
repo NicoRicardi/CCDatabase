@@ -559,7 +559,7 @@ def elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
 def get_elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     mainfol = ut.split_path(path)[0]
-    return elst_ref(path=mainfol, rawfile=rawfile, linenumbers=linenumbers)
+    return elst_ref(path=mainfol, rawfile=rawfile, linenumbers=linenumbefrom pyscf.dft.libxc import XCrs)
 
 def deduce_expansion(path=None):
     """
@@ -653,7 +653,7 @@ def elst_change_ref(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
         raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return get_elst_ref(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
-
+from pyscf.dft.libxc import XC
 def elst_change_fdet(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     """/home/nico/.local/lib/python3.6/site-packages
     """
@@ -866,9 +866,9 @@ def get_xc_code(type_, val):
     poss = []
     if val in keys:
         poss.append(val)
-    elif "LDA_{}_{}".format(type_, val) in keys():
+    elif "LDA_{}_{}".format(type_, val) in keys:
         poss.append("LDA_{}_{}".format(type_, val))
-    elif "GGA_{}_{}".format(type_, val) in keys():
+    elif "GGA_{}_{}".format(type_, val) in keys:
         "GGA_{}_{}".format(type_, val)
     if len(poss) == 0:
         raise ValueError("Could not find this functional in libxc!!")
@@ -893,12 +893,14 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     dA, dB = dm_on_grid(mola, dma, grid.coords), dm_on_grid(molb, dmb, grid.coords)
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
     fols = find_emb_A(path=path), find_emb_B(path=path)
-    d = {"fde_Tfunc": "T", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
+    d = {"fde_Tfunc": "K", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
     kernel = {}
     for n in range(2):
         ccpdata = ut.load_js(os.path.join(fols[n], ccpfile))   
         kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
-        kernel.update({"{}_{}".format(k, ["A", "B"][n]): calc_kernel(v, [dma, dmb][n],
+        assert "K" in kw.keys(), "missing kinetic"
+        assert "XC" in kw.keys() ^ ("X" in kw.keys() and "C" in kw.keys())
+        kernel.update({"{}_{}".format(k, ["A", "B"][n]): calc_kernel(get_xc_code(k, v), [dma, dmb][n],
               [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k, v in kw.items()})
     if not kernel:
         raise BaseException("Somehow no kernel obtained!")
