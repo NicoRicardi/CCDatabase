@@ -913,6 +913,17 @@ def kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder
     kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
     return sum(kernel.values())
 
+def kernel_sep(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
+    kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
+    keys_A, keys_B = [i for i in kernel.keys() if i.endswith("A")], [i for i in kernel.keys() if i.endswith("A")]
+    to_return = {"A": sum([kernel[i] for i in keys_A]), "B": sum([kernel[i] for i in keys_B])}
+    return to_return
+
 def dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     rawfile = os.path.join(path, rawfile)
@@ -980,7 +991,9 @@ ccp_funcs = {
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
         "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
         "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"),
-         "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)}
+        "kernel_A": lambda path, n: kernel_sep(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")["A"],
+        "kernel_B": lambda path, n: kernel_sep(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")["B"],
+        "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)}
 
 qcep_ccp_funcs = {
         "ex_en": lambda path, n: raw_to_complex(path=path, n=n-1, rawfile="CCParser.json", raw_key="exc_energy"),
