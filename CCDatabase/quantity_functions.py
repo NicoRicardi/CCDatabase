@@ -559,7 +559,7 @@ def elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
 def get_elst_ref(path=None, rawfile="CCParser.json", linenumbers=True):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     mainfol = ut.split_path(path)[0]
-    return elst_ref(path=mainfol, rawfile=rawfile, linenumbers=linenumbefrom pyscf.dft.libxc import XCrs)
+    return elst_ref(path=mainfol, rawfile=rawfile, linenumbers=linenumbers)
 
 def deduce_expansion(path=None):
     """
@@ -653,7 +653,7 @@ def elst_change_ref(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
         raise ValueError("Only Ground-State energy")
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     return get_elst_ref(path=path, rawfile=rawfile, linenumbers=linenumbers) - get_elst_int_sum_iso(path=path, rawfile=rawfile, linenumbers=linenumbers)
-from pyscf.dft.libxc import XC
+
 def elst_change_fdet(path=None, n=0, rawfile="CCParser.json", linenumbers=True):
     """/home/nico/.local/lib/python3.6/site-packages
     """
@@ -881,10 +881,12 @@ def get_xc_code(type_, val):
         else:
             return poss[0]
         
-def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+def get_kernel_terms(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
     raw = ut.load_js(os.path.join(path, dmfindfile))
     expansion = deduce_expansion(path=path)
     molb, dmb, mola, dma = read_key(raw, kvar, b_only=False)
@@ -894,37 +896,41 @@ def get_kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
     molb_,dmb_nvar,mola_,dma_nvar = read_key(raw, knvar, b_only=False)
     fols = find_emb_A(path=path), find_emb_B(path=path)
     d = {"fde_Tfunc": "K", "fde_Xfunc": "X", "fde_Cfunc": "C", "fde_XCfunc": "XC"}
-    kernel = {}
+    kernels = {}
     for n in range(2):
+        kernel = {}
         ccpdata = ut.load_js(os.path.join(fols[n], ccpfile))   
         kw = {v: ccpdata[k][-1][0].upper() for k, v in d.items() if k in ccpdata.keys()}
+        if not kw:
+            continue
         assert "K" in kw.keys(), "missing kinetic"
-        assert "XC" in kw.keys() ^ ("X" in kw.keys() and "C" in kw.keys())
-        kernel.update({"{}_{}".format(k, ["A", "B"][n]): calc_kernel(get_xc_code(k, v), [dma, dmb][n],
+        assert ("XC" in kw.keys()) ^ ("X" in kw.keys() and "C" in kw.keys())
+        kernel.update({"{}".format(k): calc_kernel(get_xc_code(k, v), [dma, dmb][n],
               [dma_nvar, dmb_nvar][n], [dA, dB][n], [dB, dA][n], grid, [mola,molb][n]) for k, v in kw.items()})
-    if not kernel:
+        kernels[["A", "B"][n]] = kernel
+    if not kernels:
         raise BaseException("Somehow no kernel obtained!")
-    return kernel
+    return kernels
 
-def kernel(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
-    """
-    """
-    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
-    if n != 0:
-        raise NotImplementedError("Only GS so far!")
-    kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
-    return sum(kernel.values())
-
+@cachetools.cached(cache=caches["kernel"])
 def kernel_sep(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
     """
     """
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
     if n != 0:
         raise NotImplementedError("Only GS so far!")
-    kernel = get_kernel(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
-    keys_A, keys_B = [i for i in kernel.keys() if i.endswith("A")], [i for i in kernel.keys() if i.endswith("B")]
-    to_return = {"A": sum([kernel[i] for i in keys_A]), "B": sum([kernel[i] for i in keys_B])}
-    return to_return
+    kernels = get_kernel_terms(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
+    kernels = {k: sum(v.values()) for k,v in kernels.items()}
+    return 
+
+def kernel_tot(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
+    """
+    """
+    path = ut.deal_with_type(path, condition=None, to=os.getcwd)
+    if n != 0:
+        raise NotImplementedError("Only GS so far!")
+    kernels = kernel_sep(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
+    return sum(kernels.values()) / len(kernels.values())
 
 def dipoles(path=None, n=0, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True):
     path = ut.deal_with_type(path, condition=None, to=os.getcwd)
@@ -992,7 +998,7 @@ ccp_funcs = {
         "densdiff_iso_ref": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_ref", rawfile="DMfinder.json"),
         "densdiff_iso_FDET": lambda path, n: densdiff(path=path, n=n, k1="HF_iso", k2="HF_FDET", rawfile="DMfinder.json"),
         "M_value": lambda path, n: M_value(path=path, n=n, k1="HF_FDET", k2="HF_ref", rawfile="DMfinder.json"),
-        "kernel_tot": lambda path, n: kernel(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"),
+        "kernel_tot": lambda path, n: kernel_tot(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"),
         "kernel_A": lambda path, n: kernel_sep(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")["A"],
         "kernel_B": lambda path, n: kernel_sep(path=path, n=n, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json")["B"],
         "tot_dip": lambda path, n: tot_dipoles(path=path, n=n, rawfile="CCParser.json", ex_en_kw="exc_energy_rel", hf=False, linenumbers=True)}

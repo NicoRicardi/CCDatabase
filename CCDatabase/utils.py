@@ -28,7 +28,8 @@ caches = {"npz": cachetools.LRUCache(maxsize=8),
           "read_file": cachetools.LRUCache(maxsize=2),
           "locate_iso_dmfiles": cachetools.LRUCache(maxsize=1),
           "locate_ref_dmfile": cachetools.LRUCache(maxsize=1),
-          "locate_fdet_dmfiles": cachetools.LRUCache(maxsize=1)
+          "locate_fdet_dmfiles": cachetools.LRUCache(maxsize=1),
+          "kernel": cachetools.LRUCache(maxsize=1)
           }
 
 
