@@ -910,6 +910,7 @@ def get_kernel_terms(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile
         kernels[["A", "B"][n]] = kernel
     if not kernels:
         raise BaseException("Somehow no kernel obtained!")
+    ccdlog.info("kernelsi {}".format(kernels))
     return kernels
 
 @cachetools.cached(cache=caches["kernel"])
@@ -921,7 +922,7 @@ def kernel_sep(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfi
         raise NotImplementedError("Only GS so far!")
     kernels = get_kernel_terms(path=path, n=n, kvar=kvar, knvar=knvar, dmfindfile=dmfindfile, ccpfile=ccpfile)
     kernels = {k: sum(v.values()) for k,v in kernels.items()}
-    return 
+    return kernels 
 
 def kernel_tot(path=None, n=0, kvar="HF_FDET", knvar="MP_FDET", dmfindfile="DMfinder.json", ccpfile="CCParser.json"):
     """
